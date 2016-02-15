@@ -52,7 +52,7 @@ class GUI extends Frame {
 		
 		setVisible(true);         
 	}
-
+	
 	/** The entry main() method */
 	public static void main(String[] args) {
 		connectGUI p = new connectGUI();
@@ -69,7 +69,8 @@ class connectGUI extends Frame {
 	private TextField tfServAddr = new TextField();
 	private TextField tfPortNum = new TextField();
 	private Button bttnConnect = new Button("Connect");
-	private Button btnCancel = new Button("Cancel");
+	private Button bttnCreate = new Button("Create Server");
+	private Button bttnCancel = new Button("Cancel");
 	
 	connectGUI(){
 		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
@@ -82,7 +83,7 @@ class connectGUI extends Frame {
 		
 		JPanel northPanel = new JPanel (new GridLayout (1, 4));
 		JPanel middlePanel = new JPanel (new GridLayout (1, 2));
-		JPanel southPanel = new JPanel(new GridLayout (1, 3));
+		JPanel southPanel = new JPanel(new GridLayout (1, 4));
 		
 		lblServerAddr.setFont(f);
 		northPanel.add(lblServerAddr);
@@ -129,8 +130,17 @@ class connectGUI extends Frame {
             }
         });
 		
-		southPanel.add(btnCancel);                    
-		btnCancel.addActionListener(new ActionListener() {
+		southPanel.add(bttnCreate);                    
+		bttnCreate.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                //TODO create server logic
+            	System.out.println("Need to create server");
+            }
+        });
+		
+		southPanel.add(bttnCancel);                    
+		bttnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
                 dispose();
