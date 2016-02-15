@@ -1,5 +1,6 @@
 import java.awt.*;        // Using AWT container and component classes
 import java.awt.event.*;  // Using AWT event classes and listener interfaces
+import javax.swing.JPanel;
 
 
 class GUI extends Frame {
@@ -73,46 +74,38 @@ class connectGUI extends Frame {
 	connectGUI(){
 		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
 		
-		setResizable(false);
 		setLocation(550, 400);
 		setTitle("Connect to game");
-		setBackground(Color.GRAY);
-		setLayout(null);
+		setLayout(new GridLayout (3, 1));
 		setSize(500, 130);
 		setVisible(true);
 		
-		lblServerAddr.setBounds(15, 40, 110, 15);
+		JPanel northPanel = new JPanel (new GridLayout (1, 4));
+		JPanel middlePanel = new JPanel (new GridLayout (1, 2));
+		JPanel southPanel = new JPanel(new GridLayout (1, 3));
+		
 		lblServerAddr.setFont(f);
-		lblServerAddr.setForeground(Color.WHITE);
-		add(lblServerAddr);
+		northPanel.add(lblServerAddr);
+		northPanel.add(tfServAddr);
 		
-		lblPortNum.setBounds(285, 40, 90, 15);
 		lblPortNum.setFont(f);
-		lblPortNum.setForeground(Color.WHITE);
-		add(lblPortNum);
+		northPanel.add(lblPortNum);
+		northPanel.add(tfPortNum);
 		
-		lblName.setBounds(15, 70, 50, 15);
 		lblName.setFont(f);
-		lblName.setForeground(Color.WHITE);
-		add(lblName);
+		middlePanel.add(lblName);
 		
-		lblError.setBounds(15, 100, 90, 15);
 		lblError.setFont(f);
 		lblError.setForeground(Color.RED);
 		lblError.setVisible(false);
-		add(lblError);
+		southPanel.add(lblError);
 		
-		tfServAddr.setBounds(125, 37, 150, 21);
-		add(tfServAddr);
+		middlePanel.add(tfName);
+
+		add(northPanel);
+		add(middlePanel);
 		
-		tfPortNum.setBounds(380, 37, 100, 21);
-		add(tfPortNum);
-		
-		tfName.setBounds(67, 67, 208, 21);
-		add(tfName);
-		
-		bttnConnect.setBounds(380, 67, 100, 30);
-		add(bttnConnect);                    
+		southPanel.add(bttnConnect);                    
 		bttnConnect.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
@@ -136,14 +129,16 @@ class connectGUI extends Frame {
             }
         });
 		
-		btnCancel.setBounds(279, 67, 100, 30);
-		add(btnCancel);                    
+		southPanel.add(btnCancel);                    
 		btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
                 dispose();
+                System.exit(0);
             }
         });
+		add(southPanel);
+		this.validate();
 	}
 }
 
