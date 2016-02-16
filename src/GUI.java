@@ -2,7 +2,7 @@ import java.awt.*;        // Using AWT container and component classes
 import java.awt.event.*;  // Using AWT event classes and listener interfaces
 import javax.swing.JPanel;
 
-
+//maing this comment!
 class GUI extends Frame {
 
 	private String playerName = connectGUI.name;
