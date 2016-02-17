@@ -1,0 +1,158 @@
+import java.util.*;
+/*
+ * @author Hal M. Hattis
+ * 
+ * @course TSP CS3141 
+ * 
+ * @class "Deck" - Euchre component
+ */
+public class Deck {
+
+	//class variables
+	Card[] cards;  
+	Card[] discard;
+	Card[] hand1;
+	Card[] hand2;
+	Card[] hand3;
+	Card[] hand4;
+	
+	//constructor for deck
+	public Deck(){
+		cards = new Card[24];
+		
+		//cards in deck
+		Card NS = new Card('S', 1);
+		Card TS = new Card('S', 2);
+		Card JS = new Card('S', 3);
+		Card QS = new Card('S', 4);
+		Card KS = new Card('S', 5);
+		Card AS = new Card('S', 6);
+		Card NH = new Card('H', 1);
+		Card TH = new Card('H', 2);
+		Card JH = new Card('H', 3);
+		Card QH = new Card('H', 4);
+		Card KH = new Card('H', 5);
+		Card AH = new Card('H', 6);
+		Card NC = new Card('C', 1);
+		Card TC = new Card('C', 2);
+		Card JC = new Card('C', 3);
+		Card QC = new Card('C', 4);
+		Card KC = new Card('C', 5);
+		Card AC = new Card('C', 6);
+		Card ND = new Card('D', 1);
+		Card TD = new Card('D', 2);
+		Card JD = new Card('D', 3);
+		Card QD = new Card('D', 4);
+		Card KD = new Card('D', 5);
+		Card AD = new Card('D', 6);
+	
+		cards[0] = NS;
+		cards[1] = TS;
+		cards[2] = JS;
+		cards[3] = QS;
+		cards[4] = KS;
+		cards[5] = AS;
+		cards[6] = NH;
+		cards[7] = TH;
+		cards[8] = JH;
+		cards[9] = QH;
+		cards[10] = KH;
+		cards[11] = AH;
+		cards[12] = NC;
+		cards[13] = TC;
+		cards[14] = JC;
+		cards[15] = QC;
+		cards[16] = KC;
+		cards[17] = AC;
+		cards[18] = ND;
+		cards[19] = TD;
+		cards[20] = JD;
+		cards[21] = QD;
+		cards[22] = KD;
+		cards[23] = AD;
+	}
+	
+	/*
+	 * NOT COMPLETE******
+	 * Method to generate hands and discard from the deck
+	 * @return void
+	 */
+	public void deal(){
+		hand1= new Card[5];
+		hand2= new Card[5];
+		hand3= new Card[5];
+		hand4= new Card[5];
+		discard = new Card[4];
+		
+		for(int i=0; i<=16; i+=4){
+			hand1[(i%5)]= cards[i];
+			hand2[(i%5)]= cards[i+1];
+			hand3[(i%5)]= cards[i+2];
+			hand4[(i%5)]= cards[i+3];
+		}
+		
+		discard[0]= cards[20];
+		discard[1]= cards[21];
+		discard[2]= cards[22];
+		discard[3]= cards[23];
+	}
+	
+	/*
+	 * NOT COMPLETE******
+	 * Method to randomize deck for dealing
+	 * @return void
+	 */
+	public void shuffle(){
+		ArrayList<Card> shuffler = new ArrayList<Card>(24);
+		
+		//load cards into an accessory array used to shuffle
+		for(int i=0; i<24; i+=1){
+			shuffler.add(cards[i]);
+		}
+		
+		//randomly pull cards out of the array list to fill the deck back up 
+		for(int i=0; i<24; i+=1){
+			int randomNum = (23*(int)(Math.random()))/shuffler.size(); 
+			cards[i]= shuffler.remove(randomNum);
+		}
+	}
+	
+	public static void main(String[] args) {
+		Deck theDeck= new Deck();
+		
+		//print deck
+		for(int i=0; i<24; i+=1){
+			System.out.println("Value:"+ theDeck.cards[i].value + " Suit:" + theDeck.cards[i].suit);
+		}
+		
+		//shuffle
+		System.out.println("Every day Im shufflin...");
+		theDeck.shuffle();
+		
+		//print deck after shuffle
+		for(int i=0; i<24; i+=1){
+			System.out.println("Value:"+ theDeck.cards[i].value + " Suit:" + theDeck.cards[i].suit);
+		}
+		
+		//deal cards
+		System.out.println("Lets Make A Deal");
+		theDeck.deal();
+		
+		//print hands after the deal
+		System.out.println("Raise Them Hands High");
+		for(int i=0; i<5; i+=1){
+			System.out.println("Hand 1 Card " + (i+1) + ": " + theDeck.hand1[i].value + theDeck.hand1[i].suit);
+			System.out.println("Hand 2 Card " + (i+1) + ": " + theDeck.hand2[i].value + theDeck.hand2[i].suit);
+			System.out.println("Hand 3 Card " + (i+1) + ": " + theDeck.hand3[i].value + theDeck.hand3[i].suit);
+			System.out.println("Hand 4 Card " + (i+1) + ": " + theDeck.hand4[i].value + theDeck.hand4[i].suit);
+		}
+		
+		//print the discard pile after the deal
+		System.out.println("And the crescendo");
+		for(int i=0; i<4; i+=1){
+			System.out.println("Discard Card " + (i+1) + ": " + theDeck.discard[i].value + theDeck.discard[i].suit);
+		}
+		
+	}
+	
+}//EOC
