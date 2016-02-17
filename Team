@@ -1,0 +1,17 @@
+/*
+ * @author Hal M. Hattis
+ * 
+ * @course TSP CS3141 
+ * 
+ * @class "Team" - Euchre component
+ * 
+ * @SuperClass to Player
+ */
+public class Team {
+	
+	//class variables
+	Player[] players;
+	int score;
+	int tricks;
+	
+}//EOC
