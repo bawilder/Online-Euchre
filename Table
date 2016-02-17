@@ -1,0 +1,15 @@
+/*
+ * @author Hal M. Hattis
+ * 
+ * @course TSP CS3141 
+ * 
+ * @class "Table" - Euchre component
+ */
+public class Table {
+	
+	//class variables
+	Player[] players;
+	Team team1, team2;
+	int playerDealing;
+	
+}//EOC
