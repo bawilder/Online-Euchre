@@ -1,0 +1,55 @@
+/*
+ * @author Hal M. Hattis
+ * 
+ * @course TSP CS3141 
+ * 
+ * @class "Player" - Euchre component
+ */
+public class Player {
+	
+	//class variables
+	int tricks;
+	Card[] hand;
+	Player partner;
+	Boolean dealer;
+	
+	/*
+	 * Method to help a player handle playing a card
+	 * @return void for now
+	 * @param Card card, the card to be played
+	 */
+	public void playCard(Card card){
+		
+	}
+	
+	/*
+	 * Method to help player handle picking up trump card
+	 * @return void for now
+	 * @param Card card, the card to discard
+	 */
+	public void discard(Card card){
+		
+	}
+	
+	/*
+	 * Method to allow player to call trump
+	 * Possibly add an exception case here
+	 * @param char suit, the suit to call as trump
+	 * @return char, the suit called by the player
+	 */
+	public char callTrump(char suit){
+		if (suit==0){
+			return ' ';
+		}
+		if(suit>4){
+			System.out.println("Invalid suit!");
+			return ' ';
+		}
+		else{
+			return suit;
+		}
+	}
+	
+	
+	
+}//EOC
