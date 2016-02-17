@@ -1,0 +1,14 @@
+/*
+ * @author Hal M. Hattis
+ * 
+ * @course TSP CS3141 
+ * 
+ * @class "EuchreGame" - Euchre headclass
+ */
+public class EuchreGame {
+	
+	//class variables
+	Team winner;
+	
+	
+}//EOC
