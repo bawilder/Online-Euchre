@@ -11,7 +11,28 @@ public class Team {
 	
 	//class variables
 	Player[] players;
+	boolean winner;
 	int score;
 	int tricks;
+	
+	//constructor for Team
+	public Team(){
+		players= new Player[2];
+		winner=false;
+		score=0;
+		tricks=0;
+	}
+	
+	/*
+	 * method to increment score for team
+	 * method also detemines if team won on score
+	 * @param int points: points scored
+	 */
+	public void teamScored(int points){
+		score+= points;
+		if(score>=10){
+			winner=true;
+		}
+	}
 	
 }//EOC
