@@ -11,5 +11,31 @@ public class Table {
 	Player[] players;
 	Team team1, team2;
 	int playerDealing;
+	int playerTurn;
+	
+	public Table(){
+		players= new Player[4];
+		
+	}
+	
+	public void rotateDealer(){
+		if(playerDealing<4){
+			playerDealing+=1;
+		}
+		
+		else{
+			playerDealing=1;
+		}
+	}
+	
+	public void rotateTurn(){
+		if(playerTurn<4){
+			playerTurn+=1;
+		}
+		
+		else{
+			playerTurn=1;
+		}
+	}
 	
 }//EOC
