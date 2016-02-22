@@ -14,13 +14,19 @@ public class Team {
 	boolean winner;
 	int score;
 	int tricks;
+	boolean gotEuchd;
+	boolean calledTrump;
 	
 	//constructor for Team
-	public Team(){
+	public Team(Player teammate1, Player teammate2){
 		players= new Player[2];
+		players[0]= teammate1;
+		players[1]= teammate2;
 		winner=false;
 		score=0;
 		tricks=0;
+		gotEuchd= false;
+		calledTrump=false;
 	}
 	
 	/*
@@ -33,6 +39,14 @@ public class Team {
 		if(score>=10){
 			winner=true;
 		}
+	}
+	
+	public int getScore(){
+		return score;
+	}
+	
+	public int getTricks(){
+		return (players[0].tricks + players[1].tricks);
 	}
 	
 }//EOC
