@@ -13,40 +13,54 @@ public class Player {
 	Player partner;
 	Boolean dealer;
 	
+	//possible utility for going alone
+	boolean alone;
+	boolean partnerAlone;
+	
 	/*
 	 * Method to help a player handle playing a card
 	 * @return void for now
 	 * @param Card card, the card to be played
 	 */
-	public void playCard(Card card){
+	public Card playCard(int cardToPlay){
 		
+		//if they play an invalid card
+		if(cardToPlay<1 || cardToPlay>5 || hand[cardToPlay]==null){
+			//throw exception maybe?
+			return null;
+		}
+		
+		Card returnCard= hand[cardToPlay];
+		hand[cardToPlay]= null;
+		return returnCard;
 	}
 	
 	/*
 	 * Method to help player handle picking up trump card
-	 * @return void for now
-	 * @param Card card, the card to discard
+	 * @return Card dropDard, the card to drop
+	 * @param int cardToDrop, the position of the card to discard
+	 * @param Card trumpCard, the card being picking up to call trump
 	 */
-	public void discard(Card card){
+	public Card pickUpTrump(int cardToDrop, Card trumpCard){
+		
+		if(cardToDrop<1 || cardToDrop>5 || hand[cardToDrop]==null){
+			//throw exception maybe?
+			return null;
+		}
+		
+		Card dropCard= hand[cardToDrop];
+		hand[cardToDrop]= trumpCard;
+		return dropCard;
 		
 	}
 	
-	/*
-	 * Method to allow player to call trump
-	 * Possibly add an exception case here
-	 * @param char suit, the suit to call as trump
-	 * @return char, the suit called by the player
-	 */
-	public char callTrump(char suit){
-		if (suit==0){
-			return ' ';
-		}
-		if(suit>4){
-			System.out.println("Invalid suit!");
-			return ' ';
-		}
-		else{
-			return suit;
+	public void landedTrick(){
+		tricks+=1;
+	}
+	
+	public void showHand(){
+		for(int i=0; i<5; i+=1){
+			System.out.println(hand[i].face + " " + hand[i].suit);
 		}
 	}
 	
