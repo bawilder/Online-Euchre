@@ -105,7 +105,7 @@ public class Deck {
 	public void shuffle(){
 		
 		//randomly pull cards out of the array to swap around the deck
-		for(int i=0; i<100; i+=1){
+		for(int i=0; i<50; i+=1){
 			//create a dummy card to work for swapping
 			Card tempCard;
 			
