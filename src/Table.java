@@ -32,22 +32,22 @@ public class Table {
 	}
 	
 	public void rotateDealer(){
-		if(playerDealing<4){
+		if(playerDealing<3){
 			playerDealing+=1;
 		}
 		
 		else{
-			playerDealing=1;
+			playerDealing=0;
 		}
 	}
 	
 	public void rotateTurn(){
-		if(playerTurn<4){
+		if(playerTurn<3){
 			playerTurn+=1;
 		}
 		
 		else{
-			playerTurn=1;
+			playerTurn=0;
 		}
 	}
 	
