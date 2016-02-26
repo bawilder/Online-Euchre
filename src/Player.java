@@ -25,13 +25,21 @@ public class Player {
 	public Card playCard(int cardToPlay){
 		
 		//if they play an invalid card
-		if(cardToPlay<1 || cardToPlay>5 || hand[cardToPlay]==null){
+		if(cardToPlay<0 || cardToPlay>4 || hand[cardToPlay]==null){
 			//throw exception maybe?
 			return null;
 		}
 		
 		Card returnCard= hand[cardToPlay];
 		hand[cardToPlay]= null;
+		
+		for(int i = 0; i<4; i+=1){
+			if(hand[i]==null){
+				hand[i]= hand[i+1];
+				hand[i+1] = null;
+			}
+		}
+		
 		return returnCard;
 	}
 	
@@ -43,7 +51,7 @@ public class Player {
 	 */
 	public Card pickUpTrump(int cardToDrop, Card trumpCard){
 		
-		if(cardToDrop<1 || cardToDrop>5 || hand[cardToDrop]==null){
+		if(cardToDrop<0 || cardToDrop>4 || hand[cardToDrop]==null){
 			//throw exception maybe?
 			return null;
 		}
@@ -58,9 +66,18 @@ public class Player {
 		tricks+=1;
 	}
 	
+	public void clearTricks(){
+		tricks=0;
+	}
+	
 	public void showHand(){
-		for(int i=0; i<5; i+=1){
-			System.out.println(hand[i].face + " " + hand[i].suit);
+		for(Card card: hand){
+			if(card==null){
+				
+			}
+			else{
+				System.out.println(card.face + " " + card.suit);
+			}
 		}
 	}
 	
