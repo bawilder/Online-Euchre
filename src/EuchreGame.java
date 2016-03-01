@@ -94,10 +94,10 @@ public class EuchreGame {
 		
 		table.players[playerOfCard].tricks+=1;
 		
-		if(playerOfCard<2){
+		if(playerOfCard==0 || playerOfCard==2){
 			table.team1.tricks+=1;
 		}
-		if(playerOfCard>1){
+		if(playerOfCard==1 || playerOfCard==3){
 			table.team2.tricks+=1;
 		}
 		
