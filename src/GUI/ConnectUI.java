@@ -17,6 +17,8 @@ public class ConnectUI extends Frame{
 	private Button bttnConnect = new Button("Connect");
 	private Button bttnCreate = new Button("Create Server");
 	private Button bttnCancel = new Button("Cancel");
+	private int portNum;
+	private int serverNum;
 	
 	ConnectUI(){
 		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
@@ -56,8 +58,7 @@ public class ConnectUI extends Frame{
 		bttnConnect.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-            	int portNum;
-            	int serverNum;
+            	
             	
             	if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
             		serverNum = Integer.parseInt(tfPortNum.getText());
