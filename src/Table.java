@@ -40,7 +40,7 @@ public class Table {
 			boolean containsTrump= false;
 			Card tempCard;
 			//check to see if this table set contains a trump card
-			for(int i=0; i<3; i+=1){
+			for(int i=0; i<4; i+=1){
 				tempCard= tableCards[i];
 				if (tempCard.suit== trump || (tempCard.suit==trumpPartner && tempCard.face== 'J')){
 					containsTrump=true;
@@ -51,7 +51,7 @@ public class Table {
 			//so because we already know if the table contains trump, we can 
 			//decide based on that which form of evaluation to use for the tables cards
 			if (containsTrump){
-			    for(int i=0; i<3; i+=1){
+			    for(int i=0; i<4; i+=1){
 			    	tempCard= tableCards[i];
 			    	//evaluate with Bowers    
 			    	if(tempCard.face == 'J' || maxCard.face == 'J'){
@@ -106,7 +106,7 @@ public class Table {
 				
 				char suitToFollow= tableCards[0].suit;
 				maxCard= tableCards[0];
-				for(int i=0; i<3; i+=1){
+				for(int i=0; i<4; i+=1){
 					tempCard= tableCards[i];
 					
 					if(tempCard.suit == suitToFollow){
