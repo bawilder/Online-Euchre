@@ -19,11 +19,11 @@ public class Client {
 	private ImageIcon imagep3;
 	private ImageIcon imagep4;
 	
-	private int card1Num = 1;
-	private int card2Num = 2;
-	private int card3Num = 3;
-	private int card4Num = 4;
-	private int card5Num = 5;
+	private int card1Num = 21;
+	private int card2Num = 22;
+	private int card3Num = 23;
+	private int card4Num = 1;
+	private int card5Num = 9;
 	
 	private ImageIcon card1 = new ImageIcon ();
 	private ImageIcon card2 = new ImageIcon ();
@@ -134,7 +134,7 @@ public class Client {
 		lblPlayer2.setBounds(181, 188, 250, 23);
 		frame.getContentPane().add(lblPlayer2);
 		
-		//pickCards();
+		pickCards();
 		drawCards();
 
 	}
@@ -188,6 +188,11 @@ public class Client {
 		}
 	}
 	
+	/**
+	 * After client recieves intial packet with all players cards, this is load the correct images into the 
+	 * players hand
+	 * 
+	 */
 	private void pickCards () {
 		
 		ImageIcon temp = null;
@@ -208,53 +213,53 @@ public class Client {
 			
 			switch (tempCardNo) {
 			
-			//case 0 : Image clubs = new Image(new );
-				//break;
-			case 1 : temp = new ImageIcon(getClass().getResource("10_of_spades.png"));
+			case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades.png"));;
 				break;
-			case 2 : temp = new ImageIcon(getClass().getResource("jack_of_spades.png"));
+			case 1 : temp = new ImageIcon(getClass().getResource("/10_of_spades.png"));
 				break;
-			case 3 : temp = new ImageIcon(getClass().getResource("queen_of_spades.png"));
+			case 2 : temp = new ImageIcon(getClass().getResource("/jack_of_spades.png"));
 				break;
-			case 4 : temp = new ImageIcon(getClass().getResource("king_of_spades.png"));
+			case 3 : temp = new ImageIcon(getClass().getResource("/queen_of_spades.png"));
 				break;
-			case 5 : temp = new ImageIcon(getClass().getResource("ace_of_spades.png"));
+			case 4 : temp = new ImageIcon(getClass().getResource("/king_of_spades.png"));
 				break;
-			case 6 : temp = new ImageIcon(getClass().getResource("9_of_hearts.png"));
+			case 5 : temp = new ImageIcon(getClass().getResource("/ace_of_spades.png"));
 				break;
-			case 7 : temp = new ImageIcon(getClass().getResource("10_of_hearts.png"));
+			case 6 : temp = new ImageIcon(getClass().getResource("/9_of_hearts.png"));
 				break;
-			case 8 : temp = new ImageIcon(getClass().getResource("jack_of_hearts.png"));
+			case 7 : temp = new ImageIcon(getClass().getResource("/10_of_hearts.png"));
 				break;
-			case 9 : temp = new ImageIcon(getClass().getResource("queen_of_hearts.png"));
+			case 8 : temp = new ImageIcon(getClass().getResource("/jack_of_hearts.png"));
 				break;
-			case 10 : temp = new ImageIcon(getClass().getResource("king_of_hearts.png"));
+			case 9 : temp = new ImageIcon(getClass().getResource("/queen_of_hearts.png"));
 				break;
-			case 11 : temp = new ImageIcon(getClass().getResource("ace_of_hearts.png.png"));
+			case 10 : temp = new ImageIcon(getClass().getResource("/king_of_hearts.png"));
 				break;
-			case 12 : temp = new ImageIcon(getClass().getResource("9_of_clubs.png"));
+			case 11 : temp = new ImageIcon(getClass().getResource("/ace_of_hearts.png"));
 				break;
-			case 13 : temp = new ImageIcon(getClass().getResource("10_of_clubs.png"));
+			case 12 : temp = new ImageIcon(getClass().getResource("/9_of_clubs.png"));
 				break;
-			case 14 : temp = new ImageIcon(getClass().getResource("jack_of_clubs.png"));
+			case 13 : temp = new ImageIcon(getClass().getResource("/10_of_clubs.png"));
 				break;
-			case 15 : temp = new ImageIcon(getClass().getResource("queen_of_clubs.png"));
+			case 14 : temp = new ImageIcon(getClass().getResource("/jack_of_clubs.png"));
 				break;
-			case 16 : temp = new ImageIcon(getClass().getResource("king_of_clubs.png"));
+			case 15 : temp = new ImageIcon(getClass().getResource("/queen_of_clubs.png"));
 				break;
-			case 17 : temp = new ImageIcon(getClass().getResource("ace_of_clubs.png"));
+			case 16 : temp = new ImageIcon(getClass().getResource("/king_of_clubs.png"));
 				break;
-			case 18 : temp = new ImageIcon(getClass().getResource("9_of_diamonds.png"));
+			case 17 : temp = new ImageIcon(getClass().getResource("/ace_of_clubs.png"));
 				break;
-			case 19 : temp = new ImageIcon(getClass().getResource("10_of_diamonds.png"));
+			case 18 : temp = new ImageIcon(getClass().getResource("/9_of_diamonds.png"));
 				break;
-			case 20 : temp = new ImageIcon(getClass().getResource("jack_of_diamonds.png"));
+			case 19 : temp = new ImageIcon(getClass().getResource("/10_of_diamonds.png"));
 				break;
-			case 21 : temp = new ImageIcon(getClass().getResource("queen_of_diamonds.png"));
+			case 20 : temp = new ImageIcon(getClass().getResource("/jack_of_diamonds.png"));
 				break;
-			case 22 : temp = new ImageIcon(getClass().getResource("king_of_diamonds.png"));
+			case 21 : temp = new ImageIcon(getClass().getResource("/queen_of_diamonds.png"));
 				break;
-			case 23 : temp = new ImageIcon(getClass().getResource("ace_of_diamonds.png"));
+			case 22 : temp = new ImageIcon(getClass().getResource("/king_of_diamonds.png"));
+				break;
+			case 23 : temp = new ImageIcon(getClass().getResource("/ace_of_diamonds.png"));
 				break;
 				default : System.out.println("Fatal Error");
 			}
