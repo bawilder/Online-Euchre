@@ -19,7 +19,36 @@
  * 7 - Set Trump Values		(host -> client)
  * 8 - Score Update/Deal	(host -> client)
  * 9 - Initialize Game		(host -> client)
+ * 
+ * The integer values of the cards are as follows:
+ * 0  - 9 of Spades
+ * 1  - 10 of Spades
+ * 2  - Jack of Spades
+ * 3  - Queen of Spades
+ * 4  - Kind of Spades
+ * 5  - Ace of Spades
+ * 6  - Nine of Hearts
+ * 7  - Ten of Hearts
+ * 8  - Jack of Hearts
+ * 9  - Queen of Hearts
+ * 10 - King of Hearts
+ * 11 - Ace of Hearts
+ * 12 - Nine of Clubs
+ * 13 - Ten of Clubs
+ * 14 - Jack of Clubs
+ * 15 - Queen of Clubs 
+ * 16 - King of Clubs
+ * 17 - Ace of Clubs
+ * 18 - Nine of Diamonds
+ * 19 - Ten of Diamonds
+ * 20 - Jack of Diamonds
+ * 21 - Card QD = Queen of Diamonds
+ * 22 - Card KD = King of Diamonds
+ * 23 - Card AD = Ace of Diamonds
+ * *  - Card has yet to be played
  */
+
+
 
 public class Packet {
 	/**
