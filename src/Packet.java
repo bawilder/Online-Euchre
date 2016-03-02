@@ -1,3 +1,26 @@
+/**
+ * 
+ * @author Tanner Howell
+ * @emotionalSupport Brian Wilder
+ * @incessantNagging Zach Dunham
+ * 
+ * 
+ * This is the class where all of the packets are assembled. Packets are distinguished by
+ * + an integer value at the start of the packet.
+ * 
+ * The integer values are as follows:
+ * 0 - Illegal Move/Error	(host -> client)
+ * 1 - Refresh Board 		(host -> client)
+ * 2 - Play Card			(client -> host)
+ * 3 - TBD
+ * 4 - TBD
+ * 5 - TBD
+ * 6 - TBD
+ * 7 - Set Trump Values		(host -> client)
+ * 8 - Score Update/Deal	(host -> client)
+ * 9 - Initialize Game		(host -> client)
+ */
+
 public class Packet {
 	/**
 	 * Assembles an initialize packet, sent at start of game
@@ -13,17 +36,14 @@ public class Packet {
 		
 		packet = packet.concat(Integer.toString(dealFlag) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
 		for(int i = 0; i < hand.length; i ++)
-			packet = packet.concat(Integer.toString(hand[i]) + ",");
+			if(i < 3)
+				packet = packet.concat(Integer.toString(hand[i]) + ",");
+			else
+				packet = packet.concat(Integer.toString(hand[i]));
 		
 		return packet;
 	}
-	/*
-	public String legalPacket() {
-		
-		return "unfinished";
-	}
-	*/
-	
+
 	/**
 	 * A packet that is used when a card is played
 	 * @param cardVal - the value of the card being played
@@ -46,19 +66,37 @@ public class Packet {
 	public String trumpPacket(int minTrump, int maxTrump, int leftBauer) {
 		String packet = "7,";
 		
-		packet = packet.concat(Integer.toString(minTrump) + "," + Integer.toString(maxTrump) + "," + Integer.toString(leftBauer));
+		//convert the integers to strings and append them to the packet
+		packet = packet.concat(Integer.toString(minTrump) + ",");
+		packet = packet.concat(Integer.toString(maxTrump) + ",");
+		packet = packet.concat(Integer.toString(leftBauer));
 		
 		return packet;
 	}
 	
 	/**
 	 * A packet that is sent to update the scores
+	 * @param team1Score - the current score of team1
+	 * @param team2Score - the current score of team2
+	 * @param newHand - an array of new cards for the player
 	 * @return - Packet
 	 */
-	//TODO: write this packet function
-	public String scorePacket() {
+	public String newHandPacket(int team1Score, int team2Score, int[] newHand) {
+		String packet = "8,";
 		
-		return "unfinished";
+		//append team 1's score
+		packet = packet.concat(Integer.toString(team1Score) + ",");
+		//append team 2's score
+		packet = packet.concat(Integer.toString(team2Score) + ",");
+		//append the new hand
+		for(int i = 0; i < newHand.length; i++)
+			if(i < 3)
+				packet = packet.concat(Integer.toString(newHand[i]) + ",");
+			else
+				packet = packet.concat(Integer.toString(newHand[i]));
+		
+		//return the packet for sending
+		return packet;
 	}
 	
 	/**
@@ -70,10 +108,23 @@ public class Packet {
 	 * @param p4Count - The number of cards in Player 4's hand
 	 * @return - An assembled packet
 	 */
-	//TODO
 	public String refreshPacket(int[] table, int p1Count, int p2Count, int p3Count, int p4Count) {
+		String packet = "1,";
 		
-		return "unfinished";
+		for (int i = 0; i < 4; i++)
+			if (i<3)
+				packet = packet.concat(Integer.toString(table[i]) + ",");
+			else
+				packet = packet.concat(Integer.toString(table[i]));
+			
+		//Append the scores
+		packet = packet.concat(Integer.toString(p1Count) + ",");
+		packet = packet.concat(Integer.toString(p2Count) + ",");
+		packet = packet.concat(Integer.toString(p3Count) + ",");
+		packet = packet.concat(Integer.toString(p4Count) + ",");
+		
+		//return the packet
+		return packet;
 	}
 	
 	/**
@@ -81,6 +132,10 @@ public class Packet {
 	 * (playing out of turn, playing the wrong suit)
 	 * @param message - A string to let player know what they did wrong
 	 * @return - packet
+	 * 9 Spades - 
+	 * 9 Clubs - 
+	 * 9 Hearts -
+	 * 9 Diamonds - 
 	 */
 	public String illegalPacket(String message) {
 		String packet = "0,";
@@ -88,21 +143,6 @@ public class Packet {
 		packet = packet.concat(message + ",");
 		
 		return packet;
-	}
-	
-	
-	//TODO
-	public int[] initHand(String packet)
-	{
-		int[] hand = new int[3];
-		return hand;
-	}
-	//TODO
-	public String initPackNames(String packet)
-	{
-		String playerNames = "";
-		
-		return playerNames;
 	}
 }
 
