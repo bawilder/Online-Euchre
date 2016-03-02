@@ -8,20 +8,40 @@ import javax.swing.*;
 
 
 public class Client {
-	private String playerName = ConnectUI.name;
+	private String player1Name = ConnectUI.name;
+	private String player2Name = "";
+	private String player3Name = "";
+	private String player4Name = "";
+	
 	private int turnNo = 5;
+	
 	private ImageIcon imagep2;
 	private ImageIcon imagep3;
 	private ImageIcon imagep4;
+	
+	private int card1Num = 1;
+	private int card2Num = 2;
+	private int card3Num = 3;
+	private int card4Num = 4;
+	private int card5Num = 5;
+	
+	private ImageIcon card1 = new ImageIcon ();
+	private ImageIcon card2 = new ImageIcon ();
+	private ImageIcon card3 = new ImageIcon ();
+	private ImageIcon card4 = new ImageIcon ();
+	private ImageIcon card5 = new ImageIcon ();
+	
 	private JFrame frame;
+	
+	private final JPanel player1 = new JPanel();
 	private final JPanel player2 = new JPanel();
 	private final JPanel player3 = new JPanel();
 	private final JPanel player4 = new JPanel();
-	private final JPanel player1 = new JPanel();
-	private JLabel lblPlayer1 = new JLabel("Player1");
-	private JLabel lblPlayer2 = new JLabel("Player2");
-	private JLabel lblPlayer3 = new JLabel("Player3");
-	private JLabel lblPlayer4 = new JLabel("Player4");
+	
+	private JLabel lblPlayer1 = new JLabel("");
+	private JLabel lblPlayer2 = new JLabel("");
+	private JLabel lblPlayer3 = new JLabel("");
+	private JLabel lblPlayer4 = new JLabel("");
 
 	/**
 	 * Launch the application.
@@ -54,6 +74,7 @@ public class Client {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
 		frame.setSize(1250, 900);
@@ -112,6 +133,8 @@ public class Client {
 		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblPlayer2.setBounds(181, 188, 250, 23);
 		frame.getContentPane().add(lblPlayer2);
+		
+		//pickCards();
 		drawCards();
 
 	}
@@ -123,7 +146,17 @@ public class Client {
 				player1.setLayout(new GridLayout(0, turnNo, 0, 0));
 				for (int j = 0; j < turnNo; j++) { // draw the right number of cards
 					JLabel temp = new JLabel("");
-					temp.setIcon(imagep3);
+					if ( j == 0 ) { 
+						temp.setIcon(card1);
+					} else if ( j == 1) {
+						temp.setIcon(card2);
+					} else if ( j == 2) {
+						temp.setIcon(card3);
+					} else if ( j == 3) {
+						temp.setIcon(card4);
+					} else if ( j == 4) {
+						temp.setIcon(card5);
+					}
 					player1.add(temp);
 				}
 				break;
@@ -151,6 +184,91 @@ public class Client {
 					player4.add(temp);
 				}
 				break;
+			}
+		}
+	}
+	
+	private void pickCards () {
+		
+		ImageIcon temp = null;
+		int tempCardNo = -1;
+		
+		for(int i = 0; i < 5; i++){ //Get the images for each card
+			if (i == 0){
+				tempCardNo = card1Num;
+			} else if (i == 1) {
+				tempCardNo = card2Num;
+			} else if (i == 2) {
+				tempCardNo = card3Num;
+			} else if (i == 3) {
+				tempCardNo = card4Num;
+			} else if (i == 4) {
+				tempCardNo = card5Num;
+			}
+			
+			switch (tempCardNo) {
+			
+			//case 0 : Image clubs = new Image(new );
+				//break;
+			case 1 : temp = new ImageIcon(getClass().getResource("10_of_spades.png"));
+				break;
+			case 2 : temp = new ImageIcon(getClass().getResource("jack_of_spades.png"));
+				break;
+			case 3 : temp = new ImageIcon(getClass().getResource("queen_of_spades.png"));
+				break;
+			case 4 : temp = new ImageIcon(getClass().getResource("king_of_spades.png"));
+				break;
+			case 5 : temp = new ImageIcon(getClass().getResource("ace_of_spades.png"));
+				break;
+			case 6 : temp = new ImageIcon(getClass().getResource("9_of_hearts.png"));
+				break;
+			case 7 : temp = new ImageIcon(getClass().getResource("10_of_hearts.png"));
+				break;
+			case 8 : temp = new ImageIcon(getClass().getResource("jack_of_hearts.png"));
+				break;
+			case 9 : temp = new ImageIcon(getClass().getResource("queen_of_hearts.png"));
+				break;
+			case 10 : temp = new ImageIcon(getClass().getResource("king_of_hearts.png"));
+				break;
+			case 11 : temp = new ImageIcon(getClass().getResource("ace_of_hearts.png.png"));
+				break;
+			case 12 : temp = new ImageIcon(getClass().getResource("9_of_clubs.png"));
+				break;
+			case 13 : temp = new ImageIcon(getClass().getResource("10_of_clubs.png"));
+				break;
+			case 14 : temp = new ImageIcon(getClass().getResource("jack_of_clubs.png"));
+				break;
+			case 15 : temp = new ImageIcon(getClass().getResource("queen_of_clubs.png"));
+				break;
+			case 16 : temp = new ImageIcon(getClass().getResource("king_of_clubs.png"));
+				break;
+			case 17 : temp = new ImageIcon(getClass().getResource("ace_of_clubs.png"));
+				break;
+			case 18 : temp = new ImageIcon(getClass().getResource("9_of_diamonds.png"));
+				break;
+			case 19 : temp = new ImageIcon(getClass().getResource("10_of_diamonds.png"));
+				break;
+			case 20 : temp = new ImageIcon(getClass().getResource("jack_of_diamonds.png"));
+				break;
+			case 21 : temp = new ImageIcon(getClass().getResource("queen_of_diamonds.png"));
+				break;
+			case 22 : temp = new ImageIcon(getClass().getResource("king_of_diamonds.png"));
+				break;
+			case 23 : temp = new ImageIcon(getClass().getResource("ace_of_diamonds.png"));
+				break;
+				default : System.out.println("Fatal Error");
+			}
+			
+			if (i == 0){
+				card1 = temp;
+			} else if (i == 1) {
+				card2 = temp;
+			} else if (i == 2) {
+				card3 = temp;
+			} else if (i == 3) {
+				card4 = temp;
+			} else if (i == 4) {
+				card5 = temp;
 			}
 		}
 	}
