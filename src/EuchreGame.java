@@ -54,8 +54,13 @@ public class EuchreGame {
 		table.players[1].showHand();
 		int card2 = in.nextInt()-1;
 		
+<<<<<<< Updated upstream
 		while( card2 < 0 || card2 > 4|| table.players[1].hand[card2] == null){
 			System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
+=======
+		while(card2 < 0 || card2 > 4 || table.players[1].hand[card2] == null){
+			System.out.println("Invalid card, try again... (That card isn't in your hand)");
+>>>>>>> Stashed changes
 			card2= in.nextInt()-1;
 		}
 		
