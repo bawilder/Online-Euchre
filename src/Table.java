@@ -33,7 +33,7 @@ public class Table {
 		team2= new Team(players[1], players[3]);
 	}
 	
-	//give to Hal
+	//suffering form an off by one error thats stopping player 4 from winning tricks
 		public int evalCards() {
 			Card maxCard= new Card('B',0,'B');
 			int playerOfCard=0;
