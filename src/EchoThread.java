@@ -1,6 +1,15 @@
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * 
+ * @author Tanner Howell
+ * @author Brian Wilder
+ * 
+ * This is a thread that runs the actual print and write buffers for each
+ * +client and server
+ *
+ */
 public class EchoThread extends Thread {
 	protected Socket socket;
 	private int playerNo;
@@ -14,7 +23,6 @@ public class EchoThread extends Thread {
 		this.out = null;
 	}
 
-	//TODO: Parsing
 	//TODO: Needs to know which player it is
 	public void run(int playerNo) {
 		//BufferedReader in = null;
@@ -41,10 +49,6 @@ public class EchoThread extends Thread {
                 if ((line == null) || line.equalsIgnoreCase("TERM")) {
                     socket.close();
                     return;
-                } else {
-                    out.write(line + "\n\r");
-                    out.flush();
-                	//TODO: Update board
                 }*/
 
 			} catch (IOException e) {
@@ -53,12 +57,33 @@ public class EchoThread extends Thread {
 			}
 		}
 	}
-	
-	public void sendPacket(String myPacket) throws IOException{
-		out.write(myPacket);
+
+	/**
+	 * A function that sends a packet over the printbuffer
+	 * @param myPacket - the packet to be send
+	 */
+	public void sendPacket(String myPacket){
+		boolean errInWrite = true;
+		while(errInWrite == true)
+		{
+			try{
+				out.flush();
+				//TODO: Notify the client might not be needed, check into this
+				out.notify();    //Might not be needed 
+				out.println(myPacket);
+				errInWrite = out.checkError();
+			}
+			catch(Exception e){
+				System.out.println(e);
+			}
+		}
 		return;
 	}
-	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public String receivePacket(){
 		String rcvPack = "";
 		while(rcvPack.equals(null)){
