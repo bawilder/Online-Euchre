@@ -53,6 +53,9 @@
 public class Packet {
 	/**
 	 * Assembles an initialize packet, sent at start of game
+	 * Packet Layout:
+	 * 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5
+	 * 
 	 * @param dealFlag - A flag that is set when someone is the dealer
 	 * @param p2Nam - Player 2 name
 	 * @param p3Nam - Player 3 name
@@ -75,6 +78,8 @@ public class Packet {
 
 	/**
 	 * A packet that is used when a card is played
+	 * Packet Layout:
+	 * 		2,cardVal
 	 * @param cardVal - the value of the card being played
 	 * @return - an assembled packet
 	 */
@@ -87,6 +92,9 @@ public class Packet {
 	
 	/**
 	 * A packet that is used to set trump values
+	 * Packet Layout:
+	 * 		7,minTrump,maxTrump,leftBaur
+	 * 
 	 * @param minTrump - the minimum value of trump
 	 * @param maxTrump
 	 * @param leftBauer
@@ -105,6 +113,9 @@ public class Packet {
 	
 	/**
 	 * A packet that is sent to update the scores
+	 * PacketLayout:
+	 * 		8,team1Score,team2Score,card1,card2,card3,card4,card5
+	 * 
 	 * @param team1Score - the current score of team1
 	 * @param team2Score - the current score of team2
 	 * @param newHand - an array of new cards for the player
@@ -130,6 +141,9 @@ public class Packet {
 	
 	/**
 	 * A packet that is sent by the host to update the board to all of the clients
+	 * Packet Layout;
+	 * 		1,card1||*,card2||*,card3||*,card4||*,p1Count,p2Count,p3Count,p4Count
+	 * 
 	 * @param table - The cards currently on the table
 	 * @param p1Count - The number of cards in Player 1's hand
 	 * @param p2Count - The number of cards in Player 2's hand
@@ -159,12 +173,11 @@ public class Packet {
 	/**
 	 * A packet sent from the host to the client when the client makes an illegal move
 	 * (playing out of turn, playing the wrong suit)
+	 * Packet Layout:
+	 * 		0,message
+	 * 
 	 * @param message - A string to let player know what they did wrong
-	 * @return - packet
-	 * 9 Spades - 
-	 * 9 Clubs - 
-	 * 9 Hearts -
-	 * 9 Diamonds - 
+	 * @return - packet 
 	 */
 	public String illegalPacket(String message) {
 		String packet = "0,";

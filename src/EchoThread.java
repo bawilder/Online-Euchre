@@ -1,5 +1,8 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 
@@ -25,8 +28,6 @@ public class EchoThread extends Thread {
 
 	//TODO: Needs to know which player it is
 	public void run(int playerNo) {
-		//BufferedReader in = null;
-		//PrintWriter out = null;
 		String line;
 		try {
 			// Buffer for reading in
@@ -41,19 +42,17 @@ public class EchoThread extends Thread {
 
 		while (true) {
 			try {
-
+				String pack = "";
+				int cardPlayed = -1;
 				if(in.ready() == true){
-					String pack = receivePacket();
+					pack = receivePacket();
 				}
-				/*line = in.readLine();
-                if ((line == null) || line.equalsIgnoreCase("TERM")) {
-                    socket.close();
-                    return;
-                }*/
+				if(pack.length() > 0 && pack.toCharArray()[0] == '2'){
+					cardPlayed = parseCardPacket(pack);
+				}
 
 			} catch (IOException e) {
 				System.out.println(e);
-				return;
 			}
 		}
 	}
@@ -94,5 +93,13 @@ public class EchoThread extends Thread {
 			}
 		}
 		return rcvPack;
+	}
+	
+	public int parseCardPacket(String packet){
+		int cardNo = -1;
+		List<String> list = new ArrayList<String>(Arrays.asList(packet.split(",")));
+		
+		
+		return cardNo;
 	}
 }
