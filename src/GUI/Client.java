@@ -108,13 +108,6 @@ public class Client {
 		JButton btnPickUp = new JButton("Pick Up");
 		btnPickUp.setBounds(1025, 818, 100, 32);
 		frame.getContentPane().add(btnPickUp);
-		
-		JCheckBox chckbxAlone = new JCheckBox("Alone");
-		chckbxAlone.setForeground(Color.WHITE);
-		chckbxAlone.setBackground(Color.DARK_GRAY);
-		chckbxAlone.setHorizontalAlignment(SwingConstants.CENTER);
-		chckbxAlone.setBounds(1135, 788, 93, 23);
-		frame.getContentPane().add(chckbxAlone);
 		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		lblPlayer1.setForeground(Color.WHITE);
@@ -138,6 +131,64 @@ public class Client {
 		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblPlayer2.setBounds(181, 424, 250, 23);
 		frame.getContentPane().add(lblPlayer2);
+		
+		JLabel lblYourTeam = new JLabel("Your Team:");
+		lblYourTeam.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblYourTeam.setForeground(Color.WHITE);
+		lblYourTeam.setBounds(10, 789, 100, 23);
+		frame.getContentPane().add(lblYourTeam);
+		
+		JLabel lblOpponents = new JLabel("Opponents:");
+		lblOpponents.setForeground(Color.WHITE);
+		lblOpponents.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblOpponents.setBounds(10, 827, 100, 23);
+		frame.getContentPane().add(lblOpponents);
+		
+		JLabel lblTricks = new JLabel("Tricks");
+		lblTricks.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTricks.setForeground(Color.WHITE);
+		lblTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblTricks.setBounds(99, 754, 100, 23);
+		frame.getContentPane().add(lblTricks);
+		
+		JLabel lblScore = new JLabel("Score");
+		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblScore.setForeground(Color.WHITE);
+		lblScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblScore.setBounds(194, 754, 100, 23);
+		frame.getContentPane().add(lblScore);
+		
+		JLabel yourTeamTricks = new JLabel("0");
+		yourTeamTricks.setHorizontalAlignment(SwingConstants.CENTER);
+		yourTeamTricks.setForeground(Color.WHITE);
+		yourTeamTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		yourTeamTricks.setBounds(99, 788, 100, 23);
+		frame.getContentPane().add(yourTeamTricks);
+		
+		JLabel yourTeamScore = new JLabel("0");
+		yourTeamScore.setHorizontalAlignment(SwingConstants.CENTER);
+		yourTeamScore.setForeground(Color.WHITE);
+		yourTeamScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		yourTeamScore.setBounds(194, 788, 100, 23);
+		frame.getContentPane().add(yourTeamScore);
+		
+		JLabel oppoTricks = new JLabel("0");
+		oppoTricks.setHorizontalAlignment(SwingConstants.CENTER);
+		oppoTricks.setForeground(Color.WHITE);
+		oppoTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		oppoTricks.setBounds(99, 827, 100, 23);
+		frame.getContentPane().add(oppoTricks);
+		
+		JLabel oppoScore = new JLabel("0");
+		oppoScore.setHorizontalAlignment(SwingConstants.CENTER);
+		oppoScore.setForeground(Color.WHITE);
+		oppoScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		oppoScore.setBounds(194, 827, 100, 23);
+		frame.getContentPane().add(oppoScore);
+		
+		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
+		btnPickupAndGo.setBounds(1025, 789, 200, 23);
+		frame.getContentPane().add(btnPickupAndGo);
 		
 		pickCards();
 		drawCards();
