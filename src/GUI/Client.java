@@ -15,6 +15,10 @@ public class Client {
 	private int numPlayers = 0;
 	
 	private int turnNo = 5;
+	private int oppoTricks = 0;
+	private int oppoScore = 0;
+	private int yourTricks = 0;
+	private int yourScore = 0;
 	
 	private ImageIcon imagep2;
 	private ImageIcon imagep3;
@@ -74,9 +78,18 @@ public class Client {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		//TODO Draw the sit down screen
+		// TODO Wait till the person sits down to send their sit down position
 		
+		//while (numPlayers < 4) {
+			//TODO wait for the server to send everyones names and positions
+			
+			
+		//}
 		
+		//TODO Wait for the server to send out the first hand
 		
+		//Draw the board for the first hand
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -100,6 +113,11 @@ public class Client {
 		player1.setBounds(317, 684, 634, 166);
 		
 		frame.getContentPane().add(player1);
+		player1.setLayout(null);
+		
+		JButton player1Sit = new JButton("New button");
+		player1Sit.setBounds(234, 58, 154, 42);
+		player1.add(player1Sit);
 		
 		JButton btnPass = new JButton("Pass");
 		btnPass.setBounds(1135, 818, 89, 32);
@@ -193,6 +211,10 @@ public class Client {
 		pickCards();
 		drawCards();
 
+		
+		//TODO update the board as turns go
+		
+		//TODO deal with next hand
 	}
 
 	private void drawCards () {
