@@ -1,6 +1,5 @@
 package GUI;
 
-import java.awt.EventQueue;
 import java.awt.*;
 
 import javax.swing.ImageIcon;
@@ -8,10 +7,12 @@ import javax.swing.*;
 
 
 public class Client {
-	private String player1Name = ConnectUI.name;
-	private String player2Name = "";
-	private String player3Name = "";
-	private String player4Name = "";
+	private String player1Name = "Chuck"; //ConnectUI.name;
+	private String player2Name = "Penis Stomp";
+	private String player3Name = "Wet willie";
+	private String player4Name = "Walla Walla";
+	
+	private int numPlayers = 0;
 	
 	private int turnNo = 5;
 	
@@ -38,10 +39,10 @@ public class Client {
 	private final JPanel player3 = new JPanel();
 	private final JPanel player4 = new JPanel();
 	
-	private JLabel lblPlayer1 = new JLabel("");
-	private JLabel lblPlayer2 = new JLabel("");
-	private JLabel lblPlayer3 = new JLabel("");
-	private JLabel lblPlayer4 = new JLabel("");
+	private JLabel lblPlayer1 = new JLabel(player1Name);
+	private JLabel lblPlayer2 = new JLabel(player2Name);
+	private JLabel lblPlayer3 = new JLabel(player3Name);
+	private JLabel lblPlayer4 = new JLabel(player4Name);
 
 	/**
 	 * Launch the application.
@@ -73,6 +74,9 @@ public class Client {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		
+		
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -111,27 +115,28 @@ public class Client {
 		chckbxAlone.setHorizontalAlignment(SwingConstants.CENTER);
 		chckbxAlone.setBounds(1135, 788, 93, 23);
 		frame.getContentPane().add(chckbxAlone);
+		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		lblPlayer1.setForeground(Color.WHITE);
 		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer1.setBounds(317, 650, 250, 23);
+		lblPlayer1.setBounds(497, 650, 250, 23);
 		frame.getContentPane().add(lblPlayer1);
 		
 		lblPlayer4.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblPlayer4.setForeground(Color.WHITE);
 		lblPlayer4.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer4.setBounds(811, 641, 250, 32);
+		lblPlayer4.setBounds(811, 419, 250, 32);
 		frame.getContentPane().add(lblPlayer4);
 		
-		lblPlayer3.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblPlayer3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPlayer3.setForeground(Color.WHITE);
 		lblPlayer3.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer3.setBounds(673, 188, 250, 23);
+		lblPlayer3.setBounds(497, 188, 250, 23);
 		frame.getContentPane().add(lblPlayer3);
 		
 		lblPlayer2.setForeground(Color.WHITE);
 		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer2.setBounds(181, 188, 250, 23);
+		lblPlayer2.setBounds(181, 424, 250, 23);
 		frame.getContentPane().add(lblPlayer2);
 		
 		pickCards();
@@ -146,18 +151,26 @@ public class Client {
 				player1.setLayout(new GridLayout(0, turnNo, 0, 0));
 				for (int j = 0; j < turnNo; j++) { // draw the right number of cards
 					JLabel temp = new JLabel("");
+					JButton tempbutt = new JButton ();
+					tempbutt.setBackground(Color.darkGray);
+					tempbutt.setBorderPainted(false);
 					if ( j == 0 ) { 
-						temp.setIcon(card1);
+						//temp.setIcon(card1);
+						tempbutt.setIcon(card1);
 					} else if ( j == 1) {
-						temp.setIcon(card2);
+						//temp.setIcon(card2);
+						tempbutt.setIcon(card2);
 					} else if ( j == 2) {
-						temp.setIcon(card3);
+						//temp.setIcon(card3);
+						tempbutt.setIcon(card3);
 					} else if ( j == 3) {
-						temp.setIcon(card4);
+						//temp.setIcon(card4);
+						tempbutt.setIcon(card4);
 					} else if ( j == 4) {
-						temp.setIcon(card5);
+						//temp.setIcon(card5);
+						tempbutt.setIcon(card5);
 					}
-					player1.add(temp);
+					player1.add(tempbutt);
 				}
 				break;
 			case 1 :
