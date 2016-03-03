@@ -9,16 +9,16 @@
  * + an integer value at the start of the packet.
  * 
  * The integer values are as follows:
- * 0 - Illegal Move/Error	(host -> client)
- * 1 - Refresh Board 		(host -> client)
- * 2 - Play Card			(client -> host)
- * 3 - TBD
- * 4 - TBD
- * 5 - TBD
- * 6 - TBD
- * 7 - Set Trump Values		(host -> client)
- * 8 - Score Update/Deal	(host -> client)
- * 9 - Initialize Game		(host -> client)
+ * 0  - Illegal Move/Error	(host -> client)
+ * 1  - Refresh Board 		(host -> client)
+ * 2  - Play Card			(client -> host)
+ * 3  - TBD
+ * 4  - TBD
+ * 5  - Update All Names  	(host -> client)
+ * 6  - Send Name			(client -> host)
+ * 7  - Set Trump Values	(host -> client)
+ * 8  - Score Update/Deal	(host -> client)
+ * 9  - Initialize Game		(host -> client)
  * 
  * The integer values of the cards are as follows:
  * 0  - 9 of Spades
@@ -46,6 +46,7 @@
  * 22 - Card KD = King of Diamonds
  * 23 - Card AD = Ace of Diamonds
  * *  - Card has yet to be played
+ * 
  */
 
 
@@ -72,6 +73,38 @@ public class Packet {
 				packet = packet.concat(Integer.toString(hand[i]) + ",");
 			else
 				packet = packet.concat(Integer.toString(hand[i]));
+		
+		return packet;
+	}
+	
+	/**
+	 * A packet where the host updates all of the clients with player names
+	 * 
+	 * @param p1nam - player 1 name
+	 * @param p2nam - player 2 name
+	 * @param p3nam - player 3 name
+	 * 
+	 * @return - assembled packet
+	 */
+	public String updateNames(String p1nam, String p2nam, String p3nam){
+		String packet = "5,";
+		packet = packet.concat(p1nam + ",");
+		packet = packet.concat(p2nam + ",");
+		packet = packet.concat(p3nam);
+		
+		return packet;
+	}
+	
+	/**
+	 * Allows the client to let the host know his/her name
+	 * @param playerPosition - the location of the player
+	 * @param name - the name the client wants
+	 * @return - an assembled packet
+	 */
+	public String playerName(int playerPosition, String name){
+		String packet = "6,";
+		packet = packet.concat(Integer.toString(playerPosition) + ",");
+		packet = packet.concat(name);
 		
 		return packet;
 	}
