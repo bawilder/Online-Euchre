@@ -47,6 +47,12 @@ public class Client {
 	private JLabel lblPlayer2 = new JLabel(player2Name);
 	private JLabel lblPlayer3 = new JLabel(player3Name);
 	private JLabel lblPlayer4 = new JLabel(player4Name);
+	
+	private JButton player1sit = new JButton("Sit");
+	private JButton player2sit = new JButton("Sit");
+	private JButton player3sit = new JButton("Sit");
+	private JButton player4sit = new JButton("Sit");
+	
 
 	/**
 	 * Launch the application.
@@ -79,17 +85,7 @@ public class Client {
 	 */
 	private void initialize() {
 		//TODO Draw the sit down screen
-		// TODO Wait till the person sits down to send their sit down position
 		
-		//while (numPlayers < 4) {
-			//TODO wait for the server to send everyones names and positions
-			
-			
-		//}
-		
-		//TODO Wait for the server to send out the first hand
-		
-		//Draw the board for the first hand
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -97,119 +93,144 @@ public class Client {
 		frame.setSize(1250, 900);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		
 		player2.setBackground(Color.DARK_GRAY);
 		player2.setBounds(10, 130, 161, 600);
 		
 		frame.getContentPane().add(player2);
+		player2.setLayout(null);
+		
 		player3.setBackground(Color.DARK_GRAY);
 		player3.setBounds(317, 11, 634, 166);
 		
 		frame.getContentPane().add(player3);
+		player3.setLayout(null);
+		
 		player4.setBackground(Color.DARK_GRAY);
 		player4.setBounds(1071, 136, 153, 589);
 		
 		frame.getContentPane().add(player4);
+		player4.setLayout(null);
+		
 		player1.setBackground(Color.DARK_GRAY);
 		player1.setBounds(317, 684, 634, 166);
 		
 		frame.getContentPane().add(player1);
 		player1.setLayout(null);
 		
-		JButton player1Sit = new JButton("New button");
-		player1Sit.setBounds(234, 58, 154, 42);
-		player1.add(player1Sit);
+		player1sit.setBounds(234, 58, 154, 42);
+		player1.add(player1sit);
+		player2sit.setBounds(0, 281, 154, 42);
+		player2.add(player2sit);
+		player3sit.setBounds(239, 56, 154, 42);
+		player3.add(player3sit);
+		player4sit.setBounds(0, 277, 154, 42);
+		player4.add(player4sit);
 		
-		JButton btnPass = new JButton("Pass");
-		btnPass.setBounds(1135, 818, 89, 32);
-		frame.getContentPane().add(btnPass);
 		
-		JButton btnPickUp = new JButton("Pick Up");
-		btnPickUp.setBounds(1025, 818, 100, 32);
-		frame.getContentPane().add(btnPickUp);
-		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		lblPlayer1.setForeground(Color.WHITE);
-		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer1.setBounds(497, 650, 250, 23);
-		frame.getContentPane().add(lblPlayer1);
+		// TODO Wait till the person sits down to send their sit down position
 		
-		lblPlayer4.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblPlayer4.setForeground(Color.WHITE);
-		lblPlayer4.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer4.setBounds(811, 419, 250, 32);
-		frame.getContentPane().add(lblPlayer4);
-		
-		lblPlayer3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPlayer3.setForeground(Color.WHITE);
-		lblPlayer3.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer3.setBounds(497, 188, 250, 23);
-		frame.getContentPane().add(lblPlayer3);
-		
-		lblPlayer2.setForeground(Color.WHITE);
-		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer2.setBounds(181, 424, 250, 23);
-		frame.getContentPane().add(lblPlayer2);
-		
-		JLabel lblYourTeam = new JLabel("Your Team:");
-		lblYourTeam.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblYourTeam.setForeground(Color.WHITE);
-		lblYourTeam.setBounds(10, 789, 100, 23);
-		frame.getContentPane().add(lblYourTeam);
-		
-		JLabel lblOpponents = new JLabel("Opponents:");
-		lblOpponents.setForeground(Color.WHITE);
-		lblOpponents.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblOpponents.setBounds(10, 827, 100, 23);
-		frame.getContentPane().add(lblOpponents);
-		
-		JLabel lblTricks = new JLabel("Tricks");
-		lblTricks.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTricks.setForeground(Color.WHITE);
-		lblTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblTricks.setBounds(99, 754, 100, 23);
-		frame.getContentPane().add(lblTricks);
-		
-		JLabel lblScore = new JLabel("Score");
-		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
-		lblScore.setForeground(Color.WHITE);
-		lblScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblScore.setBounds(194, 754, 100, 23);
-		frame.getContentPane().add(lblScore);
-		
-		JLabel yourTeamTricks = new JLabel("0");
-		yourTeamTricks.setHorizontalAlignment(SwingConstants.CENTER);
-		yourTeamTricks.setForeground(Color.WHITE);
-		yourTeamTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		yourTeamTricks.setBounds(99, 788, 100, 23);
-		frame.getContentPane().add(yourTeamTricks);
-		
-		JLabel yourTeamScore = new JLabel("0");
-		yourTeamScore.setHorizontalAlignment(SwingConstants.CENTER);
-		yourTeamScore.setForeground(Color.WHITE);
-		yourTeamScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		yourTeamScore.setBounds(194, 788, 100, 23);
-		frame.getContentPane().add(yourTeamScore);
-		
-		JLabel oppoTricks = new JLabel("0");
-		oppoTricks.setHorizontalAlignment(SwingConstants.CENTER);
-		oppoTricks.setForeground(Color.WHITE);
-		oppoTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		oppoTricks.setBounds(99, 827, 100, 23);
-		frame.getContentPane().add(oppoTricks);
-		
-		JLabel oppoScore = new JLabel("0");
-		oppoScore.setHorizontalAlignment(SwingConstants.CENTER);
-		oppoScore.setForeground(Color.WHITE);
-		oppoScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		oppoScore.setBounds(194, 827, 100, 23);
-		frame.getContentPane().add(oppoScore);
-		
-		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
-		btnPickupAndGo.setBounds(1025, 789, 200, 23);
-		frame.getContentPane().add(btnPickupAndGo);
-		
-		pickCards();
-		drawCards();
+//		while (numPlayers < 4) {
+//			//TODO wait for the server to send everyones names and positions
+//			
+//			
+//		}
+//		
+//		//TODO Wait for the server to send out the first hand
+//		
+//		//Draw the board for the first hand
+//		JButton btnPass = new JButton("Pass");
+//		btnPass.setBounds(1135, 818, 89, 32);
+//		frame.getContentPane().add(btnPass);
+//		
+//		JButton btnPickUp = new JButton("Pick Up");
+//		btnPickUp.setBounds(1025, 818, 100, 32);
+//		frame.getContentPane().add(btnPickUp);
+//		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
+//		
+//		lblPlayer1.setForeground(Color.WHITE);
+//		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+//		lblPlayer1.setBounds(497, 650, 250, 23);
+//		frame.getContentPane().add(lblPlayer1);
+//		
+//		lblPlayer4.setHorizontalAlignment(SwingConstants.TRAILING);
+//		lblPlayer4.setForeground(Color.WHITE);
+//		lblPlayer4.setFont(new Font("Tahoma", Font.PLAIN, 20));
+//		lblPlayer4.setBounds(811, 419, 250, 32);
+//		frame.getContentPane().add(lblPlayer4);
+//		
+//		lblPlayer3.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblPlayer3.setForeground(Color.WHITE);
+//		lblPlayer3.setFont(new Font("Tahoma", Font.PLAIN, 20));
+//		lblPlayer3.setBounds(497, 188, 250, 23);
+//		frame.getContentPane().add(lblPlayer3);
+//		
+//		lblPlayer2.setForeground(Color.WHITE);
+//		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+//		lblPlayer2.setBounds(181, 424, 250, 23);
+//		frame.getContentPane().add(lblPlayer2);
+//		
+//		JLabel lblYourTeam = new JLabel("Your Team:");
+//		lblYourTeam.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		lblYourTeam.setForeground(Color.WHITE);
+//		lblYourTeam.setBounds(10, 789, 100, 23);
+//		frame.getContentPane().add(lblYourTeam);
+//		
+//		JLabel lblOpponents = new JLabel("Opponents:");
+//		lblOpponents.setForeground(Color.WHITE);
+//		lblOpponents.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		lblOpponents.setBounds(10, 827, 100, 23);
+//		frame.getContentPane().add(lblOpponents);
+//		
+//		JLabel lblTricks = new JLabel("Tricks");
+//		lblTricks.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblTricks.setForeground(Color.WHITE);
+//		lblTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		lblTricks.setBounds(99, 754, 100, 23);
+//		frame.getContentPane().add(lblTricks);
+//		
+//		JLabel lblScore = new JLabel("Score");
+//		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblScore.setForeground(Color.WHITE);
+//		lblScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		lblScore.setBounds(194, 754, 100, 23);
+//		frame.getContentPane().add(lblScore);
+//		
+//		JLabel yourTeamTricks = new JLabel("0");
+//		yourTeamTricks.setHorizontalAlignment(SwingConstants.CENTER);
+//		yourTeamTricks.setForeground(Color.WHITE);
+//		yourTeamTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		yourTeamTricks.setBounds(99, 788, 100, 23);
+//		frame.getContentPane().add(yourTeamTricks);
+//		
+//		JLabel yourTeamScore = new JLabel("0");
+//		yourTeamScore.setHorizontalAlignment(SwingConstants.CENTER);
+//		yourTeamScore.setForeground(Color.WHITE);
+//		yourTeamScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		yourTeamScore.setBounds(194, 788, 100, 23);
+//		frame.getContentPane().add(yourTeamScore);
+//		
+//		JLabel oppoTricks = new JLabel("0");
+//		oppoTricks.setHorizontalAlignment(SwingConstants.CENTER);
+//		oppoTricks.setForeground(Color.WHITE);
+//		oppoTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		oppoTricks.setBounds(99, 827, 100, 23);
+//		frame.getContentPane().add(oppoTricks);
+//		
+//		JLabel oppoScore = new JLabel("0");
+//		oppoScore.setHorizontalAlignment(SwingConstants.CENTER);
+//		oppoScore.setForeground(Color.WHITE);
+//		oppoScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+//		oppoScore.setBounds(194, 827, 100, 23);
+//		frame.getContentPane().add(oppoScore);
+//		
+//		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
+//		btnPickupAndGo.setBounds(1025, 789, 200, 23);
+//		frame.getContentPane().add(btnPickupAndGo);
+//		
+//		pickCards();
+//		drawCards();
 
 		
 		//TODO update the board as turns go
@@ -223,24 +244,18 @@ public class Client {
 			case 0 : 
 				player1.setLayout(new GridLayout(0, turnNo, 0, 0));
 				for (int j = 0; j < turnNo; j++) { // draw the right number of cards
-					JLabel temp = new JLabel("");
 					JButton tempbutt = new JButton ();
 					tempbutt.setBackground(Color.darkGray);
 					tempbutt.setBorderPainted(false);
 					if ( j == 0 ) { 
-						//temp.setIcon(card1);
 						tempbutt.setIcon(card1);
 					} else if ( j == 1) {
-						//temp.setIcon(card2);
 						tempbutt.setIcon(card2);
 					} else if ( j == 2) {
-						//temp.setIcon(card3);
 						tempbutt.setIcon(card3);
 					} else if ( j == 3) {
-						//temp.setIcon(card4);
 						tempbutt.setIcon(card4);
 					} else if ( j == 4) {
-						//temp.setIcon(card5);
 						tempbutt.setIcon(card5);
 					}
 					player1.add(tempbutt);
