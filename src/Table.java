@@ -55,20 +55,20 @@ public class Table {
 			    	tempCard= tableCards[i];
 			    	//evaluate with Bowers    
 			    	if(tempCard.face == 'J' || maxCard.face == 'J'){
-			    		//max is right
+			    		//max is right bower
 			    		if(maxCard.face == 'J' && maxCard.suit == trump){
-			            
+			            		//do nothing
 			    		}
-			    		//temp is right
+			    		//temp is right bower
 			    		else if(tempCard.face == 'J' && tempCard.suit == trump){
 			    			maxCard = tempCard;
 			    		}
-			    		//max is left and temp is not J
-			    		else if(maxCard.face == 'J'){
+			    		//max is left and temp is not a bower
+			    		else if(maxCard.face == 'J' && maxCard.suit == trumpPartner){
 			    			//do nothing
 			    		}
-			    		//temp is left
-			    		else if (tempCard.face == 'J'){
+			    		//temp is left bower
+			    		else if (tempCard.face == 'J' && tempCard.suit == trumpPartner){
 			    			maxCard = tempCard;
 			    		}
 			    	}
