@@ -28,7 +28,6 @@ public class EchoThread extends Thread {
 
 	//TODO: Needs to know which player it is
 	public void run(int playerNo) {
-		String line;
 		try {
 			// Buffer for reading in
 			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));

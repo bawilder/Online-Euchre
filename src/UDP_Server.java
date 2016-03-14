@@ -3,7 +3,7 @@ import java.net.*;
 
 public class UDP_Server {
 
-	static final int PORT = 50001;
+	static final int PORT = 50005;
 
 	public static void main(String args[]) {
 		int playerNo = 1;
@@ -12,7 +12,9 @@ public class UDP_Server {
 
 		try {
 			//serverSocket = new ServerSocket(PORT);
-			serverSocket = new ServerSocket(PORT, 0, InetAddress.getByName(null));
+			serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
+			System.out.println("Using port number: " + serverSocket.getLocalPort());
+			System.out.println("IP Address: " + serverSocket.getInetAddress());
 		} catch (IOException e) {
 			System.out.println(e);
 
