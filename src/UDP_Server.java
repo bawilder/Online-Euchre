@@ -11,14 +11,19 @@ public class UDP_Server {
 		Socket socket = null;
 
 		try {
-			serverSocket = new ServerSocket(PORT);
+			//serverSocket = new ServerSocket(PORT);
+			serverSocket = new ServerSocket(PORT, 0, InetAddress.getByName(null));
 		} catch (IOException e) {
 			System.out.println(e);
 
 		}
 		while (true) {
 			try {
+				System.out.println("Accepting connections!");
 				socket = serverSocket.accept();
+				//TODO: Find a better way to end the game than a 167 minute timeout 
+				socket.setSoTimeout(10000000);
+				System.out.println("Connection established");
 			} catch (IOException e) {
 				System.out.println(e);
 			}
