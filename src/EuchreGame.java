@@ -29,8 +29,126 @@ public class EuchreGame {
 		table.topOfDiscard= table.deck.discard[0];
 	}
 	
+	public char makeSuit(int suit){
+		char trumpSuit = 'X';
+		if(suit == 1){
+			trumpSuit= 'H';
+		}
+		if(suit == 2){
+			trumpSuit= 'D';
+		}
+		if(suit == 3){
+			trumpSuit= 'S';
+		}
+		if(suit == 4){
+			trumpSuit= 'C';
+		}
+		return trumpSuit;
+	}
+	
+	//in progress, have to add auto increment of dealer/player and actually pick up card
 	public void trumpRound(){
+		System.out.println("Player 1, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		int trumpCalled= in.nextInt();
 		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 2, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 3, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 4, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 1, do you want to set trump? ");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			System.out.println("What suit would you like to call it?");
+			System.out.println("1=H, 2=D, 3=S, 4=C");
+			int trumpSuit = in.nextInt();
+			char trumpSuitChar = makeSuit(trumpSuit);
+			
+			table.setTrump(trumpSuitChar);
+			return;
+		}
+		
+		System.out.println("Player 2, do you want to set trump? ");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			System.out.println("What suit would you like to call it?");
+			System.out.println("1=H, 2=D, 3=S, 4=C");
+			int trumpSuit = in.nextInt();
+			char trumpSuitChar = makeSuit(trumpSuit);
+			
+			table.setTrump(trumpSuitChar);
+			return;
+		}
+		
+		System.out.println("Player 3, do you want to set trump? ");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			System.out.println("What suit would you like to call it?");
+			System.out.println("1=H, 2=D, 3=S, 4=C");
+			int trumpSuit = in.nextInt();
+			char trumpSuitChar = makeSuit(trumpSuit);
+			
+			table.setTrump(trumpSuitChar);
+			return;
+		}
+		
+		System.out.println("Player 4, you must set trump");
+		System.out.println("What suit would you like to call it?");
+		System.out.println("1=H, 2=D, 3=S, 4=C");
+		int trumpSuit = in.nextInt();
+		char trumpSuitChar = makeSuit(trumpSuit);
+		table.setTrump(trumpSuitChar);
 	}
 	
 	public void runTrick(){
@@ -105,6 +223,8 @@ public class EuchreGame {
 	
 	public void runHand(){
 		dealDeck();
+		
+		trumpRound();
 		
 		for(int i=0; i<5; i+=1){
 			runTrick();
