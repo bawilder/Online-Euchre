@@ -16,8 +16,8 @@ public class Table {
 	int playerTurn;
 	Card topOfDiscard;
 	Deck deck;
-	char trump= 'H';
-	char trumpPartner= 'D';
+	char trump;
+	char trumpPartner;
 	
 	
 	public Table(){
@@ -33,7 +33,36 @@ public class Table {
 		team2= new Team(players[1], players[3]);
 	}
 	
-	//suffering form an off by one error thats stopping player 4 from winning tricks
+	public void setTrump(char trumpSuit){
+		if(trumpSuit == 'H'){
+			trump= 'H';
+			trumpPartner= 'D';
+			return;
+		}
+		
+		if(trumpSuit == 'D'){
+			trump= 'D';
+			trumpPartner= 'H';
+			return;
+		}
+		
+		if(trumpSuit == 'S'){
+			trump= 'S';
+			trumpPartner= 'C';
+			return;
+		}
+		
+		if(trumpSuit == 'C'){
+			trump= 'C';
+			trumpPartner= 'S';
+			return;
+		}
+		
+		else{
+			System.out.println("Error in calling trump, program locked down");
+		}
+	}
+	
 		public int evalCards() {
 			Card maxCard= new Card('B',0,'B');
 			int playerOfCard=0;
@@ -57,7 +86,7 @@ public class Table {
 			    	if(tempCard.face == 'J' || maxCard.face == 'J'){
 			    		//max is right bower
 			    		if(maxCard.face == 'J' && maxCard.suit == trump){
-			            		//do nothing
+			            
 			    		}
 			    		//temp is right bower
 			    		else if(tempCard.face == 'J' && tempCard.suit == trump){
@@ -132,7 +161,7 @@ public class Table {
 		}
 	
 	public void rotateDealer(){
-		if(playerDealing<4){
+		if(playerDealing<3){
 			playerDealing+=1;
 		}
 		
@@ -142,7 +171,7 @@ public class Table {
 	}
 
 	public void rotateTurn(){
-		if(playerTurn<4){
+		if(playerTurn<3){
 			playerTurn+=1;
 		}
 		
