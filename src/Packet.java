@@ -14,8 +14,8 @@
  * 2  - Play Card			(client -> host)
  * 3  - TBD
  * 4  - TBD
- * 5  - Update All Names  	(host -> client)
- * 6  - Send Name			(client -> host)
+ * 5  - Update All Names  	(host -> client) (DEFUNCT)
+ * 6  - Send Name			(client -> host) (DEFUNCT)
  * 7  - Set Trump Values	(host -> client)
  * 8  - Score Update/Deal	(host -> client)
  * 9  - Initialize Game		(host -> client)
@@ -45,7 +45,7 @@
  * 21 - Card QD = Queen of Diamonds
  * 22 - Card KD = King of Diamonds
  * 23 - Card AD = Ace of Diamonds
- * *  - Card has yet to be played
+ * -1 - Card has yet to be played
  * 
  */
 
