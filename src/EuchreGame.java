@@ -92,6 +92,7 @@ public class EuchreGame {
 		
 		System.out.println("Player 3, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
 		trumpCalled= in.nextInt();
+
 		
 		if(trumpCalled == 1){
 			table.setTrump(table.topOfDiscard.suit);
