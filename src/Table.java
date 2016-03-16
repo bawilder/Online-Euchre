@@ -18,6 +18,7 @@ public class Table {
 	Deck deck;
 	char trump;
 	char trumpPartner;
+	char suitRejected;
 	
 	
 	public Table(){
@@ -65,7 +66,6 @@ public class Table {
 	
 		public int evalCards() {
 			Card maxCard= new Card('B',0,'B');
-			int playerOfCard=0;
 			boolean containsTrump= false;
 			Card tempCard;
 			//check to see if this table set contains a trump card

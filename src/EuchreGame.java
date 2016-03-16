@@ -202,7 +202,6 @@ public class EuchreGame {
 		table.tableCards[3]= table.players[3].playCard(card4);
 		
 		//evaluate cards played
-		Card maxCard= new Card('9',0,'9');
 		int playerOfCard=0;
 
 		int maxCardPos= table.evalCards();
