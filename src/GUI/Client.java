@@ -34,11 +34,21 @@ public class Client {
 	private ImageIcon imagep3;
 	private ImageIcon imagep4;
 	
-	private int card1Num = 21;
-	private int card2Num = 22;
-	private int card3Num = 23;
-	private int card4Num = 1;
-	private int card5Num = 9;
+	private int card1Num = 0;
+	private int card2Num = 1;
+	private int card3Num = 2;
+	private int card4Num = 3;
+	private int card5Num = 14;
+	
+	/**
+	 * 0 - Invalid
+	 * 1 - Club
+	 * 2 - Spade
+	 * 3 - Diamond
+	 * 4 - Heart
+	 */
+	private int cardLead = 1;
+	private int trump = 2;
 	
 	private ImageIcon card1 = new ImageIcon ();
 	private ImageIcon card2 = new ImageIcon ();
@@ -88,7 +98,7 @@ public class Client {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		//TODO Draw the sit down screen
+		//TODO wait until all 4 players are connected
 		
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -226,7 +236,7 @@ public class Client {
 				player1.setLayout(new GridLayout(0, turnNo, 0, 0));
 				for (int j = 0; j < turnNo; j++) { // draw the right number of card
 					if ( j == 0 ) { 
-						JButton card1butt = new JButton ();
+						final JButton card1butt = new JButton ();
 						card1butt.setBackground(Color.darkGray);
 						card1butt.setBorderPainted(false);
 						card1butt.setIcon(card1);
@@ -235,10 +245,13 @@ public class Client {
 				            @Override
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Playerclicked button1");
+				                if (isValidMove(card1Num)) {
+				                	card1butt.setVisible(false);
+				                }
 				            }
 						});
 					} else if ( j == 1) {
-						JButton card2butt = new JButton ();
+						final JButton card2butt = new JButton ();
 						card2butt.setBackground(Color.darkGray);
 						card2butt.setBorderPainted(false);
 						card2butt.setIcon(card2);
@@ -247,10 +260,13 @@ public class Client {
 				            @Override
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button2");
+				                if (isValidMove(card2Num)) {
+				                	card2butt.setVisible(false);
+				                }
 				            }
 						});
 					} else if ( j == 2) {
-						JButton card3butt = new JButton ();
+						final JButton card3butt = new JButton ();
 						card3butt.setBackground(Color.darkGray);
 						card3butt.setBorderPainted(false);
 						card3butt.setIcon(card3);
@@ -259,10 +275,13 @@ public class Client {
 				            @Override
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button3");
+				                if (isValidMove(card3Num)) {
+				                	card3butt.setVisible(false);
+				                }
 				            }
 						});
 					} else if ( j == 3) {
-						JButton card4butt = new JButton ();
+						final JButton card4butt = new JButton ();
 						card4butt.setBackground(Color.darkGray);
 						card4butt.setBorderPainted(false);
 						card4butt.setIcon(card4);
@@ -271,10 +290,13 @@ public class Client {
 				            @Override
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button4");
+				                if (isValidMove(card4Num)) {
+				                	card4butt.setVisible(false);
+				                }
 				            }
 						});
 					} else if ( j == 4) {
-						JButton card5butt = new JButton ();
+						final JButton card5butt = new JButton ();
 						card5butt.setBackground(Color.darkGray);
 						card5butt.setBorderPainted(false);
 						card5butt.setIcon(card5);
@@ -283,6 +305,9 @@ public class Client {
 				            @Override
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button5");
+				                if (isValidMove(card5Num)) {
+				                	card5butt.setVisible(false);
+				                }
 				            }
 						});
 					}
@@ -322,6 +347,7 @@ public class Client {
 	 * 
 	 */
 	private void pickCards () {
+
 		
 		ImageIcon temp = null;
 		int tempCardNo = -1;
@@ -404,5 +430,26 @@ public class Client {
 				card5 = temp;
 			}
 		}
+	}
+	
+	private boolean isValidMove (int cardPlayed) {
+		
+		//TODO check if the player can follow suit, if not they can play whatever the fuck they want
+		
+		//TODO clubs was lead, spades was trump. Jack of clubs should be a spade thus not being able to be played
+		//right now it was playable. 
+		if(cardLead == 0) {
+			return true;
+		} else if(cardLead == 1 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 1 && cardPlayed == 2)) {
+			return true;
+		} else if (cardLead == 2 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 2 && cardPlayed == 14)) {
+			return true;
+		} else if (cardLead == 3 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 3 && cardPlayed == 8)) {
+			return true;
+		} else if (cardLead == 4 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 4 && cardPlayed == 20)) {
+			return true;
+		}
+		
+		return false;
 	}
 }
