@@ -158,7 +158,6 @@ public class TestingEG {
 		}
 	
 		//evaluate cards played
-		Card maxCard= new Card('9',0,'9');
 		int playerOfCard=0;
 
 		int maxCardPos= table.evalCards();
