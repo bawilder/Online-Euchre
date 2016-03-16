@@ -26,6 +26,20 @@ public class EuchreGame {
 		table.players[1].hand= table.deck.hand2;
 		table.players[2].hand= table.deck.hand3;
 		table.players[3].hand= table.deck.hand4;
+		
+		int [] tempArray = {0,0,0,0};
+		String player1init;
+		String player2init;
+		String player3init;
+		String player4init;
+		//TODO: send array via server
+		Packet packet = new Packet();
+		
+		player1init = packet.initPacket(1, "P2Nam", "P3Nam", "P3Nam", tempArray);
+		player2init = packet.initPacket(1, "p1Nam", "p3Nam", "p4Nam", tempArray);
+		player3init = packet.initPacket(1, "p1Nam", "p2Nam", "p4Nam", tempArray);
+		player4init = packet.initPacket(1, "p1Nam", "p2Nam", "p3Nam", tempArray);
+		
 		table.topOfDiscard= table.deck.discard[0];
 	}
 	
@@ -78,6 +92,7 @@ public class EuchreGame {
 		
 		System.out.println("Player 3, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
 		trumpCalled= in.nextInt();
+
 		
 		if(trumpCalled == 1){
 			table.setTrump(table.topOfDiscard.suit);
