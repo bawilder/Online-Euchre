@@ -1,3 +1,4 @@
+
 package GUI;
 
 import java.awt.*;
@@ -99,7 +100,7 @@ public class ConnectUI extends Frame{
 		bttnCreate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-                //TODO create server logics
+                //TODO create server logic
             	System.out.println("Need to create server");
             }
         });
@@ -116,6 +117,7 @@ public class ConnectUI extends Frame{
 		this.validate();
 	}
 	
+	//TODO: Write this function
 	/**
 	 * A function that enables the client to read a packet sent from the host
 	 * @return - the packet received

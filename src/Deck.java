@@ -120,47 +120,7 @@ public class Deck {
 	}
 	
 	public static void main(String[] args) {
-		Deck theDeck= new Deck();
 		
-		//print deck
-		for(int i=0; i<24; i+=1){
-			System.out.println("Card " + (i+1) + ": " + theDeck.cards[i].face + theDeck.cards[i].suit);
-		}
-		
-		//shuffle
-		System.out.println("Every day Im shufflin...");
-		theDeck.shuffle();
-		
-		//print deck after shuffle
-		for(int i=0; i<24; i+=1){
-			System.out.println("Card " + (i+1) + ": " + theDeck.cards[i].face + theDeck.cards[i].suit);
-		}
-		
-		//deal cards
-		System.out.println("Lets Make A Deal");
-		theDeck.deal();
-		
-		//print hands after the deal
-		System.out.println("Raise Them Hands High");
-		for(int i=0; i<5; i+=1){
-			System.out.println("Hand 1 Card " + (i+1) + ": " + theDeck.hand1[i].face + theDeck.hand1[i].suit);
-		}
-		for(int i=0; i<5; i+=1){
-			System.out.println("Hand 2 Card " + (i+1) + ": " + theDeck.hand2[i].face + theDeck.hand2[i].suit);
-		}
-		for(int i=0; i<5; i+=1){
-			System.out.println("Hand 3 Card " + (i+1) + ": " + theDeck.hand3[i].face + theDeck.hand3[i].suit);
-		}
-		for(int i=0; i<5; i+=1){
-			System.out.println("Hand 4 Card " + (i+1) + ": " + theDeck.hand4[i].face + theDeck.hand4[i].suit);
-		}
-		
-		//print the discard pile after the deal
-		System.out.println("And the crescendo");
-		for(int i=0; i<4; i+=1){
-			System.out.println("Discard Card " + (i+1) + ": " + theDeck.discard[i].face + theDeck.discard[i].suit);
-		}
-		
-	}//EOM
+	}
 	
 }//EOC
