@@ -4,9 +4,10 @@ import java.net.*;
 public class UDP_Server {
 
 	static final int PORT = 50005;
-
-	public static void main(String args[]) {
-		int playerNo = 1;
+	static EchoThread [] threads;
+	static int playerNo = 1;
+	
+	public UDP_Server() {
 		ServerSocket serverSocket = null;
 		Socket socket = null;
 
@@ -30,7 +31,8 @@ public class UDP_Server {
 				System.out.println(e);
 			}
 			// new thread for a client
-			new EchoThread(socket, playerNo).start();
+			threads[playerNo] = new EchoThread(socket, playerNo);
+			
 			playerNo += 1;
 			
 			//TODO: Make actual break condition
@@ -44,4 +46,12 @@ public class UDP_Server {
 			System.out.println(e);
 		}
 	}
+	
+	public void sendPacket(String msg, int playerNum){
+		
+		threads[playerNum].sendPacket(msg);
+		
+		return;
+	}
+
 }

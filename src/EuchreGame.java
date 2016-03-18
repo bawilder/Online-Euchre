@@ -16,6 +16,8 @@ public class EuchreGame {
 	Table table = new Table();
 	Scanner in = new Scanner(System.in);
 
+	static UDP_Server server = new UDP_Server();
+	
 	/*
 	 * This method will handle shuffling and dealing the deck to start each hand
 	 */
@@ -27,22 +29,44 @@ public class EuchreGame {
 		table.players[1].hand= table.deck.hand2;
 		table.players[2].hand= table.deck.hand3;
 		table.players[3].hand= table.deck.hand4;
+		table.topOfDiscard= table.deck.discard[0];
 		
-		int [] tempArray = {0,0,0,0};
+		int [] tempArray = {0,0,0,0,0};
 		String player1init;
 		String player2init;
 		String player3init;
 		String player4init;
-		//TODO: send array via server
+		
 		Packet packet = new Packet();
 		
-		player1init = packet.initPacket(9, "Player2", "Player3", "Player3", tempArray);
-		player2init = packet.initPacket(9, "Player1", "Player3", "Player4", tempArray);
-		player3init = packet.initPacket(9, "Player1", "Player2", "Player4", tempArray);
-		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray);
+		// send player 1 their hand
+		for(int i = 0; i < 5; i++){
+			tempArray[i] = this.cardToInt(table.players[0].hand[i]);
+		}
+		player1init = packet.initPacket(9, "Player2", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		server.sendPacket(player1init, 1);
 		
-		table.topOfDiscard= table.deck.discard[0];
-
+		// send player 2 their hand
+		for(int i = 0; i < 5; i++){
+			tempArray[i] = this.cardToInt(table.players[1].hand[i]);
+		}
+		player2init = packet.initPacket(9, "Player1", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		server.sendPacket(player2init, 2);
+		
+		// send player 3 their hand
+		for(int i = 0; i < 5; i++){
+			tempArray[i] = this.cardToInt(table.players[2].hand[i]);
+		}
+		player3init = packet.initPacket(9, "Player1", "Player2", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		server.sendPacket(player3init, 3);
+		
+		// send player 4 their hand
+		for(int i = 0; i < 5; i++){
+			tempArray[i] = this.cardToInt(table.players[3].hand[i]);
+		}
+		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray, this.cardToInt(table.topOfDiscard));
+		server.sendPacket(player4init, 4);
+		
 	}
 
 	public char makeSuit(int suit) {
@@ -258,10 +282,13 @@ public class EuchreGame {
 		}
 
 	}
-
-	public void runHand() {
+	
+	public void runHand(){
+		
+		// should be done
 		dealDeck();
-
+		
+		//TODO networking
 		trumpRound();
 
 		for (int i = 0; i < 5; i += 1) {
@@ -337,9 +364,15 @@ public class EuchreGame {
 		table.rotateDealer();
 
 	}
-
-	public void runGame() {
-		while (table.team1.getScore() < 10 && table.team2.getScore() < 10) {
+	
+	public void runGame(){
+		
+		// wait for four players to connect
+		while(server.playerNo <= 4){
+			
+		}		
+		
+		while(table.team1.getScore()<10 && table.team2.getScore()<10){
 			runHand();
 		}
 
@@ -351,7 +384,106 @@ public class EuchreGame {
 			System.out.println("Team 2 Won the Game");
 		}
 	}
+	
+	public int cardToInt(Card tempCard){
+		if (tempCard.suit == 'S' && tempCard.face == 'N'){
+		    return 0;
+		}
 
+		if (tempCard.suit == 'S' && tempCard.face == 'T'){
+		    return 1;
+		}
+
+		if (tempCard.suit == 'S' && tempCard.face == 'J'){
+		    return 2;
+		}
+
+		if (tempCard.suit == 'S' && tempCard.face == 'Q'){
+		    return 3;
+		}
+
+		if (tempCard.suit == 'S' && tempCard.face == 'K'){
+		    return 4;
+		}
+
+		if (tempCard.suit == 'S' && tempCard.face == 'A'){
+		    return 5;
+		}
+		if (tempCard.suit == 'H' && tempCard.face == 'N'){
+		    return 6;
+		}
+
+		if (tempCard.suit == 'H' && tempCard.face == 'T'){
+		    return 7;
+		}
+
+		if (tempCard.suit == 'H' && tempCard.face == 'J'){
+		    return 8;
+		}
+
+		if (tempCard.suit == 'H' && tempCard.face == 'Q'){
+		    return 9;
+		}
+
+		if (tempCard.suit == 'H' && tempCard.face == 'K'){
+		    return 10;
+		}
+
+		if (tempCard.suit == 'H' && tempCard.face == 'A'){
+		    return 11;
+		}
+
+		if (tempCard.suit == 'C' && tempCard.face == 'N'){
+		    return 12;
+		}
+
+		if (tempCard.suit == 'C' && tempCard.face == 'T'){
+		    return 13;
+		}
+
+		if (tempCard.suit == 'C' && tempCard.face == 'J'){
+		    return 14;
+		}
+
+		if (tempCard.suit == 'C' && tempCard.face == 'Q'){
+		    return 15;
+		}
+
+		if (tempCard.suit == 'C' && tempCard.face == 'K'){
+		    return 16;
+		}
+
+		if (tempCard.suit == 'C' && tempCard.face == 'A'){
+		    return 17;
+		}
+
+		if (tempCard.suit == 'D' && tempCard.face == 'N'){
+		    return 18;
+		}
+
+		if (tempCard.suit == 'D' && tempCard.face == 'T'){
+		    return 19;
+		}
+
+		if (tempCard.suit == 'D' && tempCard.face == 'J'){
+		    return 20;
+		}
+
+		if (tempCard.suit == 'D' && tempCard.face == 'Q'){
+		    return 21;
+		}
+
+		if (tempCard.suit == 'D' && tempCard.face == 'K'){
+		    return 22;
+		}
+
+		if (tempCard.suit == 'D' && tempCard.face == 'A'){
+		    return 23;
+		}
+		
+		return -1;
+	}
+	
 	public static void main(String[] args) {
 		EuchreGame game = new EuchreGame();
 		game.runGame();
