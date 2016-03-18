@@ -55,7 +55,7 @@ public class Packet {
 	/**
 	 * Assembles an initialize packet, sent at start of game
 	 * Packet Layout:
-	 * 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5
+	 * 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
 	 * 
 	 * @param dealFlag - A flag that is set when someone is the dealer
 	 * @param p2Nam - Player 2 name
@@ -64,15 +64,14 @@ public class Packet {
 	 * @param hand - An array containing the hand dealt to the player
 	 * @return - an assembled packet
 	 */
-	public String initPacket(int dealFlag, String p2Nam, String p3Nam, String p4Nam, int[] hand) {
+	public String initPacket(int dealFlag, String p2Nam, String p3Nam, String p4Nam, int[] hand, int discard) {
 		String packet = "9,";
 		
 		packet = packet.concat(Integer.toString(dealFlag) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
 		for(int i = 0; i < hand.length; i ++)
-			if(i < 3)
-				packet = packet.concat(Integer.toString(hand[i]) + ",");
-			else
-				packet = packet.concat(Integer.toString(hand[i]));
+			packet = packet.concat(Integer.toString(hand[i]) + ",");
+			
+		packet = packet.concat(Integer.toString(discard));
 		
 		return packet;
 	}
