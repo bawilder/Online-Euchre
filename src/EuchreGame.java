@@ -249,8 +249,6 @@ public class EuchreGame {
 
 		for (int i = 0; i < 5; i += 1) {
 			runTrick();
-			table.team1.calledTrump = false;
-			table.team2.calledTrump = false;
 		}
 
 		// team 1 Euchd team 2
@@ -317,6 +315,8 @@ public class EuchreGame {
 			System.out.println();
 		}
 
+		table.team1.calledTrump = false;
+		table.team2.calledTrump = false;
 		table.rotateDealer();
 
 	}
