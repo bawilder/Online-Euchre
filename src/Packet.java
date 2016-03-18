@@ -209,8 +209,8 @@ public class Packet {
 	 * Packet Layout:
 	 * 		0,message
 	 * 
-	 * @param message - A string to let player know what they did wrong
-	 * @return - packet 
+	 * @param message - A string to let player know what they did wrong 
+	 * @return - packet
 	 */
 	public String illegalPacket(String message) {
 		String packet = "0,";

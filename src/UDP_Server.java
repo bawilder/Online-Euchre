@@ -1,9 +1,13 @@
 import java.io.*;
 import java.net.*;
 
-public class UDP_Server {
+/**
+ * 
+ * @author Tanner Howell
+ * @author Brian Wilder
+ */
 
-	static final int PORT = 50005;
+public class UDP_Server {
 
 	public static void main(String args[]) {
 		int playerNo = 1;
@@ -11,7 +15,6 @@ public class UDP_Server {
 		Socket socket = null;
 
 		try {
-			//serverSocket = new ServerSocket(PORT);
 			serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
 			System.out.println("Using port number: " + serverSocket.getLocalPort());
 			System.out.println("IP Address: " + serverSocket.getInetAddress());
@@ -23,19 +26,17 @@ public class UDP_Server {
 			try {
 				System.out.println("Accepting connections!");
 				socket = serverSocket.accept();
-				//TODO: Find a better way to end the game than a 167 minute timeout 
+				// Set the game to timeout after 167 minutes
 				socket.setSoTimeout(10000000);
 				System.out.println("Connection established");
 			} catch (IOException e) {
 				System.out.println(e);
+				break;
 			}
 			// new thread for a client
 			new EchoThread(socket, playerNo).start();
 			playerNo += 1;
 			
-			//TODO: Make actual break condition
-			if(playerNo > 4)
-				break;
 		}
 		try{
 			serverSocket.close();
