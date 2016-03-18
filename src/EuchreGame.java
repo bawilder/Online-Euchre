@@ -22,7 +22,10 @@ public class EuchreGame {
 	public void dealDeck() {
 		table.deck.shuffle();
 		table.deck.deal();
-<<<<<<< HEAD
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
 		table.players[0].hand= table.deck.hand1;
 		table.players[1].hand= table.deck.hand2;
 		table.players[2].hand= table.deck.hand3;
@@ -42,13 +45,15 @@ public class EuchreGame {
 		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray);
 		
 		table.topOfDiscard= table.deck.discard[0];
+<<<<<<< Updated upstream
+
 =======
 		table.players[0].hand = table.deck.hand1;
 		table.players[1].hand = table.deck.hand2;
 		table.players[2].hand = table.deck.hand3;
 		table.players[3].hand = table.deck.hand4;
 		table.topOfDiscard = table.deck.discard[0];
->>>>>>> Honorbound156-Branch
+>>>>>>> Stashed changes
 	}
 
 	public char makeSuit(int suit) {
@@ -67,7 +72,9 @@ public class EuchreGame {
 		}
 		return trumpSuit;
 	}
-<<<<<<< HEAD
+<<<<<<< Updated upstream
+
+=======
 	
 	//in progress, have to add auto increment of dealer/player and actually pick up card
 	public void trumpRound(){
@@ -126,7 +133,7 @@ public class EuchreGame {
 			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
 			
 			return;
-=======
+>>>>>>> Stashed changes
 
 	// in progress, have to add auto increment of dealer/player and actually
 	// pick up card
@@ -171,7 +178,6 @@ public class EuchreGame {
 				break;
 			}
 			table.rotateTurn();
->>>>>>> Honorbound156-Branch
 		}
 
 		// set the suit that was rejected as trump so that it cannot be selected
