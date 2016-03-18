@@ -71,12 +71,14 @@ public class ConnectUI extends Frame{
             	
             	if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
             		//serverNum = Integer.parseInt(tfPortNum.getText());
+
+            		//TODO: Make this localhost
             		name = tfName.getText();
             		portNum = Integer.parseInt(tfPortNum.getText());
             		
             		//TODO Connect to the server here using portNum and serverNum
             		try {
-						Socket socket = new Socket(serverNum, portNum);
+						Socket socket = new Socket(name, portNum);
 						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 						writeBuff = new PrintWriter(socket.getOutputStream(), true);
 					} catch (Exception err) {

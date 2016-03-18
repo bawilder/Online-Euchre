@@ -17,6 +17,10 @@ import javax.swing.*;
 
 
 public class Client {
+	
+	private ConnectUI player = new ConnectUI();
+	private Packet myPack = new Packet();
+	
 	private String player1Name = "Player1"; //ConnectUI.name;
 	private String player2Name = "Player2";
 	private String player3Name = "Player3";
@@ -72,6 +76,7 @@ public class Client {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -468,6 +473,20 @@ public class Client {
 		return false;
 	}
 	
+	//TODO: Write this biznit
+	/**
+	 * A function that sends a card to the server
+	 * "Player plays a card"
+	 * 
+	 * @return - whether or not the card sends successfully
+	 */
+	public boolean sendCard(int cardVal) {
+		String packet = myPack.playCard(cardVal);
+		
+		player.sendPacket(packet);
+		
+		return false;
+	}
 	/**
 	 * 0 - Invalid
 	 * 1 - Club
