@@ -60,7 +60,13 @@ public class Table {
 		}
 		
 		else{
-			System.out.println("Error in calling trump, program locked down");
+			//String msg = "Error in blah blah ";
+			//Packet packit = new Packet();
+			//packit = packit.illegalPacket(msg);
+			//Server.sendPct(packit);
+			
+			String msg= "Error in calling trump, program locked down";
+			System.out.println(msg);
 		}
 	}
 	
