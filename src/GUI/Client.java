@@ -21,8 +21,6 @@ import javax.swing.*;
 
 public class Client {
 	
-	private ConnectUI player = new ConnectUI();
-	private Packet myPack = new Packet();
 	private String name;
 	private boolean getOut = true;
 	public String serverNum = "localhost";
@@ -499,20 +497,7 @@ public class Client {
 		return false;
 	}
 	
-	//TODO: Write this biznit
-	/**
-	 * A function that sends a card to the server
-	 * "Player plays a card"
-	 * 
-	 * @return - whether or not the card sends successfully
-	 */
-	public boolean sendCard(int cardVal) {
-		String packet = myPack.playCard(cardVal);
-		
-		player.sendPacket(packet);
-		
-		return false;
-	}
+
 	/**
 	 * 0 - Invalid
 	 * 1 - Club
