@@ -1,16 +1,26 @@
 package GUI;
 
+
+/**
+ * Comments for Zach to add:
+ * Trump display, shows players what is trump
+ * When player pick ups card
+ * 
+ */
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.*;
 
 
 public class Client {
-	private String player1Name = "Chuck"; //ConnectUI.name;
-	private String player2Name = "Penis Stomp";
-	private String player3Name = "Wet willie";
-	private String player4Name = "Walla Walla";
+	private String player1Name = "Player1"; //ConnectUI.name;
+	private String player2Name = "Player2";
+	private String player3Name = "Player3";
+	private String player4Name = "Player4";
 	
 	private int numPlayers = 0;
 	
@@ -24,11 +34,21 @@ public class Client {
 	private ImageIcon imagep3;
 	private ImageIcon imagep4;
 	
-	private int card1Num = 21;
-	private int card2Num = 22;
-	private int card3Num = 23;
-	private int card4Num = 1;
-	private int card5Num = 9;
+	private int card1Num = 0;
+	private int card2Num = 1;
+	private int card3Num = 2;
+	private int card4Num = 3;
+	private int card5Num = 14;
+	
+	/**
+	 * 0 - Invalid
+	 * 1 - Club
+	 * 2 - Spade
+	 * 3 - Diamond
+	 * 4 - Heart
+	 */
+	private int cardLead = 3;
+	private int trump = 3;
 	
 	private ImageIcon card1 = new ImageIcon ();
 	private ImageIcon card2 = new ImageIcon ();
@@ -47,12 +67,6 @@ public class Client {
 	private JLabel lblPlayer2 = new JLabel(player2Name);
 	private JLabel lblPlayer3 = new JLabel(player3Name);
 	private JLabel lblPlayer4 = new JLabel(player4Name);
-	
-	private JButton player1sit = new JButton("Sit");
-	private JButton player2sit = new JButton("Sit");
-	private JButton player3sit = new JButton("Sit");
-	private JButton player4sit = new JButton("Sit");
-	
 
 	/**
 	 * Launch the application.
@@ -84,7 +98,7 @@ public class Client {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		//TODO Draw the sit down screen
+		//TODO wait until all 4 players are connected
 		
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -98,139 +112,116 @@ public class Client {
 		player2.setBounds(10, 130, 161, 600);
 		
 		frame.getContentPane().add(player2);
-		player2.setLayout(null);
 		
 		player3.setBackground(Color.DARK_GRAY);
 		player3.setBounds(317, 11, 634, 166);
 		
 		frame.getContentPane().add(player3);
-		player3.setLayout(null);
 		
 		player4.setBackground(Color.DARK_GRAY);
 		player4.setBounds(1071, 136, 153, 589);
 		
 		frame.getContentPane().add(player4);
-		player4.setLayout(null);
 		
 		player1.setBackground(Color.DARK_GRAY);
 		player1.setBounds(317, 684, 634, 166);
 		
 		frame.getContentPane().add(player1);
-		player1.setLayout(null);
 		
-		player1sit.setBounds(234, 58, 154, 42);
-		player1.add(player1sit);
-		player2sit.setBounds(0, 281, 154, 42);
-		player2.add(player2sit);
-		player3sit.setBounds(239, 56, 154, 42);
-		player3.add(player3sit);
-		player4sit.setBounds(0, 277, 154, 42);
-		player4.add(player4sit);
+		//TODO Wait for the server to send out the first hand
 		
+		//Draw the board for the first hand
+		JButton btnPass = new JButton("Pass");
+		btnPass.setBounds(1135, 818, 89, 32);
+		frame.getContentPane().add(btnPass);
 		
+		JButton btnPickUp = new JButton("Pick Up");
+		btnPickUp.setBounds(1025, 818, 100, 32);
+		frame.getContentPane().add(btnPickUp);
+		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		// TODO Wait till the person sits down to send their sit down position
+		lblPlayer1.setForeground(Color.WHITE);
+		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPlayer1.setBounds(497, 650, 250, 23);
+		frame.getContentPane().add(lblPlayer1);
 		
-//		while (numPlayers < 4) {
-//			//TODO wait for the server to send everyones names and positions
-//			
-//			
-//		}
-//		
-//		//TODO Wait for the server to send out the first hand
-//		
-//		//Draw the board for the first hand
-//		JButton btnPass = new JButton("Pass");
-//		btnPass.setBounds(1135, 818, 89, 32);
-//		frame.getContentPane().add(btnPass);
-//		
-//		JButton btnPickUp = new JButton("Pick Up");
-//		btnPickUp.setBounds(1025, 818, 100, 32);
-//		frame.getContentPane().add(btnPickUp);
-//		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
-//		
-//		lblPlayer1.setForeground(Color.WHITE);
-//		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-//		lblPlayer1.setBounds(497, 650, 250, 23);
-//		frame.getContentPane().add(lblPlayer1);
-//		
-//		lblPlayer4.setHorizontalAlignment(SwingConstants.TRAILING);
-//		lblPlayer4.setForeground(Color.WHITE);
-//		lblPlayer4.setFont(new Font("Tahoma", Font.PLAIN, 20));
-//		lblPlayer4.setBounds(811, 419, 250, 32);
-//		frame.getContentPane().add(lblPlayer4);
-//		
-//		lblPlayer3.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblPlayer3.setForeground(Color.WHITE);
-//		lblPlayer3.setFont(new Font("Tahoma", Font.PLAIN, 20));
-//		lblPlayer3.setBounds(497, 188, 250, 23);
-//		frame.getContentPane().add(lblPlayer3);
-//		
-//		lblPlayer2.setForeground(Color.WHITE);
-//		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-//		lblPlayer2.setBounds(181, 424, 250, 23);
-//		frame.getContentPane().add(lblPlayer2);
-//		
-//		JLabel lblYourTeam = new JLabel("Your Team:");
-//		lblYourTeam.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		lblYourTeam.setForeground(Color.WHITE);
-//		lblYourTeam.setBounds(10, 789, 100, 23);
-//		frame.getContentPane().add(lblYourTeam);
-//		
-//		JLabel lblOpponents = new JLabel("Opponents:");
-//		lblOpponents.setForeground(Color.WHITE);
-//		lblOpponents.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		lblOpponents.setBounds(10, 827, 100, 23);
-//		frame.getContentPane().add(lblOpponents);
-//		
-//		JLabel lblTricks = new JLabel("Tricks");
-//		lblTricks.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblTricks.setForeground(Color.WHITE);
-//		lblTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		lblTricks.setBounds(99, 754, 100, 23);
-//		frame.getContentPane().add(lblTricks);
-//		
-//		JLabel lblScore = new JLabel("Score");
-//		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblScore.setForeground(Color.WHITE);
-//		lblScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		lblScore.setBounds(194, 754, 100, 23);
-//		frame.getContentPane().add(lblScore);
-//		
-//		JLabel yourTeamTricks = new JLabel("0");
-//		yourTeamTricks.setHorizontalAlignment(SwingConstants.CENTER);
-//		yourTeamTricks.setForeground(Color.WHITE);
-//		yourTeamTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		yourTeamTricks.setBounds(99, 788, 100, 23);
-//		frame.getContentPane().add(yourTeamTricks);
-//		
-//		JLabel yourTeamScore = new JLabel("0");
-//		yourTeamScore.setHorizontalAlignment(SwingConstants.CENTER);
-//		yourTeamScore.setForeground(Color.WHITE);
-//		yourTeamScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		yourTeamScore.setBounds(194, 788, 100, 23);
-//		frame.getContentPane().add(yourTeamScore);
-//		
-//		JLabel oppoTricks = new JLabel("0");
-//		oppoTricks.setHorizontalAlignment(SwingConstants.CENTER);
-//		oppoTricks.setForeground(Color.WHITE);
-//		oppoTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		oppoTricks.setBounds(99, 827, 100, 23);
-//		frame.getContentPane().add(oppoTricks);
-//		
-//		JLabel oppoScore = new JLabel("0");
-//		oppoScore.setHorizontalAlignment(SwingConstants.CENTER);
-//		oppoScore.setForeground(Color.WHITE);
-//		oppoScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-//		oppoScore.setBounds(194, 827, 100, 23);
-//		frame.getContentPane().add(oppoScore);
-//		
-//		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
-//		btnPickupAndGo.setBounds(1025, 789, 200, 23);
-//		frame.getContentPane().add(btnPickupAndGo);
-//		
-//		pickCards();
-//		drawCards();
+		lblPlayer4.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblPlayer4.setForeground(Color.WHITE);
+		lblPlayer4.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPlayer4.setBounds(811, 419, 250, 32);
+		frame.getContentPane().add(lblPlayer4);
+		
+		lblPlayer3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPlayer3.setForeground(Color.WHITE);
+		lblPlayer3.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPlayer3.setBounds(497, 188, 250, 23);
+		frame.getContentPane().add(lblPlayer3);
+		
+		lblPlayer2.setForeground(Color.WHITE);
+		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPlayer2.setBounds(181, 424, 250, 23);
+		frame.getContentPane().add(lblPlayer2);
+		
+		JLabel lblYourTeam = new JLabel("Your Team:");
+		lblYourTeam.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblYourTeam.setForeground(Color.WHITE);
+		lblYourTeam.setBounds(10, 789, 100, 23);
+		frame.getContentPane().add(lblYourTeam);
+		
+		JLabel lblOpponents = new JLabel("Opponents:");
+		lblOpponents.setForeground(Color.WHITE);
+		lblOpponents.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblOpponents.setBounds(10, 827, 100, 23);
+		frame.getContentPane().add(lblOpponents);
+		
+		JLabel lblTricks = new JLabel("Tricks");
+		lblTricks.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTricks.setForeground(Color.WHITE);
+		lblTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblTricks.setBounds(99, 754, 100, 23);
+		frame.getContentPane().add(lblTricks);
+		
+		JLabel lblScore = new JLabel("Score");
+		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
+		lblScore.setForeground(Color.WHITE);
+		lblScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lblScore.setBounds(194, 754, 100, 23);
+		frame.getContentPane().add(lblScore);
+		
+		JLabel yourTeamTricks = new JLabel("0");
+		yourTeamTricks.setHorizontalAlignment(SwingConstants.CENTER);
+		yourTeamTricks.setForeground(Color.WHITE);
+		yourTeamTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		yourTeamTricks.setBounds(99, 788, 100, 23);
+		frame.getContentPane().add(yourTeamTricks);
+		
+		JLabel yourTeamScore = new JLabel("0");
+		yourTeamScore.setHorizontalAlignment(SwingConstants.CENTER);
+		yourTeamScore.setForeground(Color.WHITE);
+		yourTeamScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		yourTeamScore.setBounds(194, 788, 100, 23);
+		frame.getContentPane().add(yourTeamScore);
+		
+		JLabel oppoTricks = new JLabel("0");
+		oppoTricks.setHorizontalAlignment(SwingConstants.CENTER);
+		oppoTricks.setForeground(Color.WHITE);
+		oppoTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		oppoTricks.setBounds(99, 827, 100, 23);
+		frame.getContentPane().add(oppoTricks);
+		
+		JLabel oppoScore = new JLabel("0");
+		oppoScore.setHorizontalAlignment(SwingConstants.CENTER);
+		oppoScore.setForeground(Color.WHITE);
+		oppoScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		oppoScore.setBounds(194, 827, 100, 23);
+		frame.getContentPane().add(oppoScore);
+		
+		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
+		btnPickupAndGo.setBounds(1025, 789, 200, 23);
+		frame.getContentPane().add(btnPickupAndGo);
+		
+		pickCards();
+		drawCards();
 
 		
 		//TODO update the board as turns go
@@ -243,22 +234,88 @@ public class Client {
 			switch (i) {
 			case 0 : 
 				player1.setLayout(new GridLayout(0, turnNo, 0, 0));
-				for (int j = 0; j < turnNo; j++) { // draw the right number of cards
-					JButton tempbutt = new JButton ();
-					tempbutt.setBackground(Color.darkGray);
-					tempbutt.setBorderPainted(false);
+				for (int j = 0; j < turnNo; j++) { // draw the right number of card
 					if ( j == 0 ) { 
-						tempbutt.setIcon(card1);
+						final JButton card1butt = new JButton ();
+						card1butt.setBackground(Color.darkGray);
+						card1butt.setBorderPainted(false);
+						card1butt.setIcon(card1);
+						player1.add(card1butt);
+						card1butt.addActionListener(new ActionListener() {
+				            @Override
+				            public void actionPerformed(ActionEvent e) {
+				                System.out.println("Playerclicked button1");
+				                if (isValidMove(card1Num)) {
+				                	//TODO add network send this card to server
+				                	card1butt.setVisible(false);
+				                }
+				            }
+						});
 					} else if ( j == 1) {
-						tempbutt.setIcon(card2);
+						final JButton card2butt = new JButton ();
+						card2butt.setBackground(Color.darkGray);
+						card2butt.setBorderPainted(false);
+						card2butt.setIcon(card2);
+						player1.add(card2butt);
+						card2butt.addActionListener(new ActionListener() {
+				            @Override
+				            public void actionPerformed(ActionEvent e) {
+				                System.out.println("Player clicked button2");
+				                if (isValidMove(card2Num)) {
+				                	//TODO add network send this card to server
+				                	card2butt.setVisible(false);
+				                }
+				            }
+						});
 					} else if ( j == 2) {
-						tempbutt.setIcon(card3);
+						final JButton card3butt = new JButton ();
+						card3butt.setBackground(Color.darkGray);
+						card3butt.setBorderPainted(false);
+						card3butt.setIcon(card3);
+						player1.add(card3butt);
+						card3butt.addActionListener(new ActionListener() {
+				            @Override
+				            public void actionPerformed(ActionEvent e) {
+				                System.out.println("Player clicked button3");
+				                if (isValidMove(card3Num)) {
+				                	//TODO add network send this card to server
+				                	card3butt.setVisible(false);
+				                }
+				            }
+						});
 					} else if ( j == 3) {
-						tempbutt.setIcon(card4);
+						final JButton card4butt = new JButton ();
+						card4butt.setBackground(Color.darkGray);
+						card4butt.setBorderPainted(false);
+						card4butt.setIcon(card4);
+						player1.add(card4butt);
+						card4butt.addActionListener(new ActionListener() {
+				            @Override
+				            public void actionPerformed(ActionEvent e) {
+				                System.out.println("Player clicked button4");
+				                if (isValidMove(card4Num)) {
+				                	//TODO add network send this card to server
+				                	card4butt.setVisible(false);
+				                }
+				            }
+						});
 					} else if ( j == 4) {
-						tempbutt.setIcon(card5);
+						final JButton card5butt = new JButton ();
+						card5butt.setBackground(Color.darkGray);
+						card5butt.setBorderPainted(false);
+						card5butt.setIcon(card5);
+						player1.add(card5butt);
+						card5butt.addActionListener(new ActionListener() {
+				            @Override
+				            public void actionPerformed(ActionEvent e) {
+				                System.out.println("Player clicked button5");
+				                if (isValidMove(card5Num)) {
+				                	//TODO add network send this card to server
+				                	card5butt.setVisible(false);
+				                }
+				            }
+						});
 					}
-					player1.add(tempbutt);
 				}
 				break;
 			case 1 :
@@ -295,6 +352,7 @@ public class Client {
 	 * 
 	 */
 	private void pickCards () {
+
 		
 		ImageIcon temp = null;
 		int tempCardNo = -1;
@@ -377,5 +435,100 @@ public class Client {
 				card5 = temp;
 			}
 		}
+	}
+	
+	
+	private boolean isValidMove (int cardPlayed) {
+		
+		if(cardLead == 0) { //Player has the lead, they can play anything they want
+			return true;
+		} else if (!canFollowSuit()) { // if they cannot follow suit, any card is valid
+			return true;
+		} else if(cardLead == 1 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 1 && cardPlayed == 2)) {
+			if(trump == 2 && cardPlayed == 14) {
+				return false;
+			}
+			return true;
+		} else if (cardLead == 2 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 2 && cardPlayed == 14)) {
+			if(trump == 1 && cardPlayed == 2) {
+				return false;
+			}
+			return true;
+		} else if (cardLead == 3 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 3 && cardPlayed == 8)) {
+			if(trump == 4 && cardPlayed == 20) {
+				return false;
+			}
+			return true;
+		} else if (cardLead == 4 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 4 && cardPlayed == 20)) {
+			if(trump == 3 && cardPlayed == 8) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 0 - Invalid
+	 * 1 - Club
+	 * 2 - Spade
+	 * 3 - Diamond
+	 * 4 - Heart
+	 */
+	private boolean canFollowSuit () {
+		if(cardLead == 1) {
+			if ((card1Num <= 17) && (card1Num >= 12) || (trump == 1 && card1Num == 2)) {
+				return true;
+			} else if (((card2Num <= 17) && (card1Num >= 12) || (trump == 1 && card2Num == 2))) {
+				return true;
+			} else if (((card3Num <= 17) && (card1Num >= 12) || (trump == 1 && card3Num == 2))) {
+				return true;
+			} else if (((card4Num <= 17) && (card1Num >= 12) || (trump == 1 && card4Num == 2))) {
+				return true;
+			} else if (((card5Num <= 17) && (card1Num >= 12) || (trump == 1 && card5Num == 2))) {
+				return true;
+			}
+			return false;
+		} else if (cardLead == 2) {
+			if ((card1Num <= 5) && (card1Num >= 0) || (trump == 2 && card1Num == 14)) {
+				return true;
+			} else if (((card2Num <= 5) && (card1Num >= 0) || (trump == 2 && card2Num == 14))) {
+				return true;
+			} else if (((card3Num <= 5) && (card1Num >= 0) || (trump == 2 && card3Num == 14))) {
+				return true;
+			} else if (((card4Num <= 5) && (card1Num >= 0) || (trump == 2 && card4Num == 14))) {
+				return true;
+			} else if (((card5Num <= 5) && (card1Num >= 0) || (trump == 2 && card5Num == 14))) {
+				return true;
+			}
+			return false;
+		} else if (cardLead == 3) {
+			if ((card1Num <= 23) && (card1Num >= 18) || (trump == 3 && card1Num == 8)) {
+				return true;
+			} else if ((card2Num <= 23) && (card2Num >= 18) || (trump == 3 && card2Num == 8)) {
+				return true;
+			} else if ((card3Num <= 23) && (card3Num >= 18) || (trump == 3 && card3Num == 8)) {
+				return true;
+			} else if ((card4Num <= 23) && (card4Num >= 18) || (trump == 3 && card4Num == 8)) {
+				return true;
+			} else if ((card5Num <= 23) && (card5Num >= 18) || (trump == 3 && card5Num == 8)) {
+				return true;
+			}
+			return false;
+		} else if (cardLead == 4) {
+			if ((card1Num <= 11) && (card1Num >= 6) || (trump == 4 && card1Num == 20)) {
+				return true;
+			} else if ((card2Num <= 11) && (card2Num >= 6) || (trump == 4 && card2Num == 20)) {
+				return true;
+			} else if ((card3Num <= 11) && (card3Num >= 6) || (trump == 4 && card3Num == 20)) {
+				return true;
+			} else if ((card4Num <= 11) && (card4Num >= 6) || (trump == 4 && card4Num == 20)) {
+				return true;
+			} else if ((card5Num <= 11) && (card5Num >= 6) || (trump == 4 && card5Num == 20)) {
+				return true;
+			}
+			return false;
+		}
+		return false;
 	}
 }

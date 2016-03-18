@@ -22,11 +22,27 @@ public class EuchreGame {
 	public void dealDeck() {
 		table.deck.shuffle();
 		table.deck.deal();
-		table.players[0].hand = table.deck.hand1;
-		table.players[1].hand = table.deck.hand2;
-		table.players[2].hand = table.deck.hand3;
-		table.players[3].hand = table.deck.hand4;
-		table.topOfDiscard = table.deck.discard[0];
+
+		table.players[0].hand= table.deck.hand1;
+		table.players[1].hand= table.deck.hand2;
+		table.players[2].hand= table.deck.hand3;
+		table.players[3].hand= table.deck.hand4;
+		
+		int [] tempArray = {0,0,0,0};
+		String player1init;
+		String player2init;
+		String player3init;
+		String player4init;
+		//TODO: send array via server
+		Packet packet = new Packet();
+		
+		player1init = packet.initPacket(9, "Player2", "Player3", "Player3", tempArray);
+		player2init = packet.initPacket(9, "Player1", "Player3", "Player4", tempArray);
+		player3init = packet.initPacket(9, "Player1", "Player2", "Player4", tempArray);
+		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray);
+		
+		table.topOfDiscard= table.deck.discard[0];
+
 	}
 
 	public char makeSuit(int suit) {
@@ -89,6 +105,7 @@ public class EuchreGame {
 				break;
 			}
 			table.rotateTurn();
+
 		}
 
 		// set the suit that was rejected as trump so that it cannot be selected

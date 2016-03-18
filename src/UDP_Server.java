@@ -3,7 +3,7 @@ import java.net.*;
 
 public class UDP_Server {
 
-	static final int PORT = 50001;
+	static final int PORT = 50005;
 
 	public static void main(String args[]) {
 		int playerNo = 1;
@@ -11,14 +11,21 @@ public class UDP_Server {
 		Socket socket = null;
 
 		try {
-			serverSocket = new ServerSocket(PORT);
+			//serverSocket = new ServerSocket(PORT);
+			serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
+			System.out.println("Using port number: " + serverSocket.getLocalPort());
+			System.out.println("IP Address: " + serverSocket.getInetAddress());
 		} catch (IOException e) {
 			System.out.println(e);
 
 		}
 		while (true) {
 			try {
+				System.out.println("Accepting connections!");
 				socket = serverSocket.accept();
+				//TODO: Find a better way to end the game than a 167 minute timeout 
+				socket.setSoTimeout(10000000);
+				System.out.println("Connection established");
 			} catch (IOException e) {
 				System.out.println(e);
 			}
@@ -38,57 +45,3 @@ public class UDP_Server {
 		}
 	}
 }
-
-
-
-
-
-/*public class UDP_Server {
-	public static DatagramSocket mySocket;
-
-	public static void createServer(int sockNo){
-		try {
-			mySocket = new DatagramSocket(sockNo);
-		}
-		catch (Exception err){
-			System.out.println(err);
-		}
-	}
-
-	public void disconnect(){
-		mySocket.close();
-		return;
-	}
-
-	public static void main(String args[]){
-		try {
-			int myPort = Integer.parseInt(args[0]); // get port number
-			boolean gameIsDone = false;
-			//DatagramSocket mySocket = new DatagramSocket(myPort);
-			createServer(myPort);
-
-
-			System.out.println("Server is now ready");
-			System.out.println("IP Address is: " + InetAddress.getLocalHost().getHostAddress());
-			System.out.println("Listening port is: " + mySocket.getLocalPort());
-
-			while (true){
-				byte[] receive = new byte[512];
-				byte[] send = new byte[512];
-
-
-
-
-				if(gameIsDone == true)
-					break;
-			}
-
-			//mySocket.close();
-		}
-		catch ( Exception err ){
-			System.out.println(err);
-		}
-
-	}
-}
- */

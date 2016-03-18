@@ -1,5 +1,8 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 
@@ -25,9 +28,6 @@ public class EchoThread extends Thread {
 
 	//TODO: Needs to know which player it is
 	public void run(int playerNo) {
-		//BufferedReader in = null;
-		//PrintWriter out = null;
-		String line;
 		try {
 			// Buffer for reading in
 			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
@@ -41,23 +41,58 @@ public class EchoThread extends Thread {
 
 		while (true) {
 			try {
-
+				String pack = "";
+				int cardPlayed = -1;
+				int playerLocation = -1;
+				String playerName = "";
 				if(in.ready() == true){
-					String pack = receivePacket();
+					pack = receivePacket();
 				}
-				/*line = in.readLine();
-                if ((line == null) || line.equalsIgnoreCase("TERM")) {
-                    socket.close();
-                    return;
-                }*/
+				if(pack.length() > 0 && pack.toCharArray()[0] == '2'){
+					cardPlayed = parseCardPacket(pack);
+				}
+				else if(pack.length() > 0 && pack.toCharArray()[0] == '6'){
+					playerLocation = parseNamePacket_loc(pack);
+					playerName = parseNamePacket_name(pack);
+				}
+				//TODO: test this
+				//TODO: send packets from host to client
+				//TODO: Find out how to interface host with game logic
 
 			} catch (IOException e) {
 				System.out.println(e);
-				return;
 			}
 		}
 	}
 
+	/**
+	 * A function to parse a packet to get the player location when a name packet is received
+	 * @param packet - the packet received
+	 * @return  - player location
+	 */
+	public int parseNamePacket_loc(String packet){
+		int playerLocation = -1;
+		
+		// parse the packet into an arraylist
+		ArrayList<String> list = new ArrayList<String>(Arrays.asList(packet.split(",")));
+		playerLocation = Integer.parseInt(list.get(1));
+		
+		return playerLocation;
+	}
+	
+	/**
+	 * A function to parse a packet to get the player name when a name packet is received
+	 * @param packet - the packet recieved
+	 * @return - the player name
+	 */
+	public String parseNamePacket_name(String packet){
+		String playerName = "";
+		// parse the packet into an arraylist
+		ArrayList<String> list = new ArrayList<String>(Arrays.asList(packet.split(",")));
+		playerName = list.get(2);
+			
+		return playerName;
+	}
 	/**
 	 * A function that sends a packet over the printbuffer
 	 * @param myPacket - the packet to be send
@@ -81,7 +116,7 @@ public class EchoThread extends Thread {
 	}
 
 	/**
-	 * 
+	 * A function that listens for a packet
 	 * @return
 	 */
 	public String receivePacket(){
@@ -94,5 +129,20 @@ public class EchoThread extends Thread {
 			}
 		}
 		return rcvPack;
+	}
+	
+	/**
+	 * A parser to return the card that is played by the client
+	 *  
+	 * @param packet - a packet that is received
+	 * @return - integer value corresponding to a card
+	 */
+	public int parseCardPacket(String packet){
+		int cardNo = -1;
+		ArrayList<String> list = new ArrayList<String>(Arrays.asList(packet.split(",")));
+		
+		cardNo = Integer.parseInt(list.get(1));
+		
+		return cardNo;
 	}
 }
