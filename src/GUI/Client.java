@@ -47,8 +47,8 @@ public class Client {
 	 * 3 - Diamond
 	 * 4 - Heart
 	 */
-	private int cardLead = 1;
-	private int trump = 2;
+	private int cardLead = 3;
+	private int trump = 3;
 	
 	private ImageIcon card1 = new ImageIcon ();
 	private ImageIcon card2 = new ImageIcon ();
@@ -246,6 +246,7 @@ public class Client {
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Playerclicked button1");
 				                if (isValidMove(card1Num)) {
+				                	//TODO add network send this card to server
 				                	card1butt.setVisible(false);
 				                }
 				            }
@@ -261,6 +262,7 @@ public class Client {
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button2");
 				                if (isValidMove(card2Num)) {
+				                	//TODO add network send this card to server
 				                	card2butt.setVisible(false);
 				                }
 				            }
@@ -276,6 +278,7 @@ public class Client {
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button3");
 				                if (isValidMove(card3Num)) {
+				                	//TODO add network send this card to server
 				                	card3butt.setVisible(false);
 				                }
 				            }
@@ -291,6 +294,7 @@ public class Client {
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button4");
 				                if (isValidMove(card4Num)) {
+				                	//TODO add network send this card to server
 				                	card4butt.setVisible(false);
 				                }
 				            }
@@ -306,6 +310,7 @@ public class Client {
 				            public void actionPerformed(ActionEvent e) {
 				                System.out.println("Player clicked button5");
 				                if (isValidMove(card5Num)) {
+				                	//TODO add network send this card to server
 				                	card5butt.setVisible(false);
 				                }
 				            }
@@ -432,24 +437,98 @@ public class Client {
 		}
 	}
 	
+	
 	private boolean isValidMove (int cardPlayed) {
 		
-		//TODO check if the player can follow suit, if not they can play whatever the fuck they want
-		
-		//TODO clubs was lead, spades was trump. Jack of clubs should be a spade thus not being able to be played
-		//right now it was playable. 
-		if(cardLead == 0) {
+		if(cardLead == 0) { //Player has the lead, they can play anything they want
+			return true;
+		} else if (!canFollowSuit()) { // if they cannot follow suit, any card is valid
 			return true;
 		} else if(cardLead == 1 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 1 && cardPlayed == 2)) {
+			if(trump == 2 && cardPlayed == 14) {
+				return false;
+			}
 			return true;
 		} else if (cardLead == 2 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 2 && cardPlayed == 14)) {
+			if(trump == 1 && cardPlayed == 2) {
+				return false;
+			}
 			return true;
 		} else if (cardLead == 3 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 3 && cardPlayed == 8)) {
+			if(trump == 4 && cardPlayed == 20) {
+				return false;
+			}
 			return true;
 		} else if (cardLead == 4 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 4 && cardPlayed == 20)) {
+			if(trump == 3 && cardPlayed == 8) {
+				return false;
+			}
 			return true;
 		}
-		
+		return false;
+	}
+	
+	/**
+	 * 0 - Invalid
+	 * 1 - Club
+	 * 2 - Spade
+	 * 3 - Diamond
+	 * 4 - Heart
+	 */
+	private boolean canFollowSuit () {
+		if(cardLead == 1) {
+			if ((card1Num <= 17) && (card1Num >= 12) || (trump == 1 && card1Num == 2)) {
+				return true;
+			} else if (((card2Num <= 17) && (card1Num >= 12) || (trump == 1 && card2Num == 2))) {
+				return true;
+			} else if (((card3Num <= 17) && (card1Num >= 12) || (trump == 1 && card3Num == 2))) {
+				return true;
+			} else if (((card4Num <= 17) && (card1Num >= 12) || (trump == 1 && card4Num == 2))) {
+				return true;
+			} else if (((card5Num <= 17) && (card1Num >= 12) || (trump == 1 && card5Num == 2))) {
+				return true;
+			}
+			return false;
+		} else if (cardLead == 2) {
+			if ((card1Num <= 5) && (card1Num >= 0) || (trump == 2 && card1Num == 14)) {
+				return true;
+			} else if (((card2Num <= 5) && (card1Num >= 0) || (trump == 2 && card2Num == 14))) {
+				return true;
+			} else if (((card3Num <= 5) && (card1Num >= 0) || (trump == 2 && card3Num == 14))) {
+				return true;
+			} else if (((card4Num <= 5) && (card1Num >= 0) || (trump == 2 && card4Num == 14))) {
+				return true;
+			} else if (((card5Num <= 5) && (card1Num >= 0) || (trump == 2 && card5Num == 14))) {
+				return true;
+			}
+			return false;
+		} else if (cardLead == 3) {
+			if ((card1Num <= 23) && (card1Num >= 18) || (trump == 3 && card1Num == 8)) {
+				return true;
+			} else if ((card2Num <= 23) && (card2Num >= 18) || (trump == 3 && card2Num == 8)) {
+				return true;
+			} else if ((card3Num <= 23) && (card3Num >= 18) || (trump == 3 && card3Num == 8)) {
+				return true;
+			} else if ((card4Num <= 23) && (card4Num >= 18) || (trump == 3 && card4Num == 8)) {
+				return true;
+			} else if ((card5Num <= 23) && (card5Num >= 18) || (trump == 3 && card5Num == 8)) {
+				return true;
+			}
+			return false;
+		} else if (cardLead == 4) {
+			if ((card1Num <= 11) && (card1Num >= 6) || (trump == 4 && card1Num == 20)) {
+				return true;
+			} else if ((card2Num <= 11) && (card2Num >= 6) || (trump == 4 && card2Num == 20)) {
+				return true;
+			} else if ((card3Num <= 11) && (card3Num >= 6) || (trump == 4 && card3Num == 20)) {
+				return true;
+			} else if ((card4Num <= 11) && (card4Num >= 6) || (trump == 4 && card4Num == 20)) {
+				return true;
+			} else if ((card5Num <= 11) && (card5Num >= 6) || (trump == 4 && card5Num == 20)) {
+				return true;
+			}
+			return false;
+		}
 		return false;
 	}
 }
