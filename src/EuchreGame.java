@@ -62,6 +62,7 @@ public class EuchreGame {
 		return trumpSuit;
 	}
 
+
 	// in progress, have to add auto increment of dealer/player and actually
 	// pick up card
 	public void trumpRound() {
@@ -105,7 +106,6 @@ public class EuchreGame {
 				break;
 			}
 			table.rotateTurn();
-
 		}
 
 		// set the suit that was rejected as trump so that it cannot be selected

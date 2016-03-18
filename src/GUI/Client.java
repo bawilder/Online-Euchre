@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -38,12 +39,13 @@ public class Client {
 	public BufferedReader readBuff;
 	public PrintWriter writeBuff;
 	
-	private String player1Name = "Player1"; //ConnectUI.name;
+	private String player1Name = "Player1";
 	private String player2Name = "Player2";
 	private String player3Name = "Player3";
 	private String player4Name = "Player4";
 	
 	private int numPlayers = 0;
+	private int dealer = -1;
 	
 	private int turnNo = 5;
 	private int oppoTricks = 0;
@@ -56,10 +58,11 @@ public class Client {
 	private ImageIcon imagep4;
 	
 	private int card1Num = 0;
-	private int card2Num = 1;
-	private int card3Num = 2;
-	private int card4Num = 3;
-	private int card5Num = 14;
+	private int card2Num = 0;
+	private int card3Num = 0;
+	private int card4Num = 0;
+	private int card5Num = 0;
+	private int trumpCardNum = 0;
 	
 	/**
 	 * 0 - Invalid
@@ -124,11 +127,31 @@ public class Client {
 		ConnectUI();
 	}
 	private void initialize() {
-//		//TODO wait until all 4 players are connected
-//		while (numPlayers < 4) {
-//			
-//			
-//		}
+		String [] parsedPacket;
+		String rcvdInit = "";
+		
+		while(true){
+			
+			rcvdInit = getPacket();
+			//Packet Layout:
+			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+			
+			parsedPacket = rcvdInit.split(",");
+			if(Integer.parseInt(parsedPacket[0]) == 9){
+				dealer = Integer.parseInt(parsedPacket[1]);
+				card1Num = Integer.parseInt(parsedPacket[5]);
+				card2Num = Integer.parseInt(parsedPacket[6]);
+				card3Num = Integer.parseInt(parsedPacket[7]);
+				card4Num = Integer.parseInt(parsedPacket[8]);
+				card5Num = Integer.parseInt(parsedPacket[9]);
+				trumpCardNum = Integer.parseInt(parsedPacket[10]);
+				break;
+			}
+			
+			rcvdInit = "";
+			Arrays.fill(parsedPacket, null);
+		}
+		
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
