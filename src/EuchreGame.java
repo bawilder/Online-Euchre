@@ -22,7 +22,10 @@ public class EuchreGame {
 	public void dealDeck() {
 		table.deck.shuffle();
 		table.deck.deal();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 		table.players[0].hand= table.deck.hand1;
 		table.players[1].hand= table.deck.hand2;
 		table.players[2].hand= table.deck.hand3;
@@ -42,7 +45,15 @@ public class EuchreGame {
 		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray);
 		
 		table.topOfDiscard= table.deck.discard[0];
+<<<<<<< Updated upstream
 
+=======
+		table.players[0].hand = table.deck.hand1;
+		table.players[1].hand = table.deck.hand2;
+		table.players[2].hand = table.deck.hand3;
+		table.players[3].hand = table.deck.hand4;
+		table.topOfDiscard = table.deck.discard[0];
+>>>>>>> Stashed changes
 	}
 
 	public char makeSuit(int suit) {
@@ -61,7 +72,68 @@ public class EuchreGame {
 		}
 		return trumpSuit;
 	}
+<<<<<<< Updated upstream
 
+=======
+	
+	//in progress, have to add auto increment of dealer/player and actually pick up card
+	public void trumpRound(){
+		System.out.println("Player 1, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		int trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 2, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 3, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		trumpCalled= in.nextInt();
+
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+		}
+		
+		System.out.println("Player 4, do you want to set this card to trump: " + table.topOfDiscard.face + table.topOfDiscard.suit + "?");
+		trumpCalled= in.nextInt();
+		
+		if(trumpCalled == 1){
+			table.setTrump(table.topOfDiscard.suit);
+			System.out.println("Dealer, you must pick this card up: " +table.topOfDiscard.face + table.topOfDiscard.suit);
+			System.out.println("What card will you choose to discard from your hand?");
+			table.players[0].showHand();
+			int cardToDrop= in.nextInt()-1;
+			table.players[0].pickUpTrump(cardToDrop, table.topOfDiscard);
+			
+			return;
+>>>>>>> Stashed changes
 
 	// in progress, have to add auto increment of dealer/player and actually
 	// pick up card
