@@ -25,7 +25,6 @@ import com.sun.xml.internal.ws.api.message.Packet;
 public class Client {
 
 	private String name;
-	private boolean getOut = true;
 	public String serverNum = "localhost";
 	private Label lblServerAddr = new Label ("Server Address:");
 	private Label lblPortNum = new Label ("Port Number:");
@@ -129,33 +128,34 @@ public class Client {
 
 	private void start() {
 		frame = new JFrame();
-		ConnectUI();
+		initialize();
+		//ConnectUI();
 	}
 	private void initialize() {
 		String [] parsedPacket;
 		String rcvdInit = "";
 
-		while(true){
-
-			rcvdInit = getPacket();
-			//Packet Layout:
-			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-
-			parsedPacket = rcvdInit.split(",");
-			if(Integer.parseInt(parsedPacket[0]) == 9){
-				dealer = Integer.parseInt(parsedPacket[1]);
-				card1Num = Integer.parseInt(parsedPacket[5]);
-				card2Num = Integer.parseInt(parsedPacket[6]);
-				card3Num = Integer.parseInt(parsedPacket[7]);
-				card4Num = Integer.parseInt(parsedPacket[8]);
-				card5Num = Integer.parseInt(parsedPacket[9]);
-				trumpCardNum = Integer.parseInt(parsedPacket[10]);
-				break;
-			}
-
-			rcvdInit = "";
-			Arrays.fill(parsedPacket, null);
-		}
+//		while(true){
+//
+//			rcvdInit = getPacket();
+//			//Packet Layout:
+//			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+//
+//			parsedPacket = rcvdInit.split(",");
+//			if(Integer.parseInt(parsedPacket[0]) == 9){
+//				dealer = Integer.parseInt(parsedPacket[1]);
+//				card1Num = Integer.parseInt(parsedPacket[5]);
+//				card2Num = Integer.parseInt(parsedPacket[6]);
+//				card3Num = Integer.parseInt(parsedPacket[7]);
+//				card4Num = Integer.parseInt(parsedPacket[8]);
+//				card5Num = Integer.parseInt(parsedPacket[9]);
+//				trumpCardNum = Integer.parseInt(parsedPacket[10]);
+//				break;
+//			}
+//
+//			rcvdInit = "";
+//			Arrays.fill(parsedPacket, null);
+//		}
 
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -164,6 +164,8 @@ public class Client {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
+		
+		
 		player2.setBackground(Color.DARK_GRAY);
 		player2.setBounds(10, 130, 161, 600);
 
@@ -202,7 +204,7 @@ public class Client {
 		lblPlayer4.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblPlayer4.setForeground(Color.WHITE);
 		lblPlayer4.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer4.setBounds(811, 419, 250, 32);
+		lblPlayer4.setBounds(950, 419, 111, 32);
 		frame.getContentPane().add(lblPlayer4);
 
 		lblPlayer3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -213,7 +215,7 @@ public class Client {
 
 		lblPlayer2.setForeground(Color.WHITE);
 		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblPlayer2.setBounds(181, 424, 250, 23);
+		lblPlayer2.setBounds(181, 424, 136, 23);
 		frame.getContentPane().add(lblPlayer2);
 
 		JLabel lblYourTeam = new JLabel("Your Team:");
@@ -273,6 +275,76 @@ public class Client {
 		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
 		btnPickupAndGo.setBounds(1025, 789, 200, 23);
 		frame.getContentPane().add(btnPickupAndGo);
+		
+		JPanel table = new JPanel();
+		table.setBounds(317, 216, 634, 427);
+		frame.getContentPane().add(table);
+		table.setLayout(null);
+		
+		JLabel ply1CardPlayed = new JLabel("");
+		ply1CardPlayed.setBounds(234, 287, 165, 129);
+		table.add(ply1CardPlayed);
+		
+		JLabel ply2CardPlayed = new JLabel("");
+		ply2CardPlayed.setBounds(10, 149, 165, 129);
+		table.add(ply2CardPlayed);
+		
+		JLabel ply3CardPlayed = new JLabel("");
+		ply3CardPlayed.setBounds(234, 11, 165, 129);
+		table.add(ply3CardPlayed);
+		
+		JLabel ply4CardPlayed = new JLabel("");
+		ply4CardPlayed.setBounds(459, 149, 165, 129);
+		table.add(ply4CardPlayed);
+		
+		JLabel trumpCard = new JLabel("");
+		trumpCard.setBounds(234, 149, 165, 129);
+		table.add(trumpCard);
+		
+		JPanel player1Turn = new JPanel();
+		player1Turn.setBackground(Color.YELLOW);
+		player1Turn.setBounds(0, 417, 634, 10);
+		table.add(player1Turn);
+		
+		JPanel player3Turn = new JPanel();
+		player3Turn.setBackground(Color.YELLOW);
+		player3Turn.setBounds(0, 0, 634, 10);
+		table.add(player3Turn);
+		
+		JPanel player2Turn = new JPanel();
+		player2Turn.setBackground(Color.YELLOW);
+		player2Turn.setBounds(0, 0, 10, 427);
+		table.add(player2Turn);
+		
+		JPanel player4Turn = new JPanel();
+		player4Turn.setBackground(Color.YELLOW);
+		player4Turn.setBounds(624, 0, 10, 427);
+		table.add(player4Turn);
+		
+		JLabel lblTrump = new JLabel("Trump:");
+		lblTrump.setBounds(1025, 733, 111, 23);
+		frame.getContentPane().add(lblTrump);
+		
+		JPanel tSelect = new JPanel();
+		tSelect.setBounds(1025, 754, 199, 32);
+		frame.getContentPane().add(tSelect);
+		tSelect.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		JButton tSelectSpades = new JButton("Spades");
+		tSelect.add(tSelectSpades);
+		
+		JButton tSelectClubs = new JButton("Clubs");
+		tSelect.add(tSelectClubs);
+		
+		JButton tSelectDiamonds = new JButton("Diamonds");
+		tSelect.add(tSelectDiamonds);
+		
+		JButton tSelectHearts = new JButton("Hearts");
+		tSelect.add(tSelectHearts);
+		
+		JLabel lblNewLabel = new JLabel("Trump_Suit_Here");
+		lblNewLabel.setBounds(1081, 737, 143, 19);
+		frame.getContentPane().add(lblNewLabel);
 
 		pickCards();
 		drawCards();
@@ -589,93 +661,93 @@ public class Client {
 		return false;
 	}
 
-	public void ConnectUI(){
-		final JFrame ConnectUI = new JFrame();
-		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
-
-		ConnectUI.setLocation(550, 400);
-		ConnectUI.setTitle("Connect to game");
-		ConnectUI.setLayout(new GridLayout (3, 1));
-		ConnectUI.setSize(500, 130);
-		ConnectUI.setVisible(true);
-
-		JPanel northPanel = new JPanel (new GridLayout (1, 4));
-		JPanel middlePanel = new JPanel (new GridLayout (1, 2));
-		JPanel southPanel = new JPanel(new GridLayout (1, 4));
-
-		lblServerAddr.setFont(f);
-		northPanel.add(lblServerAddr);
-		northPanel.add(tfServAddr);
-
-		lblPortNum.setFont(f);
-		northPanel.add(lblPortNum);
-		northPanel.add(tfPortNum);
-
-		lblName.setFont(f);
-		middlePanel.add(lblName);
-
-		lblError.setFont(f);
-		lblError.setForeground(Color.RED);
-		lblError.setVisible(false);
-		southPanel.add(lblError);
-
-		middlePanel.add(tfName);
-
-		ConnectUI.add(northPanel);
-		ConnectUI.add(middlePanel);
-
-		southPanel.add(bttnConnect);                    
-		bttnConnect.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-
-
-				if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
-					//serverNum = Integer.parseInt(tfPortNum.getText());
-					name = tfName.getText();
-					portNum = Integer.parseInt(tfPortNum.getText());
-
-					//TODO Connect to the server here using portNum and serverNum
-					try {
-						Socket socket = new Socket(serverNum, portNum);
-						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-						writeBuff = new PrintWriter(socket.getOutputStream(), true);
-					} catch (Exception err) {
-						err.printStackTrace();
-						lblError.setVisible(true);    
-					}
-
-
-					//TODO: Close socket
-					initialize();
-					ConnectUI.dispose();
-
-				} else {
-					lblError.setVisible(true);    
-				}
-			}
-		});
-
-		southPanel.add(bttnCreate);                    
-		bttnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				//TODO create server logic
-				System.out.println("Need to create server");
-			}
-		});
-
-		southPanel.add(bttnCancel);                    
-		bttnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				ConnectUI.dispose();
-				System.exit(0);
-			}
-		});
-		ConnectUI.add(southPanel);
-		ConnectUI.validate();
-	}
+//	public void ConnectUI(){
+//		final JFrame ConnectUI = new JFrame();
+//		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
+//
+//		ConnectUI.setLocation(550, 400);
+//		ConnectUI.setTitle("Connect to game");
+//		ConnectUI.setLayout(new GridLayout (3, 1));
+//		ConnectUI.setSize(500, 130);
+//		ConnectUI.setVisible(true);
+//
+//		JPanel northPanel = new JPanel (new GridLayout (1, 4));
+//		JPanel middlePanel = new JPanel (new GridLayout (1, 2));
+//		JPanel southPanel = new JPanel(new GridLayout (1, 4));
+//
+//		lblServerAddr.setFont(f);
+//		northPanel.add(lblServerAddr);
+//		northPanel.add(tfServAddr);
+//
+//		lblPortNum.setFont(f);
+//		northPanel.add(lblPortNum);
+//		northPanel.add(tfPortNum);
+//
+//		lblName.setFont(f);
+//		middlePanel.add(lblName);
+//
+//		lblError.setFont(f);
+//		lblError.setForeground(Color.RED);
+//		lblError.setVisible(false);
+//		southPanel.add(lblError);
+//
+//		middlePanel.add(tfName);
+//
+//		ConnectUI.add(northPanel);
+//		ConnectUI.add(middlePanel);
+//
+//		southPanel.add(bttnConnect);                    
+//		bttnConnect.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e)
+//			{
+//
+//
+//				if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
+//					//serverNum = Integer.parseInt(tfPortNum.getText());
+//					name = tfName.getText();
+//					portNum = Integer.parseInt(tfPortNum.getText());
+//
+//					//TODO Connect to the server here using portNum and serverNum
+//					try {
+//						Socket socket = new Socket(serverNum, portNum);
+//						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//						writeBuff = new PrintWriter(socket.getOutputStream(), true);
+//					} catch (Exception err) {
+//						err.printStackTrace();
+//						lblError.setVisible(true);    
+//					}
+//
+//
+//					//TODO: Close socket
+//					initialize();
+//					ConnectUI.dispose();
+//
+//				} else {
+//					lblError.setVisible(true);    
+//				}
+//			}
+//		});
+//
+//		southPanel.add(bttnCreate);                    
+//		bttnCreate.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e)
+//			{
+//				//TODO create server logic
+//				System.out.println("Need to create server");
+//			}
+//		});
+//
+//		southPanel.add(bttnCancel);                    
+//		bttnCancel.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e)
+//			{
+//				ConnectUI.dispose();
+//				System.exit(0);
+//			}
+//		});
+//		ConnectUI.add(southPanel);
+//		ConnectUI.validate();
+//	}
 
 	public String getPacket(){
 		String myPacket = "";
