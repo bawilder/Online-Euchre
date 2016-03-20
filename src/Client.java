@@ -115,6 +115,7 @@ public class Client {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -150,28 +151,79 @@ public class Client {
 		String [] parsedPacket;
 		String rcvdInit = "";
 
-//		while(true){
-//
-//			rcvdInit = getPacket();
-//			//Packet Layout:
-//			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-//
-//			parsedPacket = rcvdInit.split(",");
-//			if(Integer.parseInt(parsedPacket[0]) == 9){
-//				dealer = Integer.parseInt(parsedPacket[1]);
-//				card1Num = Integer.parseInt(parsedPacket[5]);
-//				card2Num = Integer.parseInt(parsedPacket[6]);
-//				card3Num = Integer.parseInt(parsedPacket[7]);
-//				card4Num = Integer.parseInt(parsedPacket[8]);
-//				card5Num = Integer.parseInt(parsedPacket[9]);
-//				trumpCardNum = Integer.parseInt(parsedPacket[10]);
-//				break;
-//			}
-//
-//			rcvdInit = "";
-//			Arrays.fill(parsedPacket, null);
-//		}
+		while(true){
 
+			rcvdInit = getPacket();
+			//Packet Layout:
+			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+			
+			/*
+			 * The integer values are as follows:
+			 * 0  - Illegal Move/Error	(host -> client)
+			 * 1  - Refresh Board 		(host -> client)
+			 * 2  - Play Card			(client -> host)
+			 * 3  - Choose Trump		(client -> host)
+			 * 4  - Poke-It Packet      (host -> client)
+			 * 5  - 
+			 * 6  - 
+			 * 7  - Set Trump Values	(host -> client)
+			 * 8  - Score Update/Deal	(host -> client)
+			 * 9  - Initialize Game		(host -> client)
+			 */
+			parsedPacket = rcvdInit.split(",");
+			if(Integer.parseInt(parsedPacket[0]) == 9) {
+				dealer = Integer.parseInt(parsedPacket[1]);
+				card1Num = Integer.parseInt(parsedPacket[5]);
+				card2Num = Integer.parseInt(parsedPacket[6]);
+				card3Num = Integer.parseInt(parsedPacket[7]);
+				card4Num = Integer.parseInt(parsedPacket[8]);
+				card5Num = Integer.parseInt(parsedPacket[9]);
+				trumpCardNum = Integer.parseInt(parsedPacket[10]);
+				initRecv();
+			}
+			
+			//TODO: Fix this (team1 score team2 score)
+			else if (Integer.parseInt(parsedPacket[0]) == 8){
+				//score update
+				yourScore = Integer.parseInt(parsedPacket[1]);
+				oppoScore = Integer.parseInt(parsedPacket[2]);
+				card1Num = Integer.parseInt(parsedPacket[3]);
+				card2Num = Integer.parseInt(parsedPacket[4]);
+				card3Num = Integer.parseInt(parsedPacket[5]);
+				card4Num = Integer.parseInt(parsedPacket[6]);
+				card5Num = Integer.parseInt(parsedPacket[7]);
+				
+			}
+			
+			else if (Integer.parseInt(parsedPacket[0]) == 7){
+				trump = Integer.parseInt(parsedPacket[1]);
+			}
+			
+			//TODO: Verify zach isn't full of poop
+			else if(Integer.parseInt(parsedPacket[0]) == 4){
+				//get poked (play card)
+				player1Turn.setVisible(true);
+				myTurn = true;
+			}
+			
+			//TODO: this.finish()
+			else if(Integer.parseInt(parsedPacket[0]) == 1){
+				// refresh board
+			}
+			
+			else{
+				System.out.println("Either no packet received, or error parsing packet");
+				//TODO: Notify host about this shiznit
+			}
+
+			rcvdInit = "";
+			Arrays.fill(parsedPacket, null);
+		}
+
+		
+	}
+	
+	public void initRecv () {
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
@@ -372,6 +424,20 @@ public class Client {
 
 		//TODO deal with next hand
 	}
+	
+	/**
+	 * A helper function that packs a card into a packet and sends it
+	 * 
+	 * @param cardPos - The position of the card being played
+	 */
+	private void playCard(int cardPos){
+		String packToSend;
+		
+		packToSend = "2,";
+		packToSend = packToSend.concat(Integer.toString(cardPos));
+		
+		sendPacket(packToSend);
+	}
 
 	private void drawCards () {
 		
@@ -392,7 +458,7 @@ public class Client {
 								System.out.println("Playerclicked button1");
 								if (isValidMove(card1Num) && myTurn) {
 									ply1CardPlayed.setIcon(card1);
-									//TODO send palyCard to server
+									playCard(card1Num);
 									card1butt.setVisible(false);
 								}
 							}
@@ -408,7 +474,7 @@ public class Client {
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Player clicked button2");
 								if (isValidMove(card2Num) && myTurn) {
-									//TODO add network send this card to server
+									playCard(card2Num);
 									ply1CardPlayed.setIcon(card2);
 									card2butt.setVisible(false);
 								}
@@ -426,7 +492,7 @@ public class Client {
 								System.out.println("Player clicked button3");
 								if (isValidMove(card3Num) && myTurn) {
 									ply1CardPlayed.setIcon(card3);
-									//TODO add network send this card to server
+									playCard(card3Num);
 									card3butt.setVisible(false);
 								}
 							}
@@ -443,7 +509,7 @@ public class Client {
 								System.out.println("Player clicked button4");
 								if (isValidMove(card4Num) && myTurn) {
 									ply1CardPlayed.setIcon(card4);
-									//TODO add network send this card to server
+									playCard(card4Num);
 									card4butt.setVisible(false);
 								}
 							}
@@ -460,7 +526,7 @@ public class Client {
 								System.out.println("Player clicked button5");
 								if (isValidMove(card5Num) && myTurn) {
 									ply1CardPlayed.setIcon(card5);
-									//TODO add network send this card to server
+									playCard(card5Num);
 									card5butt.setVisible(false);
 								}
 							}
@@ -617,6 +683,7 @@ public class Client {
 		}
 		return false;
 	}
+
 
 	/**
 	 * 0 - Invalid

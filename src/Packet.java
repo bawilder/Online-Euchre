@@ -12,10 +12,10 @@
  * 0  - Illegal Move/Error	(host -> client)
  * 1  - Refresh Board 		(host -> client)
  * 2  - Play Card			(client -> host)
- * 3  - TBD
- * 4  - TBD
- * 5  - Update All Names  	(host -> client) (DEFUNCT)
- * 6  - Send Name			(client -> host) (DEFUNCT)
+ * 3  - Choose Trump		(client -> host)
+ * 4  - Poke-It Packet      (host -> client)
+ * 5  - 
+ * 6  - 
  * 7  - Set Trump Values	(host -> client)
  * 8  - Score Update/Deal	(host -> client)
  * 9  - Initialize Game		(host -> client)
@@ -64,10 +64,10 @@ public class Packet {
 	 * @param hand - An array containing the hand dealt to the player
 	 * @return - an assembled packet
 	 */
-	public String initPacket(int dealFlag, String p2Nam, String p3Nam, String p4Nam, int[] hand, int discard) {
+	public String initPacket(int dealFlag, int playerNum, String p2Nam, String p3Nam, String p4Nam, int[] hand, int discard) {
 		String packet = "9,";
 		
-		packet = packet.concat(Integer.toString(dealFlag) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
+		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
 		for(int i = 0; i < hand.length; i ++)
 			packet = packet.concat(Integer.toString(hand[i]) + ",");
 			
@@ -123,6 +123,32 @@ public class Packet {
 	}
 	
 	/**
+	 * A packet the client uses to choose the next trump suit
+	 * @param trump - the value of the suit being chosen
+	 * 		1 = Clubs
+	 * 		2 = Spades
+	 * 		3 = Diamonds
+	 * 		4 = Hearts
+	 * 		5 = Pass
+	 * @return - an assembled packet
+	 */
+	public String chooseTrump(int trump){
+		String packet = "3";
+		packet.concat(Integer.toString(trump));
+		return packet;
+	}
+	
+	/**
+	 * A packet to tell the client when it is their
+	 * turn to do something
+	 */
+	public String PokeItPacket(int playerTurn){
+		String packet = "4";
+		packet = packet.concat(Integer.toString(playerTurn + 1));
+		return packet;
+	}
+	
+	/**
 	 * A packet that is used to set trump values
 	 * Packet Layout:
 	 * 		7,minTrump,maxTrump,leftBaur
@@ -132,14 +158,11 @@ public class Packet {
 	 * @param leftBauer
 	 * @return
 	 */
-	public String trumpPacket(int minTrump, int maxTrump, int leftBauer) {
+	public String trumpPacket(int suit) {
 		String packet = "7,";
 		
 		//convert the integers to strings and append them to the packet
-		packet = packet.concat(Integer.toString(minTrump) + ",");
-		packet = packet.concat(Integer.toString(maxTrump) + ",");
-		packet = packet.concat(Integer.toString(leftBauer));
-		
+		packet = packet.concat(Integer.toString(suit));
 		return packet;
 	}
 	
@@ -153,6 +176,7 @@ public class Packet {
 	 * @param newHand - an array of new cards for the player
 	 * @return - Packet
 	 */
+	//TODO: Pass the trump (face up card)
 	public String newHandPacket(int team1Score, int team2Score, int[] newHand) {
 		String packet = "8,";
 		
@@ -192,7 +216,7 @@ public class Packet {
 			else
 				packet = packet.concat(Integer.toString(table[i]));
 			
-		//Append the scores
+		//Append the cards
 		packet = packet.concat(Integer.toString(p1Count) + ",");
 		packet = packet.concat(Integer.toString(p2Count) + ",");
 		packet = packet.concat(Integer.toString(p3Count) + ",");
