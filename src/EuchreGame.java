@@ -72,16 +72,16 @@ public class EuchreGame {
 	public char makeSuit(int suit) {
 		char trumpSuit = 'X';
 		if (suit == 1) {
-			trumpSuit = 'H';
+			trumpSuit = 'C';
 		}
 		if (suit == 2) {
-			trumpSuit = 'D';
-		}
-		if (suit == 3) {
 			trumpSuit = 'S';
 		}
+		if (suit == 3) {
+			trumpSuit = 'D';
+		}
 		if (suit == 4) {
-			trumpSuit = 'C';
+			trumpSuit = 'H';
 		}
 		return trumpSuit;
 	}
@@ -95,11 +95,13 @@ public class EuchreGame {
 		String msg;
 		String retMsg;
 		String[] parsedMsg;
+		int trump = 0;
 		table.playerTurn = table.playerDealing;
 		table.rotateTurn();
 		boolean trumpPickedUp = false;
 		boolean trumpCalled = false;
-
+		
+		for(int i = 0; i < 4; i++){
 			// Tell the clients whose turn it is
 			msg = packet.PokeItPacket(table.playerTurn);
 			server.sendPacket(msg, table.playerTurn + 1);
@@ -126,7 +128,7 @@ public class EuchreGame {
 			}
 			
 
-			if (trumpCalled == 1) {
+			if (trumpCalled == true) {
 
 				if (table.playerTurn == 0 || table.playerTurn == 2) {
 					table.team1.calledTrump = true;
@@ -137,6 +139,8 @@ public class EuchreGame {
 				}
 
 				table.setTrump(table.topOfDiscard.suit);
+				// TODO get this to actually have the dealer pick up trump card
+				/*
 				System.out.println(
 						"Dealer, you must pick this card up: " + table.topOfDiscard.face + table.topOfDiscard.suit);
 				System.out.println("What card will you choose to discard from your hand?");
@@ -148,8 +152,30 @@ public class EuchreGame {
 					System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
 					cardToDrop = in.nextInt() - 1;
 				}
+				
 
 				table.players[table.playerDealing].pickUpTrump(cardToDrop, table.topOfDiscard);
+				*/
+				// get the int value of the trump suit
+				if(table.topOfDiscard.suit == 'C')
+					trump = 1;
+				else if(table.topOfDiscard.suit == 'S')
+					trump = 2;
+				else if(table.topOfDiscard.suit == 'D')
+					trump = 3;
+				else if(table.topOfDiscard.suit == 'H')
+					trump = 4;
+				msg = packet.trumpPacket(trump);
+				
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				
 				trumpPickedUp = true;
 				break;
 			}
@@ -162,25 +188,28 @@ public class EuchreGame {
 
 		if (trumpPickedUp == false) {
 			for (int i = 0; i < 4; i += 1) {
+				// Tell each client who is choosing trump &
+				// wait for a response
+				msg = packet.PokeItPacket(table.playerTurn);
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				server.sendPacket(msg, table.playerTurn + 1);
+				table.rotateTurn();
+				
+				// receive and parse reponse
+				retMsg = server.threads[table.playerTurn + 1].receivePacket();
+				parsedMsg = retMsg.split(",");
 
 				// this is the "Screw the dealer" functionality
 				if (i == 3) {
-					System.out.println("Dealer, you must set trump");
-					System.out.println("What suit would you like to call it?");
-					System.out.println("1=H, 2=D, 3=S, 4=C");
-					System.out.println("You may not set this suit: " + table.suitRejected);
-					System.out.println("This is your hand: ");
-					table.players[table.playerDealing].showHand();
+					
 
-					int trumpSuit = in.nextInt();
+					int trumpSuit = Integer.parseInt(parsedMsg[1]);
 					char trumpSuitChar = makeSuit(trumpSuit);
-
-					while (trumpSuitChar == table.suitRejected) {
-						System.out.println("You honestly can't set that suit... Try again.");
-
-						trumpSuit = in.nextInt();
-						trumpSuitChar = makeSuit(trumpSuit);
-					}
 
 					if (table.playerDealing % 2 == 0) {
 						table.team1.calledTrump = true;
@@ -192,13 +221,19 @@ public class EuchreGame {
 
 					break;
 				}
+				
+				if(!parsedMsg[0].equals("3")){
+					System.out.println("this is a problem");
+				} else {
+					if(parsedMsg[1].equals("5")){
+						trumpCalled = false;
+					} else{
+						trumpCalled = true;
+					}
+				}
 
-				System.out.println("Player " + (table.playerTurn + 1) + " , do you want to set trump? ");
-				System.out.println("This is your hand: ");
-				table.players[i].showHand();
-				int trumpCalled = in.nextInt();
-
-				if (trumpCalled == 1) {
+				// Set trump
+				if (trumpCalled) {
 
 					if (table.playerTurn == 0 || table.playerTurn == 2) {
 						table.team1.calledTrump = true;
@@ -208,20 +243,10 @@ public class EuchreGame {
 						table.team2.calledTrump = true;
 					}
 
-					System.out.println("What suit would you like to call it?");
-					System.out.println("1=H, 2=D, 3=S, 4=C");
-					System.out.println("You may not set this suit: " + table.suitRejected);
-					int trumpSuit = in.nextInt();
-					char trumpSuitChar = makeSuit(trumpSuit);
-
-					while (trumpSuitChar == table.suitRejected) {
-						System.out.println("You honestly can't set that suit... Try again.");
-
-						trumpSuit = in.nextInt();
-						trumpSuitChar = makeSuit(trumpSuit);
-					}
-
+					trump = Integer.parseInt(parsedMsg[1]);
+					char trumpSuitChar = makeSuit(trump);
 					table.setTrump(trumpSuitChar);
+					
 					break;
 				}
 
@@ -230,14 +255,30 @@ public class EuchreGame {
 
 			table.playerTurn = table.playerDealing;
 			table.rotateTurn();
+			
+			msg = packet.PokeItPacket(table.playerTurn);
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
 
-			if (table.team1.calledTrump == true) {
-				System.out.println("Team 1 called trump to be: " + table.trump);
-			}
-			if (table.team2.calledTrump == true) {
-				System.out.println("Team 2 called trump to be: " + table.trump);
-			}
 		}
+
+		// Send trump to each client
+		msg = packet.trumpPacket(trump);
+		
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
 
 		trumpPickedUp = false;
 	}
@@ -410,98 +451,98 @@ public class EuchreGame {
 	}
 	
 	public int cardToInt(Card tempCard){
-		if (tempCard.suit == 'S' && tempCard.face == 'N'){
+		if (tempCard.suit == 'C' && tempCard.face == 'N'){
 		    return 0;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'T'){
+		if (tempCard.suit == 'C' && tempCard.face == 'T'){
 		    return 1;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'J'){
+		if (tempCard.suit == 'C' && tempCard.face == 'J'){
 		    return 2;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'C' && tempCard.face == 'Q'){
 		    return 3;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'K'){
+		if (tempCard.suit == 'C' && tempCard.face == 'K'){
 		    return 4;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'A'){
+		if (tempCard.suit == 'C' && tempCard.face == 'A'){
 		    return 5;
 		}
-		if (tempCard.suit == 'H' && tempCard.face == 'N'){
+		if (tempCard.suit == 'S' && tempCard.face == 'N'){
 		    return 6;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'T'){
+		if (tempCard.suit == 'S' && tempCard.face == 'T'){
 		    return 7;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'J'){
+		if (tempCard.suit == 'S' && tempCard.face == 'J'){
 		    return 8;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'S' && tempCard.face == 'Q'){
 		    return 9;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'K'){
+		if (tempCard.suit == 'S' && tempCard.face == 'K'){
 		    return 10;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'A'){
+		if (tempCard.suit == 'S' && tempCard.face == 'A'){
 		    return 11;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'N'){
+		if (tempCard.suit == 'D' && tempCard.face == 'N'){
 		    return 12;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'T'){
+		if (tempCard.suit == 'D' && tempCard.face == 'T'){
 		    return 13;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'J'){
+		if (tempCard.suit == 'D' && tempCard.face == 'J'){
 		    return 14;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'D' && tempCard.face == 'Q'){
 		    return 15;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'K'){
+		if (tempCard.suit == 'D' && tempCard.face == 'K'){
 		    return 16;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'A'){
+		if (tempCard.suit == 'D' && tempCard.face == 'A'){
 		    return 17;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'N'){
+		if (tempCard.suit == 'H' && tempCard.face == 'N'){
 		    return 18;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'T'){
+		if (tempCard.suit == 'H' && tempCard.face == 'T'){
 		    return 19;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'J'){
+		if (tempCard.suit == 'H' && tempCard.face == 'J'){
 		    return 20;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'H' && tempCard.face == 'Q'){
 		    return 21;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'K'){
+		if (tempCard.suit == 'H' && tempCard.face == 'K'){
 		    return 22;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'A'){
+		if (tempCard.suit == 'H' && tempCard.face == 'A'){
 		    return 23;
 		}
 		

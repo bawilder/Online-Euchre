@@ -133,7 +133,7 @@ public class Packet {
 	 * @return - an assembled packet
 	 */
 	public String chooseTrump(int trump){
-		String packet = "3";
+		String packet = "3,";
 		packet.concat(Integer.toString(trump));
 		return packet;
 	}
@@ -143,7 +143,7 @@ public class Packet {
 	 * turn to do something
 	 */
 	public String PokeItPacket(int playerTurn){
-		String packet = "4";
+		String packet = "4,";
 		packet = packet.concat(Integer.toString(playerTurn + 1));
 		return packet;
 	}
@@ -158,13 +158,11 @@ public class Packet {
 	 * @param leftBauer
 	 * @return
 	 */
-	public String trumpPacket(int minTrump, int maxTrump, int leftBauer) {
+	public String trumpPacket(int suit) {
 		String packet = "7,";
 		
 		//convert the integers to strings and append them to the packet
-		packet = packet.concat(Integer.toString(minTrump) + ",");
-		packet = packet.concat(Integer.toString(maxTrump) + ",");
-		packet = packet.concat(Integer.toString(leftBauer));
+		packet = packet.concat(Integer.toString(suit));
 		
 		return packet;
 	}
