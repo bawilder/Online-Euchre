@@ -45,7 +45,7 @@ public class Client {
 	private String player3Name = "Player3";
 	private String player4Name = "Player4";
 
-	private boolean myTurn = false;
+	private boolean myTurn = true;
 
 	private int numPlayers = 0;
 	private int dealer = -1;
@@ -61,11 +61,26 @@ public class Client {
 	private ImageIcon imagep4;
 
 	private int card1Num = 0;
-	private int card2Num = 0;
-	private int card3Num = 0;
-	private int card4Num = 0;
-	private int card5Num = 0;
+	private int card2Num = 1;
+	private int card3Num = 2;
+	private int card4Num = 3;
+	private int card5Num = 4;
 	private int trumpCardNum = 0;
+	
+	private JLabel ply1CardPlayed = new JLabel("");
+	private JLabel ply2CardPlayed = new JLabel("");
+	private JLabel ply3CardPlayed = new JLabel("");
+	private JLabel ply4CardPlayed = new JLabel("");
+	private JLabel trumpCard = new JLabel("");
+	
+	private JPanel player1Turn = new JPanel();
+	private JPanel player3Turn = new JPanel();
+	private JPanel player2Turn = new JPanel();
+	private JPanel player4Turn = new JPanel();
+	
+	private JPanel tSelect = new JPanel();
+	
+	private JLabel lblNewLabel = new JLabel("Trump_Suit_Here");
 
 	/**
 	 * 0 - Invalid
@@ -74,7 +89,7 @@ public class Client {
 	 * 3 - Diamond
 	 * 4 - Heart
 	 */
-	private int cardLead = 3;
+	private int cardLead = 0;
 	private int trump = 3;
 
 	private ImageIcon card1 = new ImageIcon ();
@@ -281,42 +296,34 @@ public class Client {
 		frame.getContentPane().add(table);
 		table.setLayout(null);
 		
-		JLabel ply1CardPlayed = new JLabel("");
-		ply1CardPlayed.setBounds(234, 287, 165, 129);
+		
+		ply1CardPlayed.setBounds(234, 245, 165, 171);
 		table.add(ply1CardPlayed);
 		
-		JLabel ply2CardPlayed = new JLabel("");
-		ply2CardPlayed.setBounds(10, 149, 165, 129);
+		ply2CardPlayed.setBounds(10, 149, 214, 129);
 		table.add(ply2CardPlayed);
 		
-		JLabel ply3CardPlayed = new JLabel("");
-		ply3CardPlayed.setBounds(234, 11, 165, 129);
+		ply3CardPlayed.setBounds(234, 11, 165, 171);
 		table.add(ply3CardPlayed);
 		
-		JLabel ply4CardPlayed = new JLabel("");
-		ply4CardPlayed.setBounds(459, 149, 165, 129);
+		ply4CardPlayed.setBounds(409, 149, 215, 129);
 		table.add(ply4CardPlayed);
 		
-		JLabel trumpCard = new JLabel("");
 		trumpCard.setBounds(234, 149, 165, 129);
 		table.add(trumpCard);
 		
-		JPanel player1Turn = new JPanel();
 		player1Turn.setBackground(Color.YELLOW);
 		player1Turn.setBounds(0, 417, 634, 10);
 		table.add(player1Turn);
 		
-		JPanel player3Turn = new JPanel();
 		player3Turn.setBackground(Color.YELLOW);
 		player3Turn.setBounds(0, 0, 634, 10);
 		table.add(player3Turn);
 		
-		JPanel player2Turn = new JPanel();
 		player2Turn.setBackground(Color.YELLOW);
 		player2Turn.setBounds(0, 0, 10, 427);
 		table.add(player2Turn);
 		
-		JPanel player4Turn = new JPanel();
 		player4Turn.setBackground(Color.YELLOW);
 		player4Turn.setBounds(624, 0, 10, 427);
 		table.add(player4Turn);
@@ -325,7 +332,6 @@ public class Client {
 		lblTrump.setBounds(1025, 733, 111, 23);
 		frame.getContentPane().add(lblTrump);
 		
-		JPanel tSelect = new JPanel();
 		tSelect.setBounds(1025, 754, 199, 32);
 		frame.getContentPane().add(tSelect);
 		tSelect.setLayout(new GridLayout(1, 0, 0, 0));
@@ -342,7 +348,6 @@ public class Client {
 		JButton tSelectHearts = new JButton("Hearts");
 		tSelect.add(tSelectHearts);
 		
-		JLabel lblNewLabel = new JLabel("Trump_Suit_Here");
 		lblNewLabel.setBounds(1081, 737, 143, 19);
 		frame.getContentPane().add(lblNewLabel);
 
@@ -374,7 +379,7 @@ public class Client {
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Playerclicked button1");
 								if (isValidMove(card1Num) && myTurn) {
-
+									ply1CardPlayed.setIcon(card1);
 									//TODO send palyCard to server
 									card1butt.setVisible(false);
 								}
@@ -392,6 +397,7 @@ public class Client {
 								System.out.println("Player clicked button2");
 								if (isValidMove(card2Num) && myTurn) {
 									//TODO add network send this card to server
+									ply1CardPlayed.setIcon(card2);
 									card2butt.setVisible(false);
 								}
 							}
@@ -407,6 +413,7 @@ public class Client {
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Player clicked button3");
 								if (isValidMove(card3Num) && myTurn) {
+									ply1CardPlayed.setIcon(card3);
 									//TODO add network send this card to server
 									card3butt.setVisible(false);
 								}
@@ -423,6 +430,7 @@ public class Client {
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Player clicked button4");
 								if (isValidMove(card4Num) && myTurn) {
+									ply1CardPlayed.setIcon(card4);
 									//TODO add network send this card to server
 									card4butt.setVisible(false);
 								}
@@ -439,6 +447,7 @@ public class Client {
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Player clicked button5");
 								if (isValidMove(card5Num) && myTurn) {
+									ply1CardPlayed.setIcon(card5);
 									//TODO add network send this card to server
 									card5butt.setVisible(false);
 								}
