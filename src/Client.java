@@ -150,15 +150,28 @@ public class Client {
 	private void initialize() {
 		String [] parsedPacket;
 		String rcvdInit = "";
-/*
+
 		while(true){
 
 			rcvdInit = getPacket();
 			//Packet Layout:
 			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-
+			
+			/*
+			 * The integer values are as follows:
+			 * 0  - Illegal Move/Error	(host -> client)
+			 * 1  - Refresh Board 		(host -> client)
+			 * 2  - Play Card			(client -> host)
+			 * 3  - Choose Trump		(client -> host)
+			 * 4  - Poke-It Packet      (host -> client)
+			 * 5  - 
+			 * 6  - 
+			 * 7  - Set Trump Values	(host -> client)
+			 * 8  - Score Update/Deal	(host -> client)
+			 * 9  - Initialize Game		(host -> client)
+			 */
 			parsedPacket = rcvdInit.split(",");
-			if(Integer.parseInt(parsedPacket[0]) == 9){
+			if(Integer.parseInt(parsedPacket[0]) == 9) {
 				dealer = Integer.parseInt(parsedPacket[1]);
 				card1Num = Integer.parseInt(parsedPacket[5]);
 				card2Num = Integer.parseInt(parsedPacket[6]);
@@ -166,13 +179,51 @@ public class Client {
 				card4Num = Integer.parseInt(parsedPacket[8]);
 				card5Num = Integer.parseInt(parsedPacket[9]);
 				trumpCardNum = Integer.parseInt(parsedPacket[10]);
-				break;
+				initRecv();
+			}
+			
+			//TODO: Fix this (team1 score team2 score)
+			else if (Integer.parseInt(parsedPacket[0]) == 8){
+				//score update
+				yourScore = Integer.parseInt(parsedPacket[1]);
+				oppoScore = Integer.parseInt(parsedPacket[2]);
+				card1Num = Integer.parseInt(parsedPacket[3]);
+				card2Num = Integer.parseInt(parsedPacket[4]);
+				card3Num = Integer.parseInt(parsedPacket[5]);
+				card4Num = Integer.parseInt(parsedPacket[6]);
+				card5Num = Integer.parseInt(parsedPacket[7]);
+				
+			}
+			
+			else if (Integer.parseInt(parsedPacket[0]) == 7){
+				trump = Integer.parseInt(parsedPacket[1]);
+			}
+			
+			//TODO: Verify zach isn't full of poop
+			else if(Integer.parseInt(parsedPacket[0]) == 4){
+				//get poked (play card)
+				player1Turn.setVisible(true);
+				myTurn = true;
+			}
+			
+			//TODO: this.finish()
+			else if(Integer.parseInt(parsedPacket[0]) == 1){
+				// refresh board
+			}
+			
+			else{
+				System.out.println("Either no packet received, or error parsing packet");
+				//TODO: Notify host about this shiznit
 			}
 
 			rcvdInit = "";
 			Arrays.fill(parsedPacket, null);
 		}
-*/
+
+		
+	}
+	
+	public void initRecv () {
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
@@ -366,23 +417,6 @@ public class Client {
 		drawCards();
 
 		//TODO add code for starting. Picking trump.
-		
-		String rPack = "";
-		String [] parsed;
-		while(true){
-			
-			rPack = getPacket();
-			
-			parsed = rPack.split(",");
-			
-			if (parsed[0] == "3"){
-				parsed[0] = "1"; //lol this is filler code
-				
-			}
-			
-			rPack = "";
-			Arrays.fill(parsed, null);
-		}
 
 		//TODO update the board as turns go
 		

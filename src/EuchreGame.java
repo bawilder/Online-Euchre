@@ -35,13 +35,15 @@ public class EuchreGame {
 		String player4init;
 		//TODO: send array via server
 		Packet packet = new Packet();
-		
-		player1init = packet.initPacket(9, "Player2", "Player3", "Player3", tempArray, 1);
-		player2init = packet.initPacket(9, "Player1", "Player3", "Player4", tempArray, 1);
-		player3init = packet.initPacket(9, "Player1", "Player2", "Player4", tempArray, 1);
-		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray, 1);
-		
 		table.topOfDiscard= table.deck.discard[0];
+		int topofDeck = 0;
+		
+		player1init = packet.initPacket(9, 1, "Player2", "Player3", "Player3", tempArray, 1);
+		player2init = packet.initPacket(9, 2, "Player1", "Player3", "Player4", tempArray, 1);
+		player3init = packet.initPacket(9, 3, "Player1", "Player2", "Player4", tempArray, 1);
+		player4init = packet.initPacket(9, 4, "Player1", "Player2", "Player3", tempArray, 1);
+		
+		
 
 	}
 
