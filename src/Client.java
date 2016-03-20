@@ -361,6 +361,20 @@ public class Client {
 
 		//TODO deal with next hand
 	}
+	
+	/**
+	 * A helper function that packs a card into a packet and sends it
+	 * 
+	 * @param cardPos - The position of the card being played
+	 */
+	private void playCard(int cardPos){
+		String packToSend;
+		
+		packToSend = "2,";
+		packToSend = packToSend.concat(Integer.toString(cardPos));
+		
+		sendPacket(packToSend);
+	}
 
 	private void drawCards () {
 		
@@ -381,7 +395,7 @@ public class Client {
 								System.out.println("Playerclicked button1");
 								if (isValidMove(card1Num) && myTurn) {
 									ply1CardPlayed.setIcon(card1);
-									//TODO send palyCard to server
+									playCard(card1Num);
 									card1butt.setVisible(false);
 								}
 							}
@@ -397,7 +411,7 @@ public class Client {
 							public void actionPerformed(ActionEvent e) {
 								System.out.println("Player clicked button2");
 								if (isValidMove(card2Num) && myTurn) {
-									//TODO add network send this card to server
+									playCard(card2Num);
 									ply1CardPlayed.setIcon(card2);
 									card2butt.setVisible(false);
 								}
@@ -415,7 +429,7 @@ public class Client {
 								System.out.println("Player clicked button3");
 								if (isValidMove(card3Num) && myTurn) {
 									ply1CardPlayed.setIcon(card3);
-									//TODO add network send this card to server
+									playCard(card3Num);
 									card3butt.setVisible(false);
 								}
 							}
@@ -432,7 +446,7 @@ public class Client {
 								System.out.println("Player clicked button4");
 								if (isValidMove(card4Num) && myTurn) {
 									ply1CardPlayed.setIcon(card4);
-									//TODO add network send this card to server
+									playCard(card4Num);
 									card4butt.setVisible(false);
 								}
 							}
@@ -449,7 +463,7 @@ public class Client {
 								System.out.println("Player clicked button5");
 								if (isValidMove(card5Num) && myTurn) {
 									ply1CardPlayed.setIcon(card5);
-									//TODO add network send this card to server
+									playCard(card5Num);
 									card5butt.setVisible(false);
 								}
 							}
