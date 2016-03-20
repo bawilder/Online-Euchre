@@ -150,29 +150,29 @@ public class Client {
 	private void initialize() {
 		String [] parsedPacket;
 		String rcvdInit = "";
+/*
+		while(true){
 
-//		while(true){
-//
-//			rcvdInit = getPacket();
-//			//Packet Layout:
-//			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-//
-//			parsedPacket = rcvdInit.split(",");
-//			if(Integer.parseInt(parsedPacket[0]) == 9){
-//				dealer = Integer.parseInt(parsedPacket[1]);
-//				card1Num = Integer.parseInt(parsedPacket[5]);
-//				card2Num = Integer.parseInt(parsedPacket[6]);
-//				card3Num = Integer.parseInt(parsedPacket[7]);
-//				card4Num = Integer.parseInt(parsedPacket[8]);
-//				card5Num = Integer.parseInt(parsedPacket[9]);
-//				trumpCardNum = Integer.parseInt(parsedPacket[10]);
-//				break;
-//			}
-//
-//			rcvdInit = "";
-//			Arrays.fill(parsedPacket, null);
-//		}
+			rcvdInit = getPacket();
+			//Packet Layout:
+			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
 
+			parsedPacket = rcvdInit.split(",");
+			if(Integer.parseInt(parsedPacket[0]) == 9){
+				dealer = Integer.parseInt(parsedPacket[1]);
+				card1Num = Integer.parseInt(parsedPacket[5]);
+				card2Num = Integer.parseInt(parsedPacket[6]);
+				card3Num = Integer.parseInt(parsedPacket[7]);
+				card4Num = Integer.parseInt(parsedPacket[8]);
+				card5Num = Integer.parseInt(parsedPacket[9]);
+				trumpCardNum = Integer.parseInt(parsedPacket[10]);
+				break;
+			}
+
+			rcvdInit = "";
+			Arrays.fill(parsedPacket, null);
+		}
+*/
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
@@ -366,6 +366,23 @@ public class Client {
 		drawCards();
 
 		//TODO add code for starting. Picking trump.
+		
+		String rPack = "";
+		String [] parsed;
+		while(true){
+			
+			rPack = getPacket();
+			
+			parsed = rPack.split(",");
+			
+			if (parsed[0] == "3"){
+				parsed[0] = "1"; //lol this is filler code
+				
+			}
+			
+			rPack = "";
+			Arrays.fill(parsed, null);
+		}
 
 		//TODO update the board as turns go
 		
