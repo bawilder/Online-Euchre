@@ -43,28 +43,28 @@ public class EuchreGame {
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[0].hand[i]);
 		}
-		player1init = packet.initPacket(9, "Player2", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		player1init = packet.initPacket(9, 1, "Player2", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player1init, 1);
 		
 		// send player 2 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[1].hand[i]);
 		}
-		player2init = packet.initPacket(9, "Player1", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		player2init = packet.initPacket(9, 2, "Player1", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player2init, 2);
 		
 		// send player 3 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[2].hand[i]);
 		}
-		player3init = packet.initPacket(9, "Player1", "Player2", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		player3init = packet.initPacket(9, 3, "Player1", "Player2", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player3init, 3);
 		
 		// send player 4 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[3].hand[i]);
 		}
-		player4init = packet.initPacket(9, "Player1", "Player2", "Player3", tempArray, this.cardToInt(table.topOfDiscard));
+		player4init = packet.initPacket(9, 4, "Player1", "Player2", "Player3", tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player4init, 4);
 		
 	}
@@ -91,16 +91,40 @@ public class EuchreGame {
 	// pick up card
 	public void trumpRound() {
 
+		Packet packet = new Packet();
+		String msg;
+		String retMsg;
+		String[] parsedMsg;
 		table.playerTurn = table.playerDealing;
 		table.rotateTurn();
 		boolean trumpPickedUp = false;
+		boolean trumpCalled = false;
 
-		for (int i = 0; i < 4; i += 1) {
-			System.out.println("Player " + (table.playerTurn + 1) + " do you want to set this card to trump: "
-					+ table.topOfDiscard.face + table.topOfDiscard.suit + "?");
-			System.out.println("This is your hand: ");
-			table.players[table.playerTurn].showHand();
-			int trumpCalled = in.nextInt();
+			// Tell the clients whose turn it is
+			msg = packet.PokeItPacket(table.playerTurn);
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			
+			// Receive a trump choice from the client
+			retMsg = server.threads[table.playerTurn + 1].receivePacket();
+			parsedMsg = retMsg.split(",");
+			
+			if(!parsedMsg[0].equals("3")){
+				System.out.println("this is a problem");
+			} else {
+				if(parsedMsg[1].equals("5")){
+					trumpCalled = false;
+				} else{
+					trumpCalled = true;
+				}
+			}
+			
 
 			if (trumpCalled == 1) {
 
