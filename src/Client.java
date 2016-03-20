@@ -64,7 +64,7 @@ public class Client {
 	private int card2Num = 1;
 	private int card3Num = 2;
 	private int card4Num = 3;
-	private int card5Num = 4;
+	private int card5Num = 18;
 	private int trumpCardNum = 0;
 	
 	private JLabel ply1CardPlayed = new JLabel("");
@@ -89,7 +89,7 @@ public class Client {
 	 * 3 - Diamond
 	 * 4 - Heart
 	 */
-	private int cardLead = 0;
+	private int cardLead = 3;
 	private int trump = 3;
 
 	private ImageIcon card1 = new ImageIcon ();
@@ -293,39 +293,49 @@ public class Client {
 		
 		JPanel table = new JPanel();
 		table.setBounds(317, 216, 634, 427);
+		table.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(table);
 		table.setLayout(null);
 		
 		
 		ply1CardPlayed.setBounds(234, 245, 165, 171);
+		ply1CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply1CardPlayed);
 		
 		ply2CardPlayed.setBounds(10, 149, 214, 129);
+		ply2CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply2CardPlayed);
 		
 		ply3CardPlayed.setBounds(234, 11, 165, 171);
+		ply3CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply3CardPlayed);
 		
 		ply4CardPlayed.setBounds(409, 149, 215, 129);
+		ply4CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply4CardPlayed);
 		
 		trumpCard.setBounds(234, 149, 165, 129);
+		trumpCard.setBackground(Color.DARK_GRAY);
 		table.add(trumpCard);
 		
 		player1Turn.setBackground(Color.YELLOW);
 		player1Turn.setBounds(0, 417, 634, 10);
+		player1Turn.setVisible(false);
 		table.add(player1Turn);
 		
 		player3Turn.setBackground(Color.YELLOW);
 		player3Turn.setBounds(0, 0, 634, 10);
+		player3Turn.setVisible(false);
 		table.add(player3Turn);
 		
 		player2Turn.setBackground(Color.YELLOW);
 		player2Turn.setBounds(0, 0, 10, 427);
+		player2Turn.setVisible(false);
 		table.add(player2Turn);
 		
 		player4Turn.setBackground(Color.YELLOW);
 		player4Turn.setBounds(624, 0, 10, 427);
+		player4Turn.setVisible(false);
 		table.add(player4Turn);
 		
 		JLabel lblTrump = new JLabel("Trump:");
@@ -357,6 +367,8 @@ public class Client {
 		//TODO add code for starting. Picking trump.
 
 		//TODO update the board as turns go
+		
+		
 
 		//TODO deal with next hand
 	}
