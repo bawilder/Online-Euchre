@@ -894,10 +894,14 @@ public class Client {
 
 	public String getPacket(){
 		String myPacket = "";
+		int count = 0;
 		while(true){
 			try{
-
-				System.out.println("Waiting to receive a packet");
+				if(count % 10 == 0)
+					System.out.println("Waiting to receive a packet");
+				else
+					count ++;
+				
 				if(readBuff.ready() == true)
 					myPacket = readBuff.readLine();
 			}
