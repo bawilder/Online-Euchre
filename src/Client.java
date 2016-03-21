@@ -144,8 +144,8 @@ public class Client {
 
 	private void start() {
 		frame = new JFrame();
-		initialize();
-		//ConnectUI();
+		//initialize();
+		ConnectUI();
 	}
 	private void initialize() {
 		String [] parsedPacket;
@@ -192,7 +192,6 @@ public class Client {
 				card3Num = Integer.parseInt(parsedPacket[5]);
 				card4Num = Integer.parseInt(parsedPacket[6]);
 				card5Num = Integer.parseInt(parsedPacket[7]);
-				
 			}
 			
 			else if (Integer.parseInt(parsedPacket[0]) == 7){
@@ -230,8 +229,6 @@ public class Client {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		
-		
 		player2.setBackground(Color.DARK_GRAY);
 		player2.setBounds(10, 130, 161, 600);
 
@@ -367,6 +364,7 @@ public class Client {
 		
 		trumpCard.setBounds(234, 149, 165, 129);
 		trumpCard.setBackground(Color.DARK_GRAY);
+		trumpCard.setIcon(cardToDrawVert(trumpCardNum));
 		table.add(trumpCard);
 		
 		player1Turn.setBackground(Color.YELLOW);
@@ -560,6 +558,65 @@ public class Client {
 			}
 		}
 	}
+	
+	private ImageIcon cardToDrawVert (int carVal) {
+		ImageIcon temp = null;
+		
+		switch (carVal) {
+
+		case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades.png"));;
+		break;
+		case 1 : temp = new ImageIcon(getClass().getResource("/10_of_spades.png"));
+		break;
+		case 2 : temp = new ImageIcon(getClass().getResource("/jack_of_spades.png"));
+		break;
+		case 3 : temp = new ImageIcon(getClass().getResource("/queen_of_spades.png"));
+		break;
+		case 4 : temp = new ImageIcon(getClass().getResource("/king_of_spades.png"));
+		break;
+		case 5 : temp = new ImageIcon(getClass().getResource("/ace_of_spades.png"));
+		break;
+		case 6 : temp = new ImageIcon(getClass().getResource("/9_of_hearts.png"));
+		break;
+		case 7 : temp = new ImageIcon(getClass().getResource("/10_of_hearts.png"));
+		break;
+		case 8 : temp = new ImageIcon(getClass().getResource("/jack_of_hearts.png"));
+		break;
+		case 9 : temp = new ImageIcon(getClass().getResource("/queen_of_hearts.png"));
+		break;
+		case 10 : temp = new ImageIcon(getClass().getResource("/king_of_hearts.png"));
+		break;
+		case 11 : temp = new ImageIcon(getClass().getResource("/ace_of_hearts.png"));
+		break;
+		case 12 : temp = new ImageIcon(getClass().getResource("/9_of_clubs.png"));
+		break;
+		case 13 : temp = new ImageIcon(getClass().getResource("/10_of_clubs.png"));
+		break;
+		case 14 : temp = new ImageIcon(getClass().getResource("/jack_of_clubs.png"));
+		break;
+		case 15 : temp = new ImageIcon(getClass().getResource("/queen_of_clubs.png"));
+		break;
+		case 16 : temp = new ImageIcon(getClass().getResource("/king_of_clubs.png"));
+		break;
+		case 17 : temp = new ImageIcon(getClass().getResource("/ace_of_clubs.png"));
+		break;
+		case 18 : temp = new ImageIcon(getClass().getResource("/9_of_diamonds.png"));
+		break;
+		case 19 : temp = new ImageIcon(getClass().getResource("/10_of_diamonds.png"));
+		break;
+		case 20 : temp = new ImageIcon(getClass().getResource("/jack_of_diamonds.png"));
+		break;
+		case 21 : temp = new ImageIcon(getClass().getResource("/queen_of_diamonds.png"));
+		break;
+		case 22 : temp = new ImageIcon(getClass().getResource("/king_of_diamonds.png"));
+		break;
+		case 23 : temp = new ImageIcon(getClass().getResource("/ace_of_diamonds.png"));
+		break;
+		default : System.out.println("Fatal Error");
+		}
+		
+		return temp;
+	}
 
 	/**
 	 * After client recieves intial packet with all players cards, this is load the correct images into the 
@@ -748,98 +805,98 @@ public class Client {
 		return false;
 	}
 
-//	public void ConnectUI(){
-//		final JFrame ConnectUI = new JFrame();
-//		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
-//
-//		ConnectUI.setLocation(550, 400);
-//		ConnectUI.setTitle("Connect to game");
-//		ConnectUI.setLayout(new GridLayout (3, 1));
-//		ConnectUI.setSize(500, 130);
-//		ConnectUI.setVisible(true);
-//
-//		JPanel northPanel = new JPanel (new GridLayout (1, 4));
-//		JPanel middlePanel = new JPanel (new GridLayout (1, 2));
-//		JPanel southPanel = new JPanel(new GridLayout (1, 4));
-//
-//		lblServerAddr.setFont(f);
-//		northPanel.add(lblServerAddr);
-//		northPanel.add(tfServAddr);
-//
-//		lblPortNum.setFont(f);
-//		northPanel.add(lblPortNum);
-//		northPanel.add(tfPortNum);
-//
-//		lblName.setFont(f);
-//		middlePanel.add(lblName);
-//
-//		lblError.setFont(f);
-//		lblError.setForeground(Color.RED);
-//		lblError.setVisible(false);
-//		southPanel.add(lblError);
-//
-//		middlePanel.add(tfName);
-//
-//		ConnectUI.add(northPanel);
-//		ConnectUI.add(middlePanel);
-//
-//		southPanel.add(bttnConnect);                    
-//		bttnConnect.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e)
-//			{
-//
-//
-//				if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
-//					//serverNum = Integer.parseInt(tfPortNum.getText());
-//					name = tfName.getText();
-//					portNum = Integer.parseInt(tfPortNum.getText());
-//
-//					//TODO Connect to the server here using portNum and serverNum
-//					try {
-//						Socket socket = new Socket(serverNum, portNum);
-//						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//						writeBuff = new PrintWriter(socket.getOutputStream(), true);
-//					} catch (Exception err) {
-//						err.printStackTrace();
-//						lblError.setVisible(true);    
-//					}
-//
-//
-//					//TODO: Close socket
-//					initialize();
-//					ConnectUI.dispose();
-//
-//				} else {
-//					lblError.setVisible(true);    
-//				}
-//			}
-//		});
-//
-//		southPanel.add(bttnCreate);                    
-//		bttnCreate.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e)
-//			{
-//				//TODO create server logic
-//				System.out.println("Need to create server");
-//			}
-//		});
-//
-//		southPanel.add(bttnCancel);                    
-//		bttnCancel.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e)
-//			{
-//				ConnectUI.dispose();
-//				System.exit(0);
-//			}
-//		});
-//		ConnectUI.add(southPanel);
-//		ConnectUI.validate();
-//	}
+	public void ConnectUI(){
+		final JFrame ConnectUI = new JFrame();
+		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
+
+		ConnectUI.setLocation(550, 400);
+		ConnectUI.setTitle("Connect to game");
+		ConnectUI.setLayout(new GridLayout (3, 1));
+		ConnectUI.setSize(500, 130);
+		ConnectUI.setVisible(true);
+
+		JPanel northPanel = new JPanel (new GridLayout (1, 4));
+		JPanel middlePanel = new JPanel (new GridLayout (1, 2));
+		JPanel southPanel = new JPanel(new GridLayout (1, 4));
+
+		lblServerAddr.setFont(f);
+		northPanel.add(lblServerAddr);
+		northPanel.add(tfServAddr);
+
+		lblPortNum.setFont(f);
+		northPanel.add(lblPortNum);
+		northPanel.add(tfPortNum);
+
+		lblName.setFont(f);
+		middlePanel.add(lblName);
+
+		lblError.setFont(f);
+		lblError.setForeground(Color.RED);
+		lblError.setVisible(false);
+		southPanel.add(lblError);
+
+		middlePanel.add(tfName);
+
+		ConnectUI.add(northPanel);
+		ConnectUI.add(middlePanel);
+
+		southPanel.add(bttnConnect);                    
+		bttnConnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+
+
+				if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
+					//serverNum = Integer.parseInt(tfPortNum.getText());
+					name = tfName.getText();
+					portNum = Integer.parseInt(tfPortNum.getText());
+
+					//TODO Connect to the server here using portNum and serverNum
+					try {
+						Socket socket = new Socket(serverNum, portNum);
+						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+						writeBuff = new PrintWriter(socket.getOutputStream(), true);
+					} catch (Exception err) {
+						err.printStackTrace();
+						lblError.setVisible(true);
+					}
+
+
+					//TODO: Close socket
+					ConnectUI.dispose();
+					initialize();
+				} else {
+					lblError.setVisible(true);    
+				}
+			}
+		});
+
+		southPanel.add(bttnCreate);                    
+		bttnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				//TODO create server logic
+				System.out.println("Need to create server");
+			}
+		});
+
+		southPanel.add(bttnCancel);                    
+		bttnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				ConnectUI.dispose();
+				System.exit(0);
+			}
+		});
+		ConnectUI.add(southPanel);
+		ConnectUI.validate();
+	}
 
 	public String getPacket(){
 		String myPacket = "";
 		while(true){
 			try{
+
 				System.out.println("Waiting to receive a packet");
 				if(readBuff.ready() == true)
 					myPacket = readBuff.readLine();
