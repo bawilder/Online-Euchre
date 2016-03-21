@@ -7,7 +7,12 @@ import java.net.*;
  * @author Brian Wilder
  */
 
+
 public class UDP_Server {
+
+	static EchoThread [] threads;
+	static int playerNo = 1;
+
 
 	public static void main(String args[]) {
 		int playerNo = 1;
@@ -34,7 +39,8 @@ public class UDP_Server {
 				break;
 			}
 			// new thread for a client
-			new EchoThread(socket, playerNo).start();
+			threads[playerNo] = new EchoThread(socket, playerNo);
+			
 			playerNo += 1;
 			
 		}
@@ -45,4 +51,12 @@ public class UDP_Server {
 			System.out.println(e);
 		}
 	}
+	
+	public void sendPacket(String msg, int playerNum){
+		
+		threads[playerNum].sendPacket(msg);
+		
+		return;
+	}
+
 }
