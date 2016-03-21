@@ -38,7 +38,7 @@ public class EchoThread extends Thread {
 		} catch (IOException e) {
 			return;
 		}
-
+		/*
 		while (true) {
 			try {
 				String pack = "";
@@ -63,6 +63,7 @@ public class EchoThread extends Thread {
 				System.out.println(e);
 			}
 		}
+		*/
 	}
 
 	/**
@@ -97,19 +98,22 @@ public class EchoThread extends Thread {
 	 * A function that sends a packet over the printbuffer
 	 * @param myPacket - the packet to be send
 	 */
+	
+	//TODO: Something is wrong in this peice of code or in server
 	public void sendPacket(String myPacket){
 		boolean errInWrite = true;
 		while(errInWrite == true)
 		{
 			try{
-				out.flush();
+				//out.flush();
 				//TODO: Notify the client might not be needed, check into this
-				out.notify();    //Might not be needed 
+				//out.notify();    //Might not be needed 
 				out.println(myPacket);
 				errInWrite = out.checkError();
 			}
 			catch(Exception e){
 				System.out.println(e);
+				System.exit(0);
 			}
 		}
 		return;

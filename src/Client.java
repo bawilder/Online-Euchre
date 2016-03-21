@@ -859,8 +859,8 @@ public class Client {
 					} catch (Exception err) {
 						err.printStackTrace();
 						lblError.setVisible(true);
+						System.exit(0);
 					}
-
 
 					//TODO: Close socket
 					ConnectUI.dispose();
@@ -894,10 +894,11 @@ public class Client {
 
 	public String getPacket(){
 		String myPacket = "";
+		System.out.println("Waiting to receive a packet");
 		while(true){
 			try{
 
-				System.out.println("Waiting to receive a packet");
+				
 				if(readBuff.ready() == true)
 					myPacket = readBuff.readLine();
 			}
