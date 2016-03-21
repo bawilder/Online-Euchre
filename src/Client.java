@@ -213,7 +213,6 @@ public class Client {
 			
 			else{
 				System.out.println("Either no packet received, or error parsing packet");
-				//TODO: Notify host about this shiznit
 			}
 
 			rcvdInit = "";
@@ -841,7 +840,9 @@ public class Client {
 		String myPacket = "";
 		while(true){
 			try{
-				myPacket = readBuff.readLine();
+				System.out.println("Waiting to receive a packet");
+				if(readBuff.ready() == true)
+					myPacket = readBuff.readLine();
 			}
 			catch (Exception err){
 				System.out.println(err);
