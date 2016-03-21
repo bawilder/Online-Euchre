@@ -47,39 +47,35 @@ public class EuchreGame {
 		player3init = packet.initPacket(9, 3, teamNo, tempArray, 1);
 		player4init = packet.initPacket(9, 4, teamNo, tempArray, 1);
 		
-<<<<<<< HEAD
+
 		// send player 1 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[0].hand[i]);
 		}
-		player1init = packet.initPacket(9, 1, "Player2", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		player1init = packet.initPacket(9, 1, teamNo, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player1init, 1);
 		
 		// send player 2 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[1].hand[i]);
 		}
-		player2init = packet.initPacket(9, 2, "Player1", "Player3", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		player2init = packet.initPacket(9, 2, teamNo, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player2init, 2);
 		
 		// send player 3 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[2].hand[i]);
 		}
-		player3init = packet.initPacket(9, 3, "Player1", "Player2", "Player4", tempArray, this.cardToInt(table.topOfDiscard));
+		player3init = packet.initPacket(9, 3, teamNo, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player3init, 3);
 		
 		// send player 4 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[3].hand[i]);
 		}
-		player4init = packet.initPacket(9, 4, "Player1", "Player2", "Player3", tempArray, this.cardToInt(table.topOfDiscard));
+		player4init = packet.initPacket(9, 4, teamNo, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player4init, 4);
 		
-=======
-		
-
->>>>>>> master
 	}
 
 	public char makeSuit(int suit) {
