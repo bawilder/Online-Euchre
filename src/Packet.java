@@ -64,6 +64,7 @@ public class Packet {
 	 * @param hand - An array containing the hand dealt to the player
 	 * @return - an assembled packet
 	 */
+	//TODO: Add team the player is on
 	public String initPacket(int dealFlag, int playerNum, String p2Nam, String p3Nam, String p4Nam, int[] hand, int discard) {
 		String packet = "9,";
 		
