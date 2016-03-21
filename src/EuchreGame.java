@@ -47,7 +47,7 @@ public class EuchreGame {
 		player3init = packet.initPacket(9, 3, teamNo, tempArray, 1);
 		player4init = packet.initPacket(9, 4, teamNo, tempArray, 1);
 		
-<<<<<<< HEAD
+
 		// send player 1 their hand
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[0].hand[i]);
@@ -76,10 +76,6 @@ public class EuchreGame {
 		player4init = packet.initPacket(9, 4, "Player1", "Player2", "Player3", tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player4init, 4);
 		
-=======
-		
-
->>>>>>> master
 	}
 
 	public char makeSuit(int suit) {
