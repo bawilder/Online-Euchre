@@ -896,12 +896,9 @@ public class Client {
 		String myPacket = "";
 		while(true){
 			try{
-<<<<<<< HEAD
-				if(readBuff.ready() == true)	
-=======
+
 				System.out.println("Waiting to receive a packet");
 				if(readBuff.ready() == true)
->>>>>>> master
 					myPacket = readBuff.readLine();
 			}
 			catch (Exception err){
