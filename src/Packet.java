@@ -64,10 +64,10 @@ public class Packet {
 	 * @param hand - An array containing the hand dealt to the player
 	 * @return - an assembled packet
 	 */
-	public String initPacket(int dealFlag, int playerNum, String p2Nam, String p3Nam, String p4Nam, int[] hand, int discard) {
+	public String initPacket(int dealFlag, int playerNum,int teamNo, int[] hand, int discard) {
 		String packet = "9,";
 		
-		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
+		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + Integer.toString(teamNo) + ",");
 		for(int i = 0; i < hand.length; i ++)
 			packet = packet.concat(Integer.toString(hand[i]) + ",");
 			

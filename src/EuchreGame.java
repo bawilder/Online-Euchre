@@ -37,11 +37,12 @@ public class EuchreGame {
 		Packet packet = new Packet();
 		table.topOfDiscard= table.deck.discard[0];
 		int topofDeck = 0;
+		int teamNo = 1;
 		
-		player1init = packet.initPacket(9, 1, "Player2", "Player3", "Player3", tempArray, 1);
-		player2init = packet.initPacket(9, 2, "Player1", "Player3", "Player4", tempArray, 1);
-		player3init = packet.initPacket(9, 3, "Player1", "Player2", "Player4", tempArray, 1);
-		player4init = packet.initPacket(9, 4, "Player1", "Player2", "Player3", tempArray, 1);
+		player1init = packet.initPacket(9, 1, teamNo, tempArray, 1);
+		player2init = packet.initPacket(9, 2, teamNo, tempArray, 1);
+		player3init = packet.initPacket(9, 3, teamNo, tempArray, 1);
+		player4init = packet.initPacket(9, 4, teamNo, tempArray, 1);
 		
 		
 
