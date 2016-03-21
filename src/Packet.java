@@ -14,8 +14,13 @@
  * 2  - Play Card			(client -> host)
  * 3  - Choose Trump		(client -> host)
  * 4  - Poke-It Packet      (host -> client)
+<<<<<<< HEAD
+ * 5  - Update All Names  	(host -> client) (DEFUNCT)
+ * 6  - Send Name			(client -> host) (DEFUNCT)
+=======
  * 5  - 
  * 6  - 
+>>>>>>> master
  * 7  - Set Trump Values	(host -> client)
  * 8  - Score Update/Deal	(host -> client)
  * 9  - Initialize Game		(host -> client)
@@ -64,10 +69,17 @@ public class Packet {
 	 * @param hand - An array containing the hand dealt to the player
 	 * @return - an assembled packet
 	 */
+<<<<<<< HEAD
+	public String initPacket(int dealFlag, int playerNum, String p2Nam, String p3Nam, String p4Nam, int[] hand, int discard) {
+		String packet = "9,";
+		
+		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
+=======
 	public String initPacket(int dealFlag, int playerNum,int teamNo, int[] hand, int discard) {
 		String packet = "9,";
 		
 		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + Integer.toString(teamNo) + ",");
+>>>>>>> master
 		for(int i = 0; i < hand.length; i ++)
 			packet = packet.concat(Integer.toString(hand[i]) + ",");
 			
@@ -133,7 +145,11 @@ public class Packet {
 	 * @return - an assembled packet
 	 */
 	public String chooseTrump(int trump){
+<<<<<<< HEAD
+		String packet = "3,";
+=======
 		String packet = "3";
+>>>>>>> master
 		packet.concat(Integer.toString(trump));
 		return packet;
 	}
@@ -143,7 +159,11 @@ public class Packet {
 	 * turn to do something
 	 */
 	public String PokeItPacket(int playerTurn){
+<<<<<<< HEAD
+		String packet = "4,";
+=======
 		String packet = "4";
+>>>>>>> master
 		packet = packet.concat(Integer.toString(playerTurn + 1));
 		return packet;
 	}
@@ -163,6 +183,10 @@ public class Packet {
 		
 		//convert the integers to strings and append them to the packet
 		packet = packet.concat(Integer.toString(suit));
+<<<<<<< HEAD
+		
+=======
+>>>>>>> master
 		return packet;
 	}
 	

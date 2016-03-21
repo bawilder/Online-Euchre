@@ -12,10 +12,15 @@ public class Player {
 	Card[] hand;
 	Player partner;
 	Boolean dealer;
+	Team teamOfPlayer;
 	
 	//possible utility for going alone
 	boolean alone;
 	boolean partnerAlone;
+	
+	public void setTeam(Team team){
+		teamOfPlayer= team;
+	}
 	
 	/*
 	 * Method to help a player handle playing a card
