@@ -9,16 +9,21 @@
  * + an integer value at the start of the packet.
  * 
  * The integer values are as follows:
- * 0 - Illegal Move/Error	(host -> client)
- * 1 - Refresh Board 		(host -> client)
- * 2 - Play Card			(client -> host)
- * 3 - TBD
- * 4 - TBD
- * 5 - TBD
- * 6 - TBD
- * 7 - Set Trump Values		(host -> client)
- * 8 - Score Update/Deal	(host -> client)
- * 9 - Initialize Game		(host -> client)
+ * 0  - Illegal Move/Error	(host -> client)
+ * 1  - Refresh Board 		(host -> client)
+ * 2  - Play Card			(client -> host)
+ * 3  - Choose Trump		(client -> host)
+ * 4  - Poke-It Packet      (host -> client)
+<<<<<<< HEAD
+ * 5  - Update All Names  	(host -> client) (DEFUNCT)
+ * 6  - Send Name			(client -> host) (DEFUNCT)
+=======
+ * 5  - 
+ * 6  - 
+>>>>>>> master
+ * 7  - Set Trump Values	(host -> client)
+ * 8  - Score Update/Deal	(host -> client)
+ * 9  - Initialize Game		(host -> client)
  * 
  * The integer values of the cards are as follows:
  * 0  - 9 of Spades
@@ -45,7 +50,8 @@
  * 21 - Card QD = Queen of Diamonds
  * 22 - Card KD = King of Diamonds
  * 23 - Card AD = Ace of Diamonds
- * *  - Card has yet to be played
+ * -1 - Card has yet to be played
+ * 
  */
 
 
@@ -53,6 +59,9 @@
 public class Packet {
 	/**
 	 * Assembles an initialize packet, sent at start of game
+	 * Packet Layout:
+	 * 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+	 * 
 	 * @param dealFlag - A flag that is set when someone is the dealer
 	 * @param p2Nam - Player 2 name
 	 * @param p3Nam - Player 3 name
@@ -60,21 +69,56 @@ public class Packet {
 	 * @param hand - An array containing the hand dealt to the player
 	 * @return - an assembled packet
 	 */
-	public String initPacket(int dealFlag, String p2Nam, String p3Nam, String p4Nam, int[] hand) {
+
+	public String initPacket(int dealFlag, int playerNum,int teamNo, int[] hand, int discard) {
 		String packet = "9,";
 		
-		packet = packet.concat(Integer.toString(dealFlag) + "," + p2Nam + "," + p3Nam + ","  + p4Nam + ",");
+		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + Integer.toString(teamNo) + ",");
+
 		for(int i = 0; i < hand.length; i ++)
-			if(i < 3)
-				packet = packet.concat(Integer.toString(hand[i]) + ",");
-			else
-				packet = packet.concat(Integer.toString(hand[i]));
+			packet = packet.concat(Integer.toString(hand[i]) + ",");
+			
+		packet = packet.concat(Integer.toString(discard));
+		
+		return packet;
+	}
+	
+	/**
+	 * A packet where the host updates all of the clients with player names
+	 * 
+	 * @param p1nam - player 1 name
+	 * @param p2nam - player 2 name
+	 * @param p3nam - player 3 name
+	 * 
+	 * @return - assembled packet
+	 */
+	public String updateNames(String p1nam, String p2nam, String p3nam){
+		String packet = "5,";
+		packet = packet.concat(p1nam + ",");
+		packet = packet.concat(p2nam + ",");
+		packet = packet.concat(p3nam);
+		
+		return packet;
+	}
+	
+	/**
+	 * Allows the client to let the host know his/her name
+	 * @param playerPosition - the location of the player
+	 * @param name - the name the client wants
+	 * @return - an assembled packet
+	 */
+	public String playerName(int playerPosition, String name){
+		String packet = "6,";
+		packet = packet.concat(Integer.toString(playerPosition) + ",");
+		packet = packet.concat(name);
 		
 		return packet;
 	}
 
 	/**
 	 * A packet that is used when a card is played
+	 * Packet Layout:
+	 * 		2,cardVal
 	 * @param cardVal - the value of the card being played
 	 * @return - an assembled packet
 	 */
@@ -86,30 +130,63 @@ public class Packet {
 	}
 	
 	/**
+	 * A packet the client uses to choose the next trump suit
+	 * @param trump - the value of the suit being chosen
+	 * 		1 = Clubs
+	 * 		2 = Spades
+	 * 		3 = Diamonds
+	 * 		4 = Hearts
+	 * 		5 = Pass
+	 * @return - an assembled packet
+	 */
+	public String chooseTrump(int trump){
+ 
+		String packet = "3,";
+
+		packet.concat(Integer.toString(trump));
+		return packet;
+	}
+	
+	/**
+	 * A packet to tell the client when it is their
+	 * turn to do something
+	 */
+	public String PokeItPacket(int playerTurn){
+		String packet = "4,";
+		packet = packet.concat(Integer.toString(playerTurn + 1));
+		return packet;
+	}
+	
+	/**
 	 * A packet that is used to set trump values
+	 * Packet Layout:
+	 * 		7,minTrump,maxTrump,leftBaur
+	 * 
 	 * @param minTrump - the minimum value of trump
 	 * @param maxTrump
 	 * @param leftBauer
 	 * @return
 	 */
-	public String trumpPacket(int minTrump, int maxTrump, int leftBauer) {
+	public String trumpPacket(int suit) {
 		String packet = "7,";
 		
 		//convert the integers to strings and append them to the packet
-		packet = packet.concat(Integer.toString(minTrump) + ",");
-		packet = packet.concat(Integer.toString(maxTrump) + ",");
-		packet = packet.concat(Integer.toString(leftBauer));
-		
+		packet = packet.concat(Integer.toString(suit));
+
 		return packet;
 	}
 	
 	/**
 	 * A packet that is sent to update the scores
+	 * PacketLayout:
+	 * 		8,team1Score,team2Score,card1,card2,card3,card4,card5
+	 * 
 	 * @param team1Score - the current score of team1
 	 * @param team2Score - the current score of team2
 	 * @param newHand - an array of new cards for the player
 	 * @return - Packet
 	 */
+	//TODO: Pass the trump (face up card)
 	public String newHandPacket(int team1Score, int team2Score, int[] newHand) {
 		String packet = "8,";
 		
@@ -130,6 +207,9 @@ public class Packet {
 	
 	/**
 	 * A packet that is sent by the host to update the board to all of the clients
+	 * Packet Layout;
+	 * 		1,card1||*,card2||*,card3||*,card4||*,p1Count,p2Count,p3Count,p4Count
+	 * 
 	 * @param table - The cards currently on the table
 	 * @param p1Count - The number of cards in Player 1's hand
 	 * @param p2Count - The number of cards in Player 2's hand
@@ -146,7 +226,7 @@ public class Packet {
 			else
 				packet = packet.concat(Integer.toString(table[i]));
 			
-		//Append the scores
+		//Append the cards
 		packet = packet.concat(Integer.toString(p1Count) + ",");
 		packet = packet.concat(Integer.toString(p2Count) + ",");
 		packet = packet.concat(Integer.toString(p3Count) + ",");
@@ -159,12 +239,11 @@ public class Packet {
 	/**
 	 * A packet sent from the host to the client when the client makes an illegal move
 	 * (playing out of turn, playing the wrong suit)
+	 * Packet Layout:
+	 * 		0,message
+	 * 
 	 * @param message - A string to let player know what they did wrong
-	 * @return - packet
-	 * 9 Spades - 
-	 * 9 Clubs - 
-	 * 9 Hearts -
-	 * 9 Diamonds - 
+	 * @return - packet 
 	 */
 	public String illegalPacket(String message) {
 		String packet = "0,";

@@ -32,6 +32,10 @@ public class Table {
 		tableCards= new Card[4];
 		team1= new Team(players[0], players[2]);
 		team2= new Team(players[1], players[3]);
+		players[0].setTeam(team1);
+		players[1].setTeam(team2);
+		players[2].setTeam(team1);
+		players[3].setTeam(team2);
 	}
 	
 	public void setTrump(char trumpSuit){

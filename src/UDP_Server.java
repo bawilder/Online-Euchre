@@ -1,9 +1,18 @@
 import java.io.*;
 import java.net.*;
 
+/**
+ * 
+ * @author Tanner Howell
+ * @author Brian Wilder
+ */
+
+
 public class UDP_Server {
 
-	static final int PORT = 50001;
+	static EchoThread [] threads;
+	static int playerNo = 1;
+
 
 	public static void main(String args[]) {
 		int playerNo = 1;
@@ -11,24 +20,29 @@ public class UDP_Server {
 		Socket socket = null;
 
 		try {
-			serverSocket = new ServerSocket(PORT);
+			serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
+			System.out.println("Using port number: " + serverSocket.getLocalPort());
+			System.out.println("IP Address: " + serverSocket.getInetAddress());
 		} catch (IOException e) {
 			System.out.println(e);
 
 		}
 		while (true) {
 			try {
+				System.out.println("Accepting connections!");
 				socket = serverSocket.accept();
+				// Set the game to timeout after 167 minutes
+				socket.setSoTimeout(10000000);
+				System.out.println("Connection established");
 			} catch (IOException e) {
 				System.out.println(e);
+				break;
 			}
 			// new thread for a client
-			new EchoThread(socket, playerNo).start();
+			threads[playerNo] = new EchoThread(socket, playerNo);
+			
 			playerNo += 1;
 			
-			//TODO: Make actual break condition
-			if(playerNo > 4)
-				break;
 		}
 		try{
 			serverSocket.close();
@@ -37,58 +51,12 @@ public class UDP_Server {
 			System.out.println(e);
 		}
 	}
-}
-
-
-
-
-
-/*public class UDP_Server {
-	public static DatagramSocket mySocket;
-
-	public static void createServer(int sockNo){
-		try {
-			mySocket = new DatagramSocket(sockNo);
-		}
-		catch (Exception err){
-			System.out.println(err);
-		}
-	}
-
-	public void disconnect(){
-		mySocket.close();
+	
+	public void sendPacket(String msg, int playerNum){
+		
+		threads[playerNum].sendPacket(msg);
+		
 		return;
 	}
 
-	public static void main(String args[]){
-		try {
-			int myPort = Integer.parseInt(args[0]); // get port number
-			boolean gameIsDone = false;
-			//DatagramSocket mySocket = new DatagramSocket(myPort);
-			createServer(myPort);
-
-
-			System.out.println("Server is now ready");
-			System.out.println("IP Address is: " + InetAddress.getLocalHost().getHostAddress());
-			System.out.println("Listening port is: " + mySocket.getLocalPort());
-
-			while (true){
-				byte[] receive = new byte[512];
-				byte[] send = new byte[512];
-
-
-
-
-				if(gameIsDone == true)
-					break;
-			}
-
-			//mySocket.close();
-		}
-		catch ( Exception err ){
-			System.out.println(err);
-		}
-
-	}
 }
- */
