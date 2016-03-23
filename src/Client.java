@@ -228,6 +228,10 @@ public class Client {
 
 					rcvdInit = "";
 					Arrays.fill(parsedPacket, null);
+					
+					// This will redraw the gui so all
+					// labels and buttons show up properly
+					frame.repaint();
 				}
 			}
 		};
