@@ -70,7 +70,7 @@ public class Packet {
 	 * @return - an assembled packet
 	 */
 
-	public String initPacket(int dealFlag, int playerNum,int teamNo, int[] hand, int discard) {
+	public String initPacket(int dealFlag, int playerNum, int teamNo, int[] hand, int discard) {
 		String packet = "9,";
 		
 		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + Integer.toString(teamNo) + ",");

@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 
@@ -38,14 +39,14 @@ public class Client {
 	private Button bttnCancel = new Button("Cancel");
 	private int portNum = -1;
 	public BufferedReader readBuff;
-	public PrintWriter writeBuff;
+	public static PrintWriter writeBuff;
 
 	private String player1Name = "Player1";
 	private String player2Name = "Player2";
 	private String player3Name = "Player3";
 	private String player4Name = "Player4";
 
-	private boolean myTurn = true;
+	private boolean myTurn = false;
 
 	private int numPlayers = 0;
 	private int dealer = -1;
@@ -66,20 +67,20 @@ public class Client {
 	private int card4Num = 3;
 	private int card5Num = 18;
 	private int trumpCardNum = 0;
-	
+
 	private JLabel ply1CardPlayed = new JLabel("");
 	private JLabel ply2CardPlayed = new JLabel("");
 	private JLabel ply3CardPlayed = new JLabel("");
 	private JLabel ply4CardPlayed = new JLabel("");
 	private JLabel trumpCard = new JLabel("");
-	
+
 	private JPanel player1Turn = new JPanel();
 	private JPanel player3Turn = new JPanel();
 	private JPanel player2Turn = new JPanel();
 	private JPanel player4Turn = new JPanel();
-	
+
 	private JPanel tSelect = new JPanel();
-	
+
 	private JLabel lblNewLabel = new JLabel("Trump_Suit_Here");
 
 	/**
@@ -98,7 +99,7 @@ public class Client {
 	private ImageIcon card4 = new ImageIcon ();
 	private ImageIcon card5 = new ImageIcon ();
 
-	private JFrame frame;
+	private static JFrame frame;
 
 	private final JPanel player1 = new JPanel();
 	private final JPanel player2 = new JPanel();
@@ -115,7 +116,7 @@ public class Client {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -148,86 +149,100 @@ public class Client {
 		ConnectUI();
 	}
 	private void initialize() {
-		String [] parsedPacket;
-		String rcvdInit = "";
-
-		while(true){
-
-			rcvdInit = getPacket();
-			//Packet Layout:
-			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-			
-			/*
-			 * The integer values are as follows:
-			 * 0  - Illegal Move/Error	(host -> client)
-			 * 1  - Refresh Board 		(host -> client)
-			 * 2  - Play Card			(client -> host)
-			 * 3  - Choose Trump		(client -> host)
-			 * 4  - Poke-It Packet      (host -> client)
-			 * 5  - 
-			 * 6  - 
-			 * 7  - Set Trump Values	(host -> client)
-			 * 8  - Score Update/Deal	(host -> client)
-			 * 9  - Initialize Game		(host -> client)
-			 */
-			parsedPacket = rcvdInit.split(",");
-			if(Integer.parseInt(parsedPacket[0]) == 9) {
-				dealer = Integer.parseInt(parsedPacket[1]);
-				card1Num = Integer.parseInt(parsedPacket[3]);
-				card2Num = Integer.parseInt(parsedPacket[4]);
-				card3Num = Integer.parseInt(parsedPacket[5]);
-				card4Num = Integer.parseInt(parsedPacket[6]);
-				card5Num = Integer.parseInt(parsedPacket[7]);
-				trumpCardNum = Integer.parseInt(parsedPacket[8]);
-				initRecv();
-			}
-			
-			//TODO: Fix this (team1 score team2 score)
-			else if (Integer.parseInt(parsedPacket[0]) == 8){
-				//score update
-				yourScore = Integer.parseInt(parsedPacket[1]);
-				oppoScore = Integer.parseInt(parsedPacket[2]);
-				card1Num = Integer.parseInt(parsedPacket[3]);
-				card2Num = Integer.parseInt(parsedPacket[4]);
-				card3Num = Integer.parseInt(parsedPacket[5]);
-				card4Num = Integer.parseInt(parsedPacket[6]);
-				card5Num = Integer.parseInt(parsedPacket[7]);
-			}
-			
-			else if (Integer.parseInt(parsedPacket[0]) == 7){
-				trump = Integer.parseInt(parsedPacket[1]);
-			}
-			
-			//TODO: Verify zach isn't full of poop
-			else if(Integer.parseInt(parsedPacket[0]) == 4){
-				//get poked (play card)
-				player1Turn.setVisible(true);
-				myTurn = true;
-			}
-			
-			//TODO: this.finish()
-			else if(Integer.parseInt(parsedPacket[0]) == 1){
-				// refresh board
-			}
-			
-			else{
-				System.out.println("Either no packet received, or error parsing packet");
-			}
-
-			rcvdInit = "";
-			Arrays.fill(parsedPacket, null);
-		}
-
 		
+		int exitCode = 0;
+		
+		Runnable r = new Runnable() {
+			public void run() {
+				while(true){
+					String [] parsedPacket;
+					String rcvdInit = "";
+					rcvdInit = getPacket();
+					//Packet Layout:
+					// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+
+					/*
+					 * The integer values are as follows:
+					 * 0  - Illegal Move/Error	(host -> client)
+					 * 1  - Refresh Board 		(host -> client)
+					 * 2  - Play Card			(client -> host)
+					 * 3  - Choose Trump		(client -> host)
+					 * 4  - Poke-It Packet      (host -> client)
+					 * 5  - 
+					 * 6  - 
+					 * 7  - Set Trump Values	(host -> client)
+					 * 8  - Score Update/Deal	(host -> client)
+					 * 9  - Initialize Game		(host -> client)
+					 */
+					parsedPacket = rcvdInit.split(",");
+					if(Integer.parseInt(parsedPacket[0]) == 9) {
+						dealer = Integer.parseInt(parsedPacket[1]);
+						card1Num = Integer.parseInt(parsedPacket[4]);
+						card2Num = Integer.parseInt(parsedPacket[5]);
+						card3Num = Integer.parseInt(parsedPacket[6]);
+						card4Num = Integer.parseInt(parsedPacket[7]);
+						card5Num = Integer.parseInt(parsedPacket[8]);
+						trumpCardNum = Integer.parseInt(parsedPacket[9]);
+
+						System.out.println("Card currently in hand: " + card1Num + ", " + card2Num + ", " + card3Num + ", " + card4Num + ", " + card5Num);
+						System.out.println("Card currently displayed up: " + trumpCardNum);
+						System.out.println("About to draw!");
+
+						initRecv();
+					}
+
+					//TODO: Fix this (team1 score team2 score)
+					else if (Integer.parseInt(parsedPacket[0]) == 8){
+						//score update
+						yourScore = Integer.parseInt(parsedPacket[1]);
+						oppoScore = Integer.parseInt(parsedPacket[2]);
+						card1Num = Integer.parseInt(parsedPacket[4]);
+						card2Num = Integer.parseInt(parsedPacket[5]);
+						card3Num = Integer.parseInt(parsedPacket[6]);
+						card4Num = Integer.parseInt(parsedPacket[7]);
+						card5Num = Integer.parseInt(parsedPacket[8]);
+					}
+
+					else if (Integer.parseInt(parsedPacket[0]) == 7){
+						trump = Integer.parseInt(parsedPacket[1]);
+					}
+
+					//TODO: Verify zach isn't full of poop
+					else if(Integer.parseInt(parsedPacket[0]) == 4){
+						//get poked (play card)
+						synchronized(frame){
+							frame.notify();
+						}
+						player1Turn.setVisible(true);
+						myTurn = true;
+					}
+
+					//TODO: this.finish()
+					else if(Integer.parseInt(parsedPacket[0]) == 1){
+						// refresh board
+					}
+
+					else{
+						System.out.println("Either no packet received, or error parsing packet");
+					}
+
+					rcvdInit = "";
+					Arrays.fill(parsedPacket, null);
+				}
+			}
+		};
+		new Thread(r).start();
 	}
-	
+
 	public void initRecv () {
+		System.out.println("Starting initRecv");
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
 		frame.setSize(1250, 900);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		System.out.println("frame should be drawn");
 
 		player2.setBackground(Color.DARK_GRAY);
 		player2.setBounds(10, 130, 161, 600);
@@ -244,10 +259,12 @@ public class Client {
 
 		frame.getContentPane().add(player4);
 
+		System.out.println();
 		player1.setBackground(Color.DARK_GRAY);
 		player1.setBounds(317, 684, 634, 166);
 
 		frame.getContentPane().add(player1);
+		System.out.println("player 1 added");
 
 		//Draw the board for the first hand
 		JButton btnPass = new JButton("Pass");
@@ -338,105 +355,93 @@ public class Client {
 		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
 		btnPickupAndGo.setBounds(1025, 789, 200, 23);
 		frame.getContentPane().add(btnPickupAndGo);
-		
+
 		JPanel table = new JPanel();
 		table.setBounds(317, 216, 634, 427);
 		table.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(table);
 		table.setLayout(null);
-		
-		
+
 		ply1CardPlayed.setBounds(234, 245, 165, 171);
 		ply1CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply1CardPlayed);
-		
+
 		ply2CardPlayed.setBounds(10, 149, 214, 129);
 		ply2CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply2CardPlayed);
-		
+
 		ply3CardPlayed.setBounds(234, 11, 165, 171);
 		ply3CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply3CardPlayed);
-		
+
 		ply4CardPlayed.setBounds(409, 149, 215, 129);
 		ply4CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply4CardPlayed);
-		
+
 		trumpCard.setBounds(234, 149, 165, 129);
 		trumpCard.setBackground(Color.DARK_GRAY);
 		trumpCard.setIcon(cardToDrawVert(trumpCardNum));
 		table.add(trumpCard);
-		
+
 		player1Turn.setBackground(Color.YELLOW);
 		player1Turn.setBounds(0, 417, 634, 10);
 		player1Turn.setVisible(false);
 		table.add(player1Turn);
-		
+
 		player3Turn.setBackground(Color.YELLOW);
 		player3Turn.setBounds(0, 0, 634, 10);
 		player3Turn.setVisible(false);
 		table.add(player3Turn);
-		
+
 		player2Turn.setBackground(Color.YELLOW);
 		player2Turn.setBounds(0, 0, 10, 427);
 		player2Turn.setVisible(false);
 		table.add(player2Turn);
-		
+
 		player4Turn.setBackground(Color.YELLOW);
 		player4Turn.setBounds(624, 0, 10, 427);
 		player4Turn.setVisible(false);
 		table.add(player4Turn);
-		
-		JLabel lblTrump = new JLabel("Trump:");
-		lblTrump.setBounds(1025, 733, 111, 23);
-		frame.getContentPane().add(lblTrump);
-		
+
+
 		tSelect.setBounds(1025, 754, 199, 32);
 		frame.getContentPane().add(tSelect);
 		tSelect.setLayout(new GridLayout(1, 0, 0, 0));
-		
+
 		JButton tSelectSpades = new JButton("Spades");
 		tSelect.add(tSelectSpades);
-		
+
 		JButton tSelectClubs = new JButton("Clubs");
 		tSelect.add(tSelectClubs);
-		
+
 		JButton tSelectDiamonds = new JButton("Diamonds");
 		tSelect.add(tSelectDiamonds);
-		
+
 		JButton tSelectHearts = new JButton("Hearts");
 		tSelect.add(tSelectHearts);
-		
+
 		lblNewLabel.setBounds(1081, 737, 143, 19);
 		frame.getContentPane().add(lblNewLabel);
 
 		pickCards();
 		drawCards();
+		System.out.println("Is frame valid?: " + frame.isValid());
 		frame.validate();
+
+		System.out.println("Is frame valid?: " + frame.isValid());
 
 		//TODO add code for starting. Picking trump.
 
 		//TODO update the board as turns go
-		
+
 		//TODO deal with next hand
 	}
-	
-	/**
-	 * A helper function that packs a card into a packet and sends it
-	 * 
-	 * @param cardPos - The position of the card being played
-	 */
-	private void playCard(int cardPos){
-		String packToSend;
-		
-		packToSend = "2,";
-		packToSend = packToSend.concat(Integer.toString(cardPos));
-		
-		sendPacket(packToSend);
-	}
-
 	private void drawCards () {
-		
+
+		JLabel lblTrump = new JLabel("Trump:");
+		lblTrump.setBounds(1025, 733, 111, 23);
+		frame.getContentPane().add(lblTrump);
+
 		for (int i = 0; i < 4; i++) { //draw cards for each player
 			switch (i) {
 			case 0 : 
@@ -557,10 +562,10 @@ public class Client {
 			}
 		}
 	}
-	
+
 	private ImageIcon cardToDrawVert (int carVal) {
 		ImageIcon temp = null;
-		
+
 		switch (carVal) {
 
 		case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades.png"));;
@@ -613,7 +618,7 @@ public class Client {
 		break;
 		default : System.out.println("Fatal Error");
 		}
-		
+
 		return temp;
 	}
 
@@ -804,6 +809,22 @@ public class Client {
 		return false;
 	}
 
+	/**
+	 * A helper function that packs a card into a packet and sends it
+	 * 
+	 * @param cardPos - The position of the card being played
+	 */
+	private static void playCard(int cardPos){
+		String packToSend;
+
+		packToSend = "2,";
+		packToSend = packToSend.concat(Integer.toString(cardPos));
+
+		sendPacket(packToSend);
+	}
+
+
+
 	public void ConnectUI(){
 		final JFrame ConnectUI = new JFrame();
 		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
@@ -894,18 +915,17 @@ public class Client {
 	public String getPacket(){
 		String myPacket = "";
 		System.out.println("Waiting to receive a packet");
-		
-		while(true){
-			try{
-				if(readBuff.ready() == true)
-					myPacket = readBuff.readLine();
-			}
-			catch (Exception err){
-				System.out.println(err);
-			}
-			if(myPacket.length() > 0)
-				break;
+		//while(true){
+		try{
+			//if(readBuff.ready() == true)
+			myPacket = readBuff.readLine();
 		}
+		catch (Exception err){
+			System.out.println(err);
+		}
+		//if(myPacket.length() > 0)
+		//break;
+		//}
 
 		return myPacket;
 	}
@@ -914,7 +934,7 @@ public class Client {
 	 * A function that allows the client to send a packet to the host
 	 * @param packToSend - the packet that needs to be send
 	 */
-	public void sendPacket(String packToSend){
+	public static void sendPacket(String packToSend){
 		while(true){
 			try{
 				// Flush the buffer and send the packet
