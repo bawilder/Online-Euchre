@@ -894,6 +894,7 @@ public class Client {
 	public String getPacket(){
 		String myPacket = "";
 		System.out.println("Waiting to receive a packet");
+		
 		while(true){
 			try{
 				if(readBuff.ready() == true)
