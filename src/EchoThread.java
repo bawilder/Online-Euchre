@@ -22,8 +22,16 @@ public class EchoThread extends Thread {
 	public EchoThread(Socket clientSocket, int passedNo) {
 		this.socket = clientSocket;
 		this.playerNo = passedNo;
-		this.in = null;
-		this.out = null;
+		try {
+			// Buffer for reading in
+			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+
+			//Buffer for writing
+			out = new PrintWriter(this.socket.getOutputStream(), true);
+
+		} catch (IOException e) {
+			return;
+		}
 	}
 
 	//TODO: Needs to know which player it is

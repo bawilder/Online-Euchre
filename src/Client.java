@@ -173,12 +173,12 @@ public class Client {
 			parsedPacket = rcvdInit.split(",");
 			if(Integer.parseInt(parsedPacket[0]) == 9) {
 				dealer = Integer.parseInt(parsedPacket[1]);
-				card1Num = Integer.parseInt(parsedPacket[5]);
-				card2Num = Integer.parseInt(parsedPacket[6]);
-				card3Num = Integer.parseInt(parsedPacket[7]);
-				card4Num = Integer.parseInt(parsedPacket[8]);
-				card5Num = Integer.parseInt(parsedPacket[9]);
-				trumpCardNum = Integer.parseInt(parsedPacket[10]);
+				card1Num = Integer.parseInt(parsedPacket[3]);
+				card2Num = Integer.parseInt(parsedPacket[4]);
+				card3Num = Integer.parseInt(parsedPacket[5]);
+				card4Num = Integer.parseInt(parsedPacket[6]);
+				card5Num = Integer.parseInt(parsedPacket[7]);
+				trumpCardNum = Integer.parseInt(parsedPacket[8]);
 				initRecv();
 			}
 			
@@ -412,13 +412,12 @@ public class Client {
 
 		pickCards();
 		drawCards();
+		frame.validate();
 
 		//TODO add code for starting. Picking trump.
 
 		//TODO update the board as turns go
 		
-		
-
 		//TODO deal with next hand
 	}
 	
@@ -897,8 +896,6 @@ public class Client {
 		System.out.println("Waiting to receive a packet");
 		while(true){
 			try{
-
-				
 				if(readBuff.ready() == true)
 					myPacket = readBuff.readLine();
 			}
