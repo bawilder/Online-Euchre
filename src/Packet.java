@@ -153,7 +153,9 @@ public class Packet {
 	 */
 	public String PokeItPacket(int playerTurn){
 		String packet = "4,";
-		packet = packet.concat(Integer.toString(playerTurn + 1));
+		
+		//Why was there a plus 1?
+		packet = packet.concat(Integer.toString(playerTurn));
 		return packet;
 	}
 	
