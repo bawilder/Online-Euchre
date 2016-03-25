@@ -63,8 +63,8 @@ public class UDP_Server {
 			Packet packit = new Packet();
 			int [] hand = {1,2,3,4,5};
 			int discard = 6;
-			String msg = packit.initPacket(1, 1, 1, hand, discard);
-			String msg2 = packit.PokeItPacket(1);
+			String msg = packit.initPacket(3, 2, 1, hand, discard);
+			String msg2 = packit.PokeItPacket(0);
 			try{
 				player1.sendPacket(msg);
 				for(int i = 0; i < 1000000; i++)

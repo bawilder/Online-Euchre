@@ -155,7 +155,7 @@ public class Packet {
 		String packet = "4,";
 		
 		//Why was there a plus 1?
-		packet = packet.concat(Integer.toString(playerTurn));
+		packet = packet.concat(Integer.toString(playerTurn + 1));
 		return packet;
 	}
 	
@@ -189,7 +189,7 @@ public class Packet {
 	 * @return - Packet
 	 */
 	//TODO: Pass the trump (face up card)
-	public String newHandPacket(int team1Score, int team2Score, int[] newHand) {
+	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard, int dealerFlag) {
 		String packet = "8,";
 		
 		//append team 1's score
