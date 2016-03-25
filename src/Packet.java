@@ -169,7 +169,7 @@ public class Packet {
 		String packet = "4,";
 		
 		//Why was there a plus 1?
-		packet = packet.concat(Integer.toString(playerTurn));
+		packet = packet.concat(Integer.toString(playerTurn + 1));
 		return packet;
 	}
 	
@@ -203,7 +203,9 @@ public class Packet {
 	 * @param discard - the card currently facing up
 	 * @return - Packet
 	 */
-	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard) {
+
+	//TODO: Pass the trump (face up card)
+	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard, int dealerFlag) {
 		String packet = "8,";
 		
 		//append team 1's score
@@ -233,20 +235,11 @@ public class Packet {
 	 * @param p4Count - The number of cards in Player 4's hand
 	 * @return - An assembled packet
 	 */
-	public String refreshPacket(int[] table, int p1Count, int p2Count, int p3Count, int p4Count) {
+	public String refreshPacket(int lastCardPlayed, int whoPlayedIt) {
 		String packet = "1,";
-		
-		for (int i = 0; i < 4; i++)
-			if (i<3)
-				packet = packet.concat(Integer.toString(table[i]) + ",");
-			else
-				packet = packet.concat(Integer.toString(table[i]));
 			
-		//Append the cards
-		packet = packet.concat(Integer.toString(p1Count) + ",");
-		packet = packet.concat(Integer.toString(p2Count) + ",");
-		packet = packet.concat(Integer.toString(p3Count) + ",");
-		packet = packet.concat(Integer.toString(p4Count) + ",");
+		packet = packet.concat(Integer.toString(lastCardPlayed) + ",");
+		packet = packet.concat(Integer.toString(whoPlayedIt));
 		
 		//return the packet
 		return packet;
