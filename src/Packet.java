@@ -201,9 +201,10 @@ public class Packet {
 	 * @param team2Score - the current score of team2
 	 * @param newHand - an array of new cards for the player
 	 * @param discard - the card currently facing up
+	 * @param dealerFlag - let's the board know who's team it is
 	 * @return - Packet
 	 */
-	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard) {
+	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard, int dealerFlag) {
 		String packet = "8,";
 		
 		//append team 1's score
