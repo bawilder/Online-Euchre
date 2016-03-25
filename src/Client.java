@@ -183,7 +183,7 @@ public class Client {
 					 * 2  - Play Card			(client -> host)
 					 * 3  - Choose Trump		(client -> host)
 					 * 4  - Poke-It Packet      (host -> client)
-					 * 5  - 
+					 * 5  - Declare Trick Winner (host-> client) 
 					 * 6  - 
 					 * 7  - Set Trump Values	(host -> client)
 					 * 8  - Score Update/Deal	(host -> client)
