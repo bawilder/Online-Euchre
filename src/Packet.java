@@ -150,7 +150,7 @@ public class Packet {
 	 * 		2 = Spades
 	 * 		3 = Diamonds
 	 * 		4 = Hearts
-	 * 		5 = Pass
+	 * 		-1 = Pass
 	 * @return - an assembled packet
 	 */
 	public String chooseTrump(int trump){

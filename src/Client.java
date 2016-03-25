@@ -50,9 +50,8 @@ public class Client {
 	private boolean myTurn = false;
 
 	private int dealer = -1;
-	private int whoAmI = 0;
+	private int whoAmI = 1;
 	private int whoseTurn = 0;
-	private int myTeam = 0;
 
 	private boolean beginningstuff;
 
@@ -193,8 +192,6 @@ public class Client {
 					parsedPacket = rcvdInit.split(",");
 					if(Integer.parseInt(parsedPacket[0]) == 9) {
 						dealer = Integer.parseInt(parsedPacket[1]);
-						whoAmI = Integer.parseInt(parsedPacket[2]);
-						myTeam = Integer.parseInt(parsedPacket[3]);
 						card1Num = Integer.parseInt(parsedPacket[4]);
 						card2Num = Integer.parseInt(parsedPacket[5]);
 						card3Num = Integer.parseInt(parsedPacket[6]);
@@ -209,33 +206,16 @@ public class Client {
 						checkDealer();
 					}
 
-					//TODO: Fix this (team1 score team2 score)
-					//Need new dealer
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
-						if(myTeam == 1) {
-							yourScore = Integer.parseInt(parsedPacket[1]);
-							oppoScore = Integer.parseInt(parsedPacket[2]);
-							yourTeamScore.setText(Integer.toString(yourScore));
-							oppoScorelbl.setText(Integer.toString(oppoScore));
-							
-						} else {
-							yourScore = Integer.parseInt(parsedPacket[2]);
-							oppoScore = Integer.parseInt(parsedPacket[1]);
-							yourTeamScore.setText(Integer.toString(yourScore));
-							oppoScorelbl.setText(Integer.toString(oppoScore));
-						}
-			
-						card1Num = Integer.parseInt(parsedPacket[4]);
-						card2Num = Integer.parseInt(parsedPacket[5]);
-						card3Num = Integer.parseInt(parsedPacket[6]);
-						card4Num = Integer.parseInt(parsedPacket[7]);
-						card5Num = Integer.parseInt(parsedPacket[8]);
-						dealer = Integer.parseInt(parsedPacket[9]);
-						
-						checkDealer();
-						pickCards();
-						drawCards();
+						yourScore = Integer.parseInt(parsedPacket[1]);
+						oppoScore = Integer.parseInt(parsedPacket[2]);
+						card1Num = Integer.parseInt(parsedPacket[3]);
+						card2Num = Integer.parseInt(parsedPacket[4]);
+						card3Num = Integer.parseInt(parsedPacket[5]);
+						card4Num = Integer.parseInt(parsedPacket[6]);
+						card5Num = Integer.parseInt(parsedPacket[7]);
+						trumpCardNum = Integer.parseInt(parsedPacket[8]);
 					}
 
 					else if (Integer.parseInt(parsedPacket[0]) == 7){
