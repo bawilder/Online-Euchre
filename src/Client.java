@@ -175,9 +175,7 @@ public class Client {
 					String [] parsedPacket;
 					String rcvdInit = "";
 					rcvdInit = getPacket();
-					//Packet Layout:
-					// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-
+				
 					/*
 					 * The integer values are as follows:
 					 * 0  - Illegal Move/Error	(host -> client)
@@ -208,16 +206,16 @@ public class Client {
 						checkDealer();
 					}
 
-					//TODO: Fix this (team1 score team2 score)
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
 						yourScore = Integer.parseInt(parsedPacket[1]);
 						oppoScore = Integer.parseInt(parsedPacket[2]);
-						card1Num = Integer.parseInt(parsedPacket[4]);
-						card2Num = Integer.parseInt(parsedPacket[5]);
-						card3Num = Integer.parseInt(parsedPacket[6]);
-						card4Num = Integer.parseInt(parsedPacket[7]);
-						card5Num = Integer.parseInt(parsedPacket[8]);
+						card1Num = Integer.parseInt(parsedPacket[3]);
+						card2Num = Integer.parseInt(parsedPacket[4]);
+						card3Num = Integer.parseInt(parsedPacket[5]);
+						card4Num = Integer.parseInt(parsedPacket[6]);
+						card5Num = Integer.parseInt(parsedPacket[7]);
+						trumpCardNum = Integer.parseInt(parsedPacket[8]);
 					}
 
 					else if (Integer.parseInt(parsedPacket[0]) == 7){
@@ -233,7 +231,6 @@ public class Client {
 						}
 					}
 
-					//TODO: Verify zach isn't full of poop
 					else if(Integer.parseInt(parsedPacket[0]) == 4){
 						//get poked (play card)
 						synchronized(frame){
@@ -245,7 +242,6 @@ public class Client {
 							myTurn = true;
 						} 
 					}
-
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
 						// refresh board
@@ -948,7 +944,6 @@ public class Client {
 					name = tfName.getText();
 					portNum = Integer.parseInt(tfPortNum.getText());
 
-					//TODO Connect to the server here using portNum and serverNum
 					try {
 						Socket socket = new Socket(serverNum, portNum);
 						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -972,7 +967,6 @@ public class Client {
 		bttnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//TODO create server logic
 				System.out.println("Need to create server");
 			}
 		});
