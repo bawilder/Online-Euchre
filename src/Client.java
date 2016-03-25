@@ -222,8 +222,6 @@ public class Client {
 						oppoTrickslbl.setText(Integer.toString(oppoTricks));
 					}
 
-					//TODO: Fix this (team1 score team2 score)
-					//Need new dealer
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
 						if(myTeam == 1) {
