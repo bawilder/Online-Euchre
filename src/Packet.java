@@ -14,13 +14,8 @@
  * 2  - Play Card			(client -> host)
  * 3  - Choose Trump		(client -> host)
  * 4  - Poke-It Packet      (host -> client)
-<<<<<<< HEAD
- * 5  - Update All Names  	(host -> client) (DEFUNCT)
- * 6  - Send Name			(client -> host) (DEFUNCT)
-=======
- * 5  - 
+ * 5  - Declare Trick Winner (host -> client)
  * 6  - 
->>>>>>> master
  * 7  - Set Trump Values	(host -> client)
  * 8  - Score Update/Deal	(host -> client)
  * 9  - Initialize Game		(host -> client)
@@ -60,17 +55,17 @@ public class Packet {
 	/**
 	 * Assembles an initialize packet, sent at start of game
 	 * Packet Layout:
-	 * 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+	 * 		9,dealFlag,playerNum,teamNo,card1,card2,card3,card4,card5,discard
 	 * 
 	 * @param dealFlag - A flag that is set when someone is the dealer
-	 * @param p2Nam - Player 2 name
-	 * @param p3Nam - Player 3 name
-	 * @param p4Nam - Player 4 name
+	 * @param playerNum - Let's the player know what number they are
+	 * @param teamNo - the team number of the player
 	 * @param hand - An array containing the hand dealt to the player
+	 * @param discard - the current card facing up
 	 * @return - an assembled packet
 	 */
 
-	public String initPacket(int dealFlag, int playerNum,int teamNo, int[] hand, int discard) {
+	public String initPacket(int dealFlag, int playerNum, int teamNo, int[] hand, int discard) {
 		String packet = "9,";
 		
 		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + Integer.toString(teamNo) + ",");
@@ -79,6 +74,25 @@ public class Packet {
 			packet = packet.concat(Integer.toString(hand[i]) + ",");
 			
 		packet = packet.concat(Integer.toString(discard));
+		
+		return packet;
+	}
+	
+	/**
+	 * A packet that lets the clients know who won the trick
+	 * 
+	 * @param trickWinner - the team that won the trick
+	 * @param t1TrickScore - the number of tricks team 1 has won
+	 * @param t2TrickScore - the number of tricks team 2 has won
+	 * @return - the assembled packet
+	 */
+	public String trickUpdate(int trickWinner, int t1TrickScore, int t2TrickScore){
+		String packet = "5,";
+		
+		packet = packet.concat(Integer.toString(trickWinner) + ",");
+		packet = packet.concat(Integer.toString(t1TrickScore) + ",");
+		packet = packet.concat(Integer.toString(t2TrickScore));
+		
 		
 		return packet;
 	}
@@ -153,7 +167,9 @@ public class Packet {
 	 */
 	public String PokeItPacket(int playerTurn){
 		String packet = "4,";
-		packet = packet.concat(Integer.toString(playerTurn + 1));
+		
+		//Why was there a plus 1?
+		packet = packet.concat(Integer.toString(playerTurn));
 		return packet;
 	}
 	
@@ -179,15 +195,15 @@ public class Packet {
 	/**
 	 * A packet that is sent to update the scores
 	 * PacketLayout:
-	 * 		8,team1Score,team2Score,card1,card2,card3,card4,card5
+	 * 		8,team1Score,team2Score,card1,card2,card3,card4,card5,discard
 	 * 
 	 * @param team1Score - the current score of team1
 	 * @param team2Score - the current score of team2
 	 * @param newHand - an array of new cards for the player
+	 * @param discard - the card currently facing up
 	 * @return - Packet
 	 */
-	//TODO: Pass the trump (face up card)
-	public String newHandPacket(int team1Score, int team2Score, int[] newHand) {
+	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard) {
 		String packet = "8,";
 		
 		//append team 1's score
@@ -196,10 +212,10 @@ public class Packet {
 		packet = packet.concat(Integer.toString(team2Score) + ",");
 		//append the new hand
 		for(int i = 0; i < newHand.length; i++)
-			if(i < 3)
-				packet = packet.concat(Integer.toString(newHand[i]) + ",");
-			else
-				packet = packet.concat(Integer.toString(newHand[i]));
+			packet = packet.concat(Integer.toString(newHand[i]) + ",");
+		
+		//append the card that is currently face up
+		packet = packet.concat(Integer.toString(discard));
 		
 		//return the packet for sending
 		return packet;

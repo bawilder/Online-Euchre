@@ -22,12 +22,6 @@ public class EchoThread extends Thread {
 	public EchoThread(Socket clientSocket, int passedNo) {
 		this.socket = clientSocket;
 		this.playerNo = passedNo;
-		this.in = null;
-		this.out = null;
-	}
-
-	//TODO: Needs to know which player it is
-	public void run(int playerNo) {
 		try {
 			// Buffer for reading in
 			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
@@ -38,30 +32,18 @@ public class EchoThread extends Thread {
 		} catch (IOException e) {
 			return;
 		}
+	}
 
-		while (true) {
-			try {
-				String pack = "";
-				int cardPlayed = -1;
-				int playerLocation = -1;
-				String playerName = "";
-				if(in.ready() == true){
-					pack = receivePacket();
-				}
-				if(pack.length() > 0 && pack.toCharArray()[0] == '2'){
-					cardPlayed = parseCardPacket(pack);
-				}
-				else if(pack.length() > 0 && pack.toCharArray()[0] == '6'){
-					playerLocation = parseNamePacket_loc(pack);
-					playerName = parseNamePacket_name(pack);
-				}
-				//TODO: test this
-				//TODO: send packets from host to client
-				//TODO: Find out how to interface host with game logic
+	public void run(int playerNo) {
+		try {
+			// Buffer for reading in
+			in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
-			} catch (IOException e) {
-				System.out.println(e);
-			}
+			//Buffer for writing
+			out = new PrintWriter(this.socket.getOutputStream(), true);
+
+		} catch (IOException e) {
+			return;
 		}
 	}
 
@@ -97,19 +79,22 @@ public class EchoThread extends Thread {
 	 * A function that sends a packet over the printbuffer
 	 * @param myPacket - the packet to be send
 	 */
+	
+	//TODO: Something is wrong in this peice of code or in server
 	public void sendPacket(String myPacket){
 		boolean errInWrite = true;
 		while(errInWrite == true)
 		{
 			try{
-				out.flush();
+				//out.flush();
 				//TODO: Notify the client might not be needed, check into this
-				out.notify();    //Might not be needed 
+				//out.notify();    //Might not be needed 
 				out.println(myPacket);
 				errInWrite = out.checkError();
 			}
 			catch(Exception e){
 				System.out.println(e);
+				System.exit(0);
 			}
 		}
 		return;
@@ -130,7 +115,7 @@ public class EchoThread extends Thread {
 		}
 		return rcvPack;
 	}
-	
+
 	/**
 	 * A parser to return the card that is played by the client
 	 *  
