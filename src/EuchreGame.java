@@ -127,7 +127,7 @@ public class EuchreGame {
 			parsedMsg = retMsg.split(",");
 			
 			if(!parsedMsg[0].equals("3")){
-				System.out.println("this is a problem");
+				System.out.println("this is a problem");  //debug
 			} else {
 				if(parsedMsg[1].equals("5")){
 					trumpCalled = false;
@@ -232,7 +232,7 @@ public class EuchreGame {
 				}
 				
 				if(!parsedMsg[0].equals("3")){
-					System.out.println("this is a problem");
+					System.out.println("this is a problem");  //debug?
 				} else {
 					if(parsedMsg[1].equals("5")){
 						trumpCalled = false;
@@ -360,7 +360,7 @@ public class EuchreGame {
 	public void runHand(){
 		
 		// should be done
-		dealDeck();
+		dealDeck();	
 		
 		//TODO networking
 		trumpRound();
@@ -368,69 +368,82 @@ public class EuchreGame {
 		for (int i = 0; i < 5; i += 1) {
 			runTrick();
 		}
-
+		
 		// team 1 Euchd team 2
 		if (table.team1.getTricks() > 2 && table.team2.calledTrump == true) {
 			table.team1.teamScored(2);
-			System.out.println("Team 1 Euch'd Team 2, scored 2 points");
-			System.out.println("Player 1 earned " + table.players[0].tricks + " tricks, and Player 3 earned "
-					+ table.players[2].tricks + " tricks.");
+			
+			//SEND THE SCORE PACKET
+			Packet myPack= new Packet();
+			myPack.newHandPacket(table.team1.score, table.team2.score);
+			
+			//send packet after deal to pass hand in
+
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 
 		// team2 Euchd team 1
 		else if (table.team2.getTricks() > 2 && table.team1.calledTrump == true) {
 			table.team2.teamScored(2);
-			System.out.println("Team 2 Euch'd Team 1, scored 2 points");
-			System.out.println("Player 2 earned " + table.players[1].tricks + " tricks, and Player 4 earned "
-					+ table.players[3].tricks + " tricks.");
+			
+			//SEND THE SCORE PACKET
+			Packet myPack= new Packet();
+			myPack.newHandPacket(table.team1.score, table.team2.score);
+			
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 
 		else if (table.team1.getTricks() > 2 || table.team1.getTricks() == 5) {
 			// give them one point of they scored, but not 5 tricks
 			if (table.team1.getTricks() > 2 && table.team1.getTricks() < 5) {
 				table.team1.teamScored(1);
+				
+				//SEND THE SCORE PACKET
+				Packet myPack= new Packet();
+				myPack.newHandPacket(table.team1.score, table.team2.score);
+				
 			}
 			// give them 2 points if they get 5 tricks
 			if (table.team1.getTricks() == 5) {
 				table.team1.teamScored(2);
+				
+				//SEND THE SCORE PACKET
+				Packet myPack= new Packet();
+				myPack.newHandPacket(table.team1.score, table.team2.score);
+				
 			}
-			System.out.println("Team 1 scored!");
-			System.out.println("Player 1 earned " + table.players[0].tricks + " tricks, and Player 3 earned "
-					+ table.players[2].tricks + " tricks.");
+
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 		// team 2 scored
 		else {
 			// give them one point of they scored, but not 5 tricks
 			if (table.team2.getTricks() > 2 && table.team2.getTricks() < 5) {
 				table.team2.teamScored(1);
+				
+				//SEND THE SCORE PACKET
+				Packet myPack= new Packet();
+				myPack.newHandPacket(table.team1.score, table.team2.score);
+				
 			}
 			// give them 2 points if they get 5 tricks
 			if (table.team1.getTricks() == 5) {
 				table.team2.teamScored(2);
+				
+				//SEND THE SCORE PACKET
+				Packet myPack= new Packet();
+				myPack.newHandPacket(table.team1.score, table.team2.score);
+				
 			}
-			System.out.println("Team 2 scored!");
-			System.out.println("Player 2 earned " + table.players[1].tricks + " tricks, and Player 4 earned "
-					+ table.players[3].tricks + " tricks.");
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 
 		table.team1.calledTrump = false;
