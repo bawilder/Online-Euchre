@@ -255,8 +255,10 @@ public class Client {
 						System.out.println("Either no packet received, or error parsing packet");
 					}
 
+
 					rcvdInit = "";
 					Arrays.fill(parsedPacket, null);
+
 
 					// This will redraw the gui so all
 					// labels and buttons show up properly
@@ -989,7 +991,6 @@ public class Client {
 
 	public String getPacket(){
 		String myPacket = "";
-<<<<<<< HEAD
 		int count = 0;
 		while(true){
 			try{
@@ -1006,20 +1007,8 @@ public class Client {
 			}
 			if(myPacket.length() > 0)
 				break;
-=======
-		System.out.println("Waiting to receive a packet");
-		//while(true){
-		try{
-			//if(readBuff.ready() == true)
-			myPacket = readBuff.readLine();
-		}
-		catch (Exception err){
-			System.out.println(err);
->>>>>>> master
-		}
-		//if(myPacket.length() > 0)
-		//break;
-		//}
+	}
+
 
 		return myPacket;
 	}
