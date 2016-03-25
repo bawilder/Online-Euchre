@@ -10,7 +10,11 @@ import java.net.*;
 
 public class UDP_Server {
 
-	static EchoThread [] threads;
+	static EchoThread player1;
+	static EchoThread player2;
+	static EchoThread player3;
+	static EchoThread player4;
+	
 	static int playerNo = 1;
 
 
@@ -18,6 +22,7 @@ public class UDP_Server {
 		int playerNo = 1;
 		ServerSocket serverSocket = null;
 		Socket socket = null;
+		boolean endGame = false;
 
 		try {
 			serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
@@ -27,7 +32,7 @@ public class UDP_Server {
 			System.out.println(e);
 
 		}
-		while (true) {
+		while (playerNo < 2) {
 			try {
 				System.out.println("Accepting connections!");
 				socket = serverSocket.accept();
@@ -39,9 +44,46 @@ public class UDP_Server {
 				break;
 			}
 			// new thread for a client
-			threads[playerNo] = new EchoThread(socket, playerNo);
-			
+			if(playerNo == 1)
+				player1 = new EchoThread(socket, playerNo);
+			else if (playerNo == 2)
+				player2 = new EchoThread(socket, playerNo);
+			else if (playerNo == 3)
+				player3 = new EchoThread(socket, playerNo);
+			else if (playerNo == 4)
+				player4 = new EchoThread(socket, playerNo);
+
 			playerNo += 1;
+			
+		}
+		
+		while(true){
+			//run this shit
+			// this is where game logic and server logic intercept/inteface
+			Packet packit = new Packet();
+			int [] hand = {1,2,3,4,5};
+			int discard = 6;
+			String msg = packit.initPacket(1, 1, 1, hand, discard);
+			String msg2 = packit.PokeItPacket(1);
+			try{
+				player1.sendPacket(msg);
+				for(int i = 0; i < 1000000; i++)
+					i += 1;
+				player1.sendPacket(msg2);
+			}
+			catch (Exception e){
+				System.out.println(e);
+				System.exit(0);
+			}
+			while(true){
+				int count = 0;
+				count += 1;
+				if (count == 2)
+					break;
+			}
+			
+			if(endGame == true)
+				break;
 			
 		}
 		try{
@@ -49,12 +91,21 @@ public class UDP_Server {
 		}
 		catch (Exception e) {
 			System.out.println(e);
+			System.exit(0);
 		}
 	}
 	
 	public void sendPacket(String msg, int playerNum){
 		
-		threads[playerNum].sendPacket(msg);
+		//TODO: Make this work with all players
+		if(playerNum == 1)
+			player1.sendPacket(msg);
+		else if(playerNum == 2)
+			player2.sendPacket(msg);
+		else if(playerNum == 3)
+			player3.sendPacket(msg);
+		else
+			player4.sendPacket(msg);
 		
 		return;
 	}

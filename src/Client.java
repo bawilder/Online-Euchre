@@ -1,5 +1,6 @@
-
-
+//Need dealer to be identified in initPacket player1 is dealer, player2 is dealer, player3 is dealer, or player4 is dealer
+//Need poke-it-packet to send every client client whose turn it is
+//need a packet to send each client who they are in init packet. Which player they are.
 
 /**
  * Comments for Zach to add:
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 
@@ -38,17 +40,20 @@ public class Client {
 	private Button bttnCancel = new Button("Cancel");
 	private int portNum = -1;
 	public BufferedReader readBuff;
-	public PrintWriter writeBuff;
+	public static PrintWriter writeBuff;
 
 	private String player1Name = "Player1";
 	private String player2Name = "Player2";
 	private String player3Name = "Player3";
 	private String player4Name = "Player4";
 
-	private boolean myTurn = true;
+	private boolean myTurn = false;
 
-	private int numPlayers = 0;
 	private int dealer = -1;
+	private int whoAmI = 1;
+	private int whoseTurn = 0;
+
+	private boolean beginningstuff;
 
 	private int turnNo = 5;
 	private int oppoTricks = 0;
@@ -60,27 +65,39 @@ public class Client {
 	private ImageIcon imagep3;
 	private ImageIcon imagep4;
 
-	private int card1Num = 0;
-	private int card2Num = 1;
-	private int card3Num = 2;
-	private int card4Num = 3;
-	private int card5Num = 18;
-	private int trumpCardNum = 0;
-	
+	private int card1Num = -1;
+	private int card2Num = -1;
+	private int card3Num = -1;
+	private int card4Num = -1;
+	private int card5Num = -1;
+	private int trumpCardNum = -1;
+
 	private JLabel ply1CardPlayed = new JLabel("");
 	private JLabel ply2CardPlayed = new JLabel("");
 	private JLabel ply3CardPlayed = new JLabel("");
 	private JLabel ply4CardPlayed = new JLabel("");
 	private JLabel trumpCard = new JLabel("");
-	
+
+	private JLabel yourTeamTricks = new JLabel("0");
+	private JLabel yourTeamScore = new JLabel("0");
+	private JLabel oppoTrickslbl = new JLabel("0");
+	private JLabel oppoScorelbl = new JLabel("0");
+
+	private JLabel ply1Deal = new JLabel("Dealer");
+	private JLabel ply4Deal = new JLabel("Dealer");
+	private JLabel ply3Deal = new JLabel("Dealer");
+	private JLabel ply2Deal = new JLabel("Dealer");
+
+	private JLabel lblPickTrump = new JLabel("Pick Trump");
+
 	private JPanel player1Turn = new JPanel();
 	private JPanel player3Turn = new JPanel();
 	private JPanel player2Turn = new JPanel();
 	private JPanel player4Turn = new JPanel();
-	
+
 	private JPanel tSelect = new JPanel();
-	
-	private JLabel lblNewLabel = new JLabel("Trump_Suit_Here");
+
+	private JLabel trumpLbl = new JLabel("");
 
 	/**
 	 * 0 - Invalid
@@ -89,8 +106,8 @@ public class Client {
 	 * 3 - Diamond
 	 * 4 - Heart
 	 */
-	private int cardLead = 3;
-	private int trump = 3;
+	private int cardLead = 0;
+	private int trump = 0;
 
 	private ImageIcon card1 = new ImageIcon ();
 	private ImageIcon card2 = new ImageIcon ();
@@ -98,7 +115,7 @@ public class Client {
 	private ImageIcon card4 = new ImageIcon ();
 	private ImageIcon card5 = new ImageIcon ();
 
-	private JFrame frame;
+	private static JFrame frame;
 
 	private final JPanel player1 = new JPanel();
 	private final JPanel player2 = new JPanel();
@@ -109,13 +126,16 @@ public class Client {
 	private JLabel lblPlayer2 = new JLabel(player2Name);
 	private JLabel lblPlayer3 = new JLabel(player3Name);
 	private JLabel lblPlayer4 = new JLabel(player4Name);
+
+	private final JLabel discardLbl = new JLabel("Discard");
+
 	public Packet myPacket = new Packet();
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -144,84 +164,110 @@ public class Client {
 
 	private void start() {
 		frame = new JFrame();
-		//initialize();
 		ConnectUI();
 	}
+
 	private void initialize() {
-		String [] parsedPacket;
-		String rcvdInit = "";
 
-		while(true){
+		Runnable r = new Runnable() {
+			public void run() {
+				while(true){
+					String [] parsedPacket;
+					String rcvdInit = "";
+					rcvdInit = getPacket();
+					//Packet Layout:
+					// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
 
-			rcvdInit = getPacket();
-			//Packet Layout:
-			// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-			
-			/*
-			 * The integer values are as follows:
-			 * 0  - Illegal Move/Error	(host -> client)
-			 * 1  - Refresh Board 		(host -> client)
-			 * 2  - Play Card			(client -> host)
-			 * 3  - Choose Trump		(client -> host)
-			 * 4  - Poke-It Packet      (host -> client)
-			 * 5  - 
-			 * 6  - 
-			 * 7  - Set Trump Values	(host -> client)
-			 * 8  - Score Update/Deal	(host -> client)
-			 * 9  - Initialize Game		(host -> client)
-			 */
-			parsedPacket = rcvdInit.split(",");
-			if(Integer.parseInt(parsedPacket[0]) == 9) {
-				dealer = Integer.parseInt(parsedPacket[1]);
-				card1Num = Integer.parseInt(parsedPacket[5]);
-				card2Num = Integer.parseInt(parsedPacket[6]);
-				card3Num = Integer.parseInt(parsedPacket[7]);
-				card4Num = Integer.parseInt(parsedPacket[8]);
-				card5Num = Integer.parseInt(parsedPacket[9]);
-				trumpCardNum = Integer.parseInt(parsedPacket[10]);
-				initRecv();
-			}
-			
-			//TODO: Fix this (team1 score team2 score)
-			else if (Integer.parseInt(parsedPacket[0]) == 8){
-				//score update
-				yourScore = Integer.parseInt(parsedPacket[1]);
-				oppoScore = Integer.parseInt(parsedPacket[2]);
-				card1Num = Integer.parseInt(parsedPacket[3]);
-				card2Num = Integer.parseInt(parsedPacket[4]);
-				card3Num = Integer.parseInt(parsedPacket[5]);
-				card4Num = Integer.parseInt(parsedPacket[6]);
-				card5Num = Integer.parseInt(parsedPacket[7]);
-			}
-			
-			else if (Integer.parseInt(parsedPacket[0]) == 7){
-				trump = Integer.parseInt(parsedPacket[1]);
-			}
-			
-			//TODO: Verify zach isn't full of poop
-			else if(Integer.parseInt(parsedPacket[0]) == 4){
-				//get poked (play card)
-				player1Turn.setVisible(true);
-				myTurn = true;
-			}
-			
-			//TODO: this.finish()
-			else if(Integer.parseInt(parsedPacket[0]) == 1){
-				// refresh board
-			}
-			
-			else{
-				System.out.println("Either no packet received, or error parsing packet");
-			}
+					/*
+					 * The integer values are as follows:
+					 * 0  - Illegal Move/Error	(host -> client)
+					 * 1  - Refresh Board 		(host -> client)
+					 * 2  - Play Card			(client -> host)
+					 * 3  - Choose Trump		(client -> host)
+					 * 4  - Poke-It Packet      (host -> client)
+					 * 5  - 
+					 * 6  - 
+					 * 7  - Set Trump Values	(host -> client)
+					 * 8  - Score Update/Deal	(host -> client)
+					 * 9  - Initialize Game		(host -> client)
+					 */
+					parsedPacket = rcvdInit.split(",");
+					if(Integer.parseInt(parsedPacket[0]) == 9) {
+						dealer = Integer.parseInt(parsedPacket[1]);
+						card1Num = Integer.parseInt(parsedPacket[4]);
+						card2Num = Integer.parseInt(parsedPacket[5]);
+						card3Num = Integer.parseInt(parsedPacket[6]);
+						card4Num = Integer.parseInt(parsedPacket[7]);
+						card5Num = Integer.parseInt(parsedPacket[8]);
+						trumpCardNum = Integer.parseInt(parsedPacket[9]);
 
-			rcvdInit = "";
-			Arrays.fill(parsedPacket, null);
-		}
+						System.out.println("Card currently in hand: " + card1Num + ", " + card2Num + ", " + card3Num + ", " + card4Num + ", " + card5Num);
+						System.out.println("Card currently displayed up: " + trumpCardNum);
 
-		
+						initRecv();
+						checkDealer();
+					}
+
+					//TODO: Fix this (team1 score team2 score)
+					else if (Integer.parseInt(parsedPacket[0]) == 8){
+						//score update
+						yourScore = Integer.parseInt(parsedPacket[1]);
+						oppoScore = Integer.parseInt(parsedPacket[2]);
+						card1Num = Integer.parseInt(parsedPacket[4]);
+						card2Num = Integer.parseInt(parsedPacket[5]);
+						card3Num = Integer.parseInt(parsedPacket[6]);
+						card4Num = Integer.parseInt(parsedPacket[7]);
+						card5Num = Integer.parseInt(parsedPacket[8]);
+					}
+
+					else if (Integer.parseInt(parsedPacket[0]) == 7){
+						trump = Integer.parseInt(parsedPacket[1]);
+						if (trump == 1) {
+							trumpLbl.setText("Clubs");
+						} else if (trump == 2) {
+							trumpLbl.setText("Spades");
+						} if (trump == 3) {
+							trumpLbl.setText("Diamonds");
+						} if (trump == 4){
+							trumpLbl.setText("Hearts");
+						}
+					}
+
+					//TODO: Verify zach isn't full of poop
+					else if(Integer.parseInt(parsedPacket[0]) == 4){
+						//get poked (play card)
+						synchronized(frame){
+							frame.notify();
+						}
+						whoseTurn = Integer.parseInt(parsedPacket[1]);
+						checkPlayerTurn();
+						if(whoseTurn == whoAmI) {
+							myTurn = true;
+						} 
+					}
+
+					//TODO: this.finish()
+					else if(Integer.parseInt(parsedPacket[0]) == 1){
+						// refresh board
+					}
+
+					else{
+						System.out.println("Either no packet received, or error parsing packet");
+					}
+
+					rcvdInit = "";
+					Arrays.fill(parsedPacket, null);
+
+					// This will redraw the gui so all
+					// labels and buttons show up properly
+					frame.repaint();
+				}
+			}
+		};
+		new Thread(r).start();
 	}
-	
-	public void initRecv () {
+
+	private void initRecv () {
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		frame.getContentPane().setForeground(Color.GREEN);
@@ -244,20 +290,37 @@ public class Client {
 
 		frame.getContentPane().add(player4);
 
+		System.out.println();
 		player1.setBackground(Color.DARK_GRAY);
 		player1.setBounds(317, 684, 634, 166);
 
 		frame.getContentPane().add(player1);
+		System.out.println("player 1 added");
 
 		//Draw the board for the first hand
 		JButton btnPass = new JButton("Pass");
 		btnPass.setBounds(1135, 818, 89, 32);
 		frame.getContentPane().add(btnPass);
+		btnPass.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (myTurn) {
+					//TODO: send that i am passing
+				}
+			}
+		});
+
 
 		JButton btnPickUp = new JButton("Pick Up");
 		btnPickUp.setBounds(1025, 818, 100, 32);
 		frame.getContentPane().add(btnPickUp);
 		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
+		btnPickUp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO: pick-up logic
+			}
+		});
 
 		lblPlayer1.setForeground(Color.WHITE);
 		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -307,137 +370,157 @@ public class Client {
 		lblScore.setBounds(194, 754, 100, 23);
 		frame.getContentPane().add(lblScore);
 
-		JLabel yourTeamTricks = new JLabel("0");
 		yourTeamTricks.setHorizontalAlignment(SwingConstants.CENTER);
 		yourTeamTricks.setForeground(Color.WHITE);
 		yourTeamTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		yourTeamTricks.setBounds(99, 788, 100, 23);
 		frame.getContentPane().add(yourTeamTricks);
 
-		JLabel yourTeamScore = new JLabel("0");
 		yourTeamScore.setHorizontalAlignment(SwingConstants.CENTER);
 		yourTeamScore.setForeground(Color.WHITE);
 		yourTeamScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		yourTeamScore.setBounds(194, 788, 100, 23);
 		frame.getContentPane().add(yourTeamScore);
 
-		JLabel oppoTricks = new JLabel("0");
-		oppoTricks.setHorizontalAlignment(SwingConstants.CENTER);
-		oppoTricks.setForeground(Color.WHITE);
-		oppoTricks.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		oppoTricks.setBounds(99, 827, 100, 23);
-		frame.getContentPane().add(oppoTricks);
+		oppoTrickslbl.setHorizontalAlignment(SwingConstants.CENTER);
+		oppoTrickslbl.setForeground(Color.WHITE);
+		oppoTrickslbl.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		oppoTrickslbl.setBounds(99, 827, 100, 23);
+		frame.getContentPane().add(oppoTrickslbl);
 
-		JLabel oppoScore = new JLabel("0");
-		oppoScore.setHorizontalAlignment(SwingConstants.CENTER);
-		oppoScore.setForeground(Color.WHITE);
-		oppoScore.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		oppoScore.setBounds(194, 827, 100, 23);
-		frame.getContentPane().add(oppoScore);
+		oppoScorelbl.setHorizontalAlignment(SwingConstants.CENTER);
+		oppoScorelbl.setForeground(Color.WHITE);
+		oppoScorelbl.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		oppoScorelbl.setBounds(194, 827, 100, 23);
+		frame.getContentPane().add(oppoScorelbl);
 
 		JButton btnPickupAndGo = new JButton("Pick-Up and Go Alone");
 		btnPickupAndGo.setBounds(1025, 789, 200, 23);
 		frame.getContentPane().add(btnPickupAndGo);
-		
+
 		JPanel table = new JPanel();
-		table.setBounds(317, 216, 634, 427);
+		table.setBounds(305, 222, 662, 427);
 		table.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(table);
 		table.setLayout(null);
-		
-		
-		ply1CardPlayed.setBounds(234, 245, 165, 171);
+
+		ply1CardPlayed.setBounds(244, 224, 165, 192);
 		ply1CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply1CardPlayed);
-		
+
 		ply2CardPlayed.setBounds(10, 149, 214, 129);
 		ply2CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply2CardPlayed);
-		
-		ply3CardPlayed.setBounds(234, 11, 165, 171);
+
+		ply3CardPlayed.setBounds(244, 11, 165, 202);
 		ply3CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply3CardPlayed);
-		
-		ply4CardPlayed.setBounds(409, 149, 215, 129);
+
+		ply4CardPlayed.setBounds(389, 149, 235, 129);
 		ply4CardPlayed.setBackground(Color.DARK_GRAY);
 		table.add(ply4CardPlayed);
-		
-		trumpCard.setBounds(234, 149, 165, 129);
+
+		trumpCard.setBounds(244, 112, 165, 202);
 		trumpCard.setBackground(Color.DARK_GRAY);
 		trumpCard.setIcon(cardToDrawVert(trumpCardNum));
 		table.add(trumpCard);
-		
+
 		player1Turn.setBackground(Color.YELLOW);
 		player1Turn.setBounds(0, 417, 634, 10);
 		player1Turn.setVisible(false);
 		table.add(player1Turn);
-		
+
 		player3Turn.setBackground(Color.YELLOW);
 		player3Turn.setBounds(0, 0, 634, 10);
 		player3Turn.setVisible(false);
 		table.add(player3Turn);
-		
+
 		player2Turn.setBackground(Color.YELLOW);
 		player2Turn.setBounds(0, 0, 10, 427);
 		player2Turn.setVisible(false);
 		table.add(player2Turn);
-		
+
 		player4Turn.setBackground(Color.YELLOW);
 		player4Turn.setBounds(624, 0, 10, 427);
 		player4Turn.setVisible(false);
 		table.add(player4Turn);
-		
-		JLabel lblTrump = new JLabel("Trump:");
-		lblTrump.setBounds(1025, 733, 111, 23);
-		frame.getContentPane().add(lblTrump);
-		
+
 		tSelect.setBounds(1025, 754, 199, 32);
 		frame.getContentPane().add(tSelect);
+		tSelect.setVisible(false);
 		tSelect.setLayout(new GridLayout(1, 0, 0, 0));
-		
-		JButton tSelectSpades = new JButton("Spades");
+
+		JButton tSelectSpades = new JButton("");
+		tSelectSpades.setIcon(new ImageIcon (getClass().getResource("/spade.png")));
 		tSelect.add(tSelectSpades);
-		
-		JButton tSelectClubs = new JButton("Clubs");
+
+		JButton tSelectClubs = new JButton("");
+		tSelectClubs.setIcon(new ImageIcon (getClass().getResource("/club.png")));
 		tSelect.add(tSelectClubs);
-		
-		JButton tSelectDiamonds = new JButton("Diamonds");
+
+		JButton tSelectDiamonds = new JButton("");
+		tSelectDiamonds.setIcon(new ImageIcon (getClass().getResource("/diamond (2).png")));
 		tSelect.add(tSelectDiamonds);
-		
-		JButton tSelectHearts = new JButton("Hearts");
+
+		JButton tSelectHearts = new JButton("");
+		tSelectHearts.setIcon(new ImageIcon (getClass().getResource("/heart.png")));
 		tSelect.add(tSelectHearts);
-		
-		lblNewLabel.setBounds(1081, 737, 143, 19);
-		frame.getContentPane().add(lblNewLabel);
+		trumpLbl.setForeground(Color.WHITE);
+		trumpLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+		trumpLbl.setBounds(1082, 736, 143, 19);
+		frame.getContentPane().add(trumpLbl);
+
+		JLabel lblTrump = new JLabel("Trump:");
+		lblTrump.setForeground(Color.WHITE);
+		lblTrump.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblTrump.setBounds(1025, 733, 111, 23);
+		frame.getContentPane().add(lblTrump);
+
+		ply1Deal.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		ply1Deal.setHorizontalAlignment(SwingConstants.TRAILING);
+		ply1Deal.setForeground(Color.WHITE);
+		ply1Deal.setBounds(840, 654, 111, 23);
+		ply1Deal.setVisible(false);
+		frame.getContentPane().add(ply1Deal);
+
+		ply4Deal.setHorizontalAlignment(SwingConstants.TRAILING);
+		ply4Deal.setForeground(Color.WHITE);
+		ply4Deal.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		ply4Deal.setBounds(950, 449, 111, 23);
+		ply4Deal.setVisible(false);
+		frame.getContentPane().add(ply4Deal);
+
+		ply3Deal.setForeground(Color.WHITE);
+		ply3Deal.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		ply3Deal.setBounds(317, 188, 111, 23);
+		ply3Deal.setVisible(false);
+		frame.getContentPane().add(ply3Deal);
+
+		ply2Deal.setForeground(Color.WHITE);
+		ply2Deal.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		ply2Deal.setBounds(181, 455, 111, 23);
+		ply2Deal.setVisible(false);
+		frame.getContentPane().add(ply2Deal);
+
+		lblPickTrump.setForeground(Color.WHITE);
+		lblPickTrump.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPickTrump.setBounds(950, 750, 124, 32);
+		lblPickTrump.setVisible(false);
+		frame.getContentPane().add(lblPickTrump);
+
+		discardLbl.setForeground(Color.WHITE);
+		discardLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		discardLbl.setBounds(317, 652, 89, 23);
+		discardLbl.setVisible(false);
+		frame.getContentPane().add(discardLbl);
 
 		pickCards();
 		drawCards();
-
-		//TODO add code for starting. Picking trump.
-
-		//TODO update the board as turns go
-		
-		
-
-		//TODO deal with next hand
+		frame.validate();
 	}
-	
-	/**
-	 * A helper function that packs a card into a packet and sends it
-	 * 
-	 * @param cardPos - The position of the card being played
-	 */
-	private void playCard(int cardPos){
-		String packToSend;
-		
-		packToSend = "2,";
-		packToSend = packToSend.concat(Integer.toString(cardPos));
-		
-		sendPacket(packToSend);
-	}
-
 	private void drawCards () {
-		
+
 		for (int i = 0; i < 4; i++) { //draw cards for each player
 			switch (i) {
 			case 0 : 
@@ -558,10 +641,10 @@ public class Client {
 			}
 		}
 	}
-	
+
 	private ImageIcon cardToDrawVert (int carVal) {
 		ImageIcon temp = null;
-		
+
 		switch (carVal) {
 
 		case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades.png"));;
@@ -614,7 +697,7 @@ public class Client {
 		break;
 		default : System.out.println("Fatal Error");
 		}
-		
+
 		return temp;
 	}
 
@@ -624,8 +707,6 @@ public class Client {
 	 * 
 	 */
 	private void pickCards () {
-
-
 		ImageIcon temp = null;
 		int tempCardNo = -1;
 
@@ -805,13 +886,29 @@ public class Client {
 		return false;
 	}
 
+	/**
+	 * A helper function that packs a card into a packet and sends it
+	 * 
+	 * @param cardPos - The position of the card being played
+	 */
+	private static void playCard(int cardPos){
+		String packToSend;
+
+		packToSend = "2,";
+		packToSend = packToSend.concat(Integer.toString(cardPos));
+
+		sendPacket(packToSend);
+	}
+
+
+
 	public void ConnectUI(){
 		final JFrame ConnectUI = new JFrame();
 		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
 
 		ConnectUI.setLocation(550, 400);
 		ConnectUI.setTitle("Connect to game");
-		ConnectUI.setLayout(new GridLayout (3, 1));
+		ConnectUI.getContentPane().setLayout(new GridLayout (3, 1));
 		ConnectUI.setSize(500, 130);
 		ConnectUI.setVisible(true);
 
@@ -837,15 +934,13 @@ public class Client {
 
 		middlePanel.add(tfName);
 
-		ConnectUI.add(northPanel);
-		ConnectUI.add(middlePanel);
+		ConnectUI.getContentPane().add(northPanel);
+		ConnectUI.getContentPane().add(middlePanel);
 
 		southPanel.add(bttnConnect);                    
 		bttnConnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-
-
 				if( !tfPortNum.getText().equals("") && !tfServAddr.getText().equals("") && !tfName.getText().equals("")) {
 					//serverNum = Integer.parseInt(tfPortNum.getText());
 					name = tfName.getText();
@@ -859,8 +954,8 @@ public class Client {
 					} catch (Exception err) {
 						err.printStackTrace();
 						lblError.setVisible(true);
+						System.exit(0);
 					}
-
 
 					//TODO: Close socket
 					ConnectUI.dispose();
@@ -888,25 +983,24 @@ public class Client {
 				System.exit(0);
 			}
 		});
-		ConnectUI.add(southPanel);
+		ConnectUI.getContentPane().add(southPanel);
 		ConnectUI.validate();
 	}
 
 	public String getPacket(){
 		String myPacket = "";
-		while(true){
-			try{
-
-				System.out.println("Waiting to receive a packet");
-				if(readBuff.ready() == true)
-					myPacket = readBuff.readLine();
-			}
-			catch (Exception err){
-				System.out.println(err);
-			}
-			if(myPacket.length() > 0)
-				break;
+		System.out.println("Waiting to receive a packet");
+		//while(true){
+		try{
+			//if(readBuff.ready() == true)
+			myPacket = readBuff.readLine();
 		}
+		catch (Exception err){
+			System.out.println(err);
+		}
+		//if(myPacket.length() > 0)
+		//break;
+		//}
 
 		return myPacket;
 	}
@@ -915,7 +1009,7 @@ public class Client {
 	 * A function that allows the client to send a packet to the host
 	 * @param packToSend - the packet that needs to be send
 	 */
-	public void sendPacket(String packToSend){
+	public static void sendPacket(String packToSend){
 		while(true){
 			try{
 				// Flush the buffer and send the packet
@@ -932,4 +1026,105 @@ public class Client {
 				break;
 		}
 	}
+
+	private void checkDealer() {
+		ply1Deal.setVisible(false);
+		ply2Deal.setVisible(false);
+		ply3Deal.setVisible(false);
+		ply4Deal.setVisible(false);
+		if (whoAmI == 1) {
+			if (dealer == 1) {
+				ply1Deal.setVisible(true);
+			} else if (dealer == 2) {
+				ply2Deal.setVisible(true);
+			} else if (dealer == 3) {
+				ply3Deal.setVisible(true);
+			} else if (dealer == 4) {
+				ply4Deal.setVisible(true);
+			}	
+		} else if (whoAmI == 2) {
+			if (dealer == 1) {
+				ply4Deal.setVisible(true);
+			} else if (dealer == 2) {
+				ply1Deal.setVisible(true);
+			} else if (dealer == 3) {
+				ply2Deal.setVisible(true);
+			} else if (dealer == 4) {
+				ply3Deal.setVisible(true);
+			}
+
+		} else if (whoAmI == 3) {
+			if (dealer == 1) {
+				ply3Deal.setVisible(true);
+			} else if (dealer == 2) {
+				ply4Deal.setVisible(true);
+			} else if (dealer == 3) {
+				ply1Deal.setVisible(true);
+			} else if (dealer == 4) {
+				ply2Deal.setVisible(true);
+			}
+
+		} else if (whoAmI == 4) {
+			if (dealer == 1) {
+				ply2Deal.setVisible(true);
+			} else if (dealer == 2) {
+				ply3Deal.setVisible(true);
+			} else if (dealer == 3) {
+				ply4Deal.setVisible(true);
+			} else if (dealer == 4) {
+				ply1Deal.setVisible(true);
+			}
+		}
+	}
+
+	private void checkPlayerTurn () {
+		player1Turn.setVisible(false);
+		player2Turn.setVisible(false);
+		player3Turn.setVisible(false);
+		player4Turn.setVisible(false);
+		if (whoAmI == 1) {
+			if (whoseTurn == 1) {
+				player1Turn.setVisible(true);
+			} else if (whoseTurn == 2) {
+				player2Turn.setVisible(true);
+			} else if (whoseTurn == 3) {
+				player3Turn.setVisible(true);
+			} else if (whoseTurn == 4) {
+				player4Turn.setVisible(true);
+			}	
+		} else if (whoAmI == 2) {
+			if (whoseTurn == 1) {
+				player4Turn.setVisible(true);
+			} else if (whoseTurn == 2) {
+				player1Turn.setVisible(true);
+			} else if (whoseTurn == 3) {
+				player2Turn.setVisible(true);
+			} else if (whoseTurn == 4) {
+				player3Turn.setVisible(true);
+			}
+
+		} else if (whoAmI == 3) {
+			if (whoseTurn == 1) {
+				player3Turn.setVisible(true);
+			} else if (whoseTurn == 2) {
+				player4Turn.setVisible(true);
+			} else if (whoseTurn == 3) {
+				player1Turn.setVisible(true);
+			} else if (whoseTurn == 4) {
+				player2Turn.setVisible(true);
+			}
+
+		} else if (whoAmI == 4) {
+			if (whoseTurn == 1) {
+				player2Turn.setVisible(true);
+			} else if (whoseTurn == 2) {
+				player3Turn.setVisible(true);
+			} else if (whoseTurn == 3) {
+				player4Turn.setVisible(true);
+			} else if (whoseTurn == 4) {
+				player1Turn.setVisible(true);
+			}
+		}
+	}
 }
+
