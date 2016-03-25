@@ -234,20 +234,11 @@ public class Packet {
 	 * @param p4Count - The number of cards in Player 4's hand
 	 * @return - An assembled packet
 	 */
-	public String refreshPacket(int[] table, int p1Count, int p2Count, int p3Count, int p4Count) {
+	public String refreshPacket(int lastCardPlayed, int whoPlayedIt) {
 		String packet = "1,";
-		
-		for (int i = 0; i < 4; i++)
-			if (i<3)
-				packet = packet.concat(Integer.toString(table[i]) + ",");
-			else
-				packet = packet.concat(Integer.toString(table[i]));
 			
-		//Append the cards
-		packet = packet.concat(Integer.toString(p1Count) + ",");
-		packet = packet.concat(Integer.toString(p2Count) + ",");
-		packet = packet.concat(Integer.toString(p3Count) + ",");
-		packet = packet.concat(Integer.toString(p4Count) + ",");
+		packet = packet.concat(Integer.toString(lastCardPlayed) + ",");
+		packet = packet.concat(Integer.toString(whoPlayedIt));
 		
 		//return the packet
 		return packet;

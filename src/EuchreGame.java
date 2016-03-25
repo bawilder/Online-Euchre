@@ -123,7 +123,7 @@ public class EuchreGame {
 			table.rotateTurn();
 			
 			// Receive a trump choice from the client
-			retMsg = server.threads[table.playerTurn + 1].receivePacket();
+			retMsg = server.receivePacket(table.playerTurn + 1);
 			parsedMsg = retMsg.split(",");
 			
 			if(!parsedMsg[0].equals("3")){
@@ -210,7 +210,7 @@ public class EuchreGame {
 				table.rotateTurn();
 				
 				// receive and parse reponse
-				retMsg = server.threads[table.playerTurn + 1].receivePacket();
+				retMsg = server.receivePacket(table.playerTurn + 1);
 				parsedMsg = retMsg.split(",");
 
 				// this is the "Screw the dealer" functionality
@@ -293,48 +293,43 @@ public class EuchreGame {
 	}
 
 	public void runTrick() {
-		// use player turn, use dealer, use read ints, use play card
+
+		String msg;
+		String recvMsg;
+		String[] parsedMsg;
+		Packet packet = new Packet();
+		int cardPlayed = -1;
+		int card;
 
 		// testing play all the cards
 		for (int i = 0; i < 4; i += 1) {
-			System.out
-					.println("Player " + (table.playerTurn + 1) + ", play a card from this hand: (1-5 are the cards)");
-			table.players[table.playerTurn].showHand();
-			int card = in.nextInt() - 1;
 
-			/*
-			//dont check suit of first player
-			if(i==0){
-				// player must play a valid card exception catch
-				while(card < 0 || card > 4 || table.players[table.playerTurn].hand[card] == null) {
-					System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
-					card = in.nextInt() - 1;
-				}
-			}
+			// Tell each client whose turn it is
+			msg = packet.PokeItPacket(table.playerTurn);
 			
-			//do check suit for rest of players
-			else {
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
 			
-				// player has played an invalid card
-				while ((card < 0 || card > 4 || table.players[table.playerTurn].hand[card] == null)
-						|| (table.players[table.playerTurn].handContains(table.tableCards[0].suit)
-								&& table.players[table.playerTurn].hand[card].suit != table.tableCards[0].suit)) {
-	
-					// player must play a valid card exception catch
-					if (card < 0 || card > 4 || table.players[table.playerTurn].hand[card] == null) {
-						System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
-					}
-	
-					// player must play on suit excpetion catch
-					if (table.players[table.playerTurn].handContains(table.tableCards[0].suit)
-							&& table.players[table.playerTurn].hand[card].suit != table.tableCards[0].suit) {
-						System.out.println("You can't play off suit, you have a card of suit that was led...");
-					}
-					card = in.nextInt() - 1;
-				}
-			}
-		*/
+			// receive a played card from the client whose turn it is
+			recvMsg = server.receivePacket(table.playerTurn + 1);
+			
+			// parse packet
+			parsedMsg = recvMsg.split(",");
+			card = Integer.parseInt(parsedMsg[1]);
+			
+			// Play card
 			table.tableCards[table.playerTurn] = table.players[table.playerTurn].playCard(card);
+			
+			// Tell each client what card was played
+			cardPlayed = cardToInt(table.players[table.playerTurn].hand[card]);
+			msg = packet.refreshPacket(cardPlayed, table.playerTurn + 1);
+			
 			table.rotateTurn();
 		}
 
@@ -354,7 +349,11 @@ public class EuchreGame {
 		if (playerOfCard == 1 || playerOfCard == 3) {
 			table.team2.tricks += 1;
 		}
-
+		
+		if(playerOfCard == 0 || playerOfCard == 2)
+			msg = packet.trickUpdate(1, table.team1.tricks, table.team2.tricks);
+		else
+			msg = packet.trickUpdate(2, table.team1.tricks, table.team2.tricks);
 	}
 	
 	public void runHand(){
