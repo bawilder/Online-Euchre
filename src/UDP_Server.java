@@ -110,4 +110,17 @@ public class UDP_Server {
 		return;
 	}
 
+	public String receivePacket(int playerNum){
+		String msg;
+		if(playerNum == 1)
+			msg = player1.receivePacket();
+		else if(playerNum == 2)
+			msg = player2.receivePacket();
+		else if(playerNum == 3)
+			msg = player3.receivePacket();
+		else
+			msg = player4.receivePacket();
+		
+		return msg;
+	}
 }
