@@ -176,9 +176,7 @@ public class Client {
 					String [] parsedPacket;
 					String rcvdInit = "";
 					rcvdInit = getPacket();
-					//Packet Layout:
-					// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
-
+				
 					/*
 					 * The integer values are as follows:
 					 * 0  - Illegal Move/Error	(host -> client)
@@ -186,7 +184,7 @@ public class Client {
 					 * 2  - Play Card			(client -> host)
 					 * 3  - Choose Trump		(client -> host)
 					 * 4  - Poke-It Packet      (host -> client)
-					 * 5  - 
+					 * 5  - Declare Trick Winner (host-> client) 
 					 * 6  - 
 					 * 7  - Set Trump Values	(host -> client)
 					 * 8  - Score Update/Deal	(host -> client)
@@ -253,7 +251,6 @@ public class Client {
 						}
 					}
 
-					//TODO: Verify zach isn't full of poop
 					else if(Integer.parseInt(parsedPacket[0]) == 4){
 						//get poked (play card)
 						synchronized(frame){
@@ -265,7 +262,6 @@ public class Client {
 							myTurn = true;
 						} 
 					}
-
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
 						// refresh board
@@ -275,8 +271,10 @@ public class Client {
 						System.out.println("Either no packet received, or error parsing packet");
 					}
 
+
 					rcvdInit = "";
 					Arrays.fill(parsedPacket, null);
+
 
 					// This will redraw the gui so all
 					// labels and buttons show up properly
@@ -966,7 +964,6 @@ public class Client {
 					name = tfName.getText();
 					portNum = Integer.parseInt(tfPortNum.getText());
 
-					//TODO Connect to the server here using portNum and serverNum
 					try {
 						Socket socket = new Socket(serverNum, portNum);
 						readBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -990,7 +987,6 @@ public class Client {
 		bttnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//TODO create server logic
 				System.out.println("Need to create server");
 			}
 		});
@@ -1009,18 +1005,24 @@ public class Client {
 
 	public String getPacket(){
 		String myPacket = "";
-		System.out.println("Waiting to receive a packet");
-		//while(true){
-		try{
-			//if(readBuff.ready() == true)
-			myPacket = readBuff.readLine();
-		}
-		catch (Exception err){
-			System.out.println(err);
-		}
-		//if(myPacket.length() > 0)
-		//break;
-		//}
+		int count = 0;
+		while(true){
+			try{
+				if(count % 10 == 0)
+					System.out.println("Waiting to receive a packet");
+				else
+					count ++;
+				
+				if(readBuff.ready() == true)
+					myPacket = readBuff.readLine();
+			}
+			catch (Exception err){
+				System.out.println(err);
+			}
+			if(myPacket.length() > 0)
+				break;
+	}
+
 
 		return myPacket;
 	}

@@ -34,7 +34,6 @@ public class EchoThread extends Thread {
 		}
 	}
 
-	//TODO: Needs to know which player it is
 	public void run(int playerNo) {
 		try {
 			// Buffer for reading in
@@ -46,32 +45,6 @@ public class EchoThread extends Thread {
 		} catch (IOException e) {
 			return;
 		}
-		/*
-		while (true) {
-			try {
-				String pack = "";
-				int cardPlayed = -1;
-				int playerLocation = -1;
-				String playerName = "";
-				if(in.ready() == true){
-					pack = receivePacket();
-				}
-				if(pack.length() > 0 && pack.toCharArray()[0] == '2'){
-					cardPlayed = parseCardPacket(pack);
-				}
-				else if(pack.length() > 0 && pack.toCharArray()[0] == '6'){
-					playerLocation = parseNamePacket_loc(pack);
-					playerName = parseNamePacket_name(pack);
-				}
-				//TODO: test this
-				//TODO: send packets from host to client
-				//TODO: Find out how to interface host with game logic
-
-			} catch (IOException e) {
-				System.out.println(e);
-			}
-		}
-		*/
 	}
 
 	/**
@@ -142,7 +115,7 @@ public class EchoThread extends Thread {
 		}
 		return rcvPack;
 	}
-	
+
 	/**
 	 * A parser to return the card that is played by the client
 	 *  

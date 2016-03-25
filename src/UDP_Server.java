@@ -60,6 +60,7 @@ public class UDP_Server {
 		while(true){
 			//run this shit
 			// this is where game logic and server logic intercept/inteface
+			
 			Packet packit = new Packet();
 			int [] hand = {1,2,3,4,5};
 			int discard = 6;
@@ -93,11 +94,10 @@ public class UDP_Server {
 			System.out.println(e);
 			System.exit(0);
 		}
+		
 	}
 	
 	public void sendPacket(String msg, int playerNum){
-		
-		//TODO: Make this work with all players
 		if(playerNum == 1)
 			player1.sendPacket(msg);
 		else if(playerNum == 2)
