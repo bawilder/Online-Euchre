@@ -169,7 +169,7 @@ public class Packet {
 		String packet = "4,";
 		
 		//Why was there a plus 1?
-		packet = packet.concat(Integer.toString(playerTurn));
+		packet = packet.concat(Integer.toString(playerTurn + 1));
 		return packet;
 	}
 	
