@@ -70,7 +70,7 @@ public class Packet {
 	 * @return - an assembled packet
 	 */
 
-	public String initPacket(int dealFlag, int playerNum,int teamNo, int[] hand, int discard) {
+	public String initPacket(int dealFlag, int playerNum, int teamNo, int[] hand, int discard) {
 		String packet = "9,";
 		
 		packet = packet.concat(Integer.toString(dealFlag) + "," + Integer.toString(playerNum) + "," + Integer.toString(teamNo) + ",");
@@ -153,7 +153,9 @@ public class Packet {
 	 */
 	public String PokeItPacket(int playerTurn){
 		String packet = "4,";
-		packet = packet.concat(Integer.toString(playerTurn + 1));
+		
+		//Why was there a plus 1?
+		packet = packet.concat(Integer.toString(playerTurn));
 		return packet;
 	}
 	
