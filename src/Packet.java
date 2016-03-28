@@ -204,19 +204,27 @@ public class Packet {
 	 * @param dealerFlag - let's the board know who's team it is
 	 * @return - Packet
 	 */
+<<<<<<< HEAD
 	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard, int dealerFlag) {
+=======
+	//TODO: Pass the trump (face up card)
+	public String newHandPacket(int team1Score, int team2Score) {
+>>>>>>> SHBrians
 		String packet = "8,";
 		
 		//append team 1's score
 		packet = packet.concat(Integer.toString(team1Score) + ",");
 		//append team 2's score
 		packet = packet.concat(Integer.toString(team2Score) + ",");
+<<<<<<< HEAD
 		//append the new hand
 		for(int i = 0; i < newHand.length; i++)
 			packet = packet.concat(Integer.toString(newHand[i]) + ",");
 		
 		//append the card that is currently face up
 		packet = packet.concat(Integer.toString(discard));
+=======
+>>>>>>> SHBrians
 		
 		//return the packet for sending
 		return packet;
