@@ -48,6 +48,9 @@ public class Client {
 	private int dealer = -1;
 	private int whoAmI = 1;
 	private int whoseTurn = 0;
+	
+	private int whoPlayed = 0;
+	private int cardPlayed = 0;
 
 	private boolean firstRound = false;
 	private boolean passed = false;
@@ -258,7 +261,44 @@ public class Client {
 
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
-						// refresh board
+						whoPlayed = Integer.parseInt(parsedPacket[1]);
+						cardPlayed = Integer.parseInt(parsedPacket[2]);
+						if (whoAmI == 1) {
+							if (whoPlayed == 2) { //player 2 played a card
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 3) { //player3 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							} else if (whoPlayed == 4) { // player 4 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							}	
+						}
+						else if (whoAmI == 2) {
+							if (whoPlayed == 1) { //player 1 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 3) { //player3 played a card
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 4) { // player 4 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							}
+						}
+						else if (whoAmI == 3) {
+							if (whoPlayed == 1) { //player 1 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							} else if (whoPlayed == 2) { //player2 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 4) { // player 4 played a card
+								ply2CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							}
+						}
+						else if (whoAmI == 4) {
+							if (whoPlayed == 1) { //player 1 played a card
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 2) { //player2 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							} else if (whoPlayed == 3) { // player 3 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							}
+						}
 					}
 
 					else{

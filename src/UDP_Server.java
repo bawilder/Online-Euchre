@@ -32,7 +32,7 @@ public class UDP_Server {
 			System.out.println(e);
 
 		}
-		while (playerNo < 2) {
+		while (playerNo < 5) {
 			try {
 				System.out.println("Accepting connections!");
 				socket = serverSocket.accept();
@@ -61,28 +61,28 @@ public class UDP_Server {
 			//run this shit
 			// this is where game logic and server logic intercept/inteface
 			
-			Packet packit = new Packet();
-			int [] hand = {1,2,3,4,5};
-			int discard = 6;
-			String msg = packit.initPacket(3, 2, 1, hand, discard);
-			String msg2 = packit.PokeItPacket(0);
-			try{
-				player1.sendPacket(msg);
-				for(int i = 0; i < 1000000; i++)
-					i += 1;
-				player1.sendPacket(msg2);
-			}
-			catch (Exception e){
-				System.out.println(e);
-				System.exit(0);
-			}
-			while(true){
-				int count = 0;
-				count += 1;
-				if (count == 2)
-					break;
-			}
-			
+//			Packet packit = new Packet();
+//			int [] hand = {1,2,3,4,5};
+//			int discard = 6;
+//			String msg = packit.initPacket(3, 2, 1, hand, discard);
+//			String msg2 = packit.PokeItPacket(0);
+//			try{
+//				player1.sendPacket(msg);
+//				for(int i = 0; i < 1000000; i++)
+//					i += 1;
+//				player1.sendPacket(msg2);
+//			}
+//			catch (Exception e){
+//				System.out.println(e);
+//				System.exit(0);
+//			}
+//			while(true){
+//				int count = 0;
+//				count += 1;
+//				if (count == 2)
+//					break;
+//			}
+//			
 			if(endGame == true)
 				break;
 			
