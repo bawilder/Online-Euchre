@@ -104,6 +104,7 @@ public class EuchreGame {
 		String msg;
 		String retMsg;
 		String[] parsedMsg;
+		int cardToDrop;
 		int trump = 0;
 		table.playerTurn = table.playerDealing;
 		table.rotateTurn();
@@ -123,13 +124,13 @@ public class EuchreGame {
 			table.rotateTurn();
 			
 			// Receive a trump choice from the client
-			retMsg = server.threads[table.playerTurn + 1].receivePacket();
+			retMsg = server.receivePacket(table.playerTurn + 1);
 			parsedMsg = retMsg.split(",");
 			
 			if(!parsedMsg[0].equals("3")){
-				System.out.println("this is a problem");
+				System.out.println("this is a problem");  //debug
 			} else {
-				if(parsedMsg[1].equals("5")){
+				if(parsedMsg[1].equals("-1")){// player is passing
 					trumpCalled = false;
 				} else{
 					trumpCalled = true;
@@ -148,23 +149,7 @@ public class EuchreGame {
 				}
 
 				table.setTrump(table.topOfDiscard.suit);
-				// TODO get this to actually have the dealer pick up trump card
-				/*
-				System.out.println(
-						"Dealer, you must pick this card up: " + table.topOfDiscard.face + table.topOfDiscard.suit);
-				System.out.println("What card will you choose to discard from your hand?");
-				table.players[table.playerDealing].showHand();
-				int cardToDrop = in.nextInt() - 1;
-
-				while (cardToDrop < 0 || cardToDrop > 4
-						|| table.players[table.playerDealing].hand[cardToDrop] == null) {
-					System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
-					cardToDrop = in.nextInt() - 1;
-				}
 				
-
-				table.players[table.playerDealing].pickUpTrump(cardToDrop, table.topOfDiscard);
-				*/
 				// get the int value of the trump suit
 				if(table.topOfDiscard.suit == 'C')
 					trump = 1;
@@ -174,8 +159,9 @@ public class EuchreGame {
 					trump = 3;
 				else if(table.topOfDiscard.suit == 'H')
 					trump = 4;
-				msg = packet.trumpPacket(trump);
 				
+				
+				msg = packet.trumpPacket(trump);
 				server.sendPacket(msg, table.playerTurn + 1);
 				table.rotateTurn();
 				server.sendPacket(msg, table.playerTurn + 1);
@@ -184,6 +170,19 @@ public class EuchreGame {
 				table.rotateTurn();
 				server.sendPacket(msg, table.playerTurn + 1);
 				table.rotateTurn();
+				
+				// receive which card is discarded by dealer
+				retMsg = server.receivePacket(table.playerDealing + 1);
+				parsedMsg = retMsg.split(",");
+				
+				// if we received a play card packet then we can move on
+				while(!parsedMsg[0].equals("2")){
+					retMsg = server.receivePacket(table.playerDealing + 1);
+					parsedMsg = retMsg.split(",");
+				}
+					cardToDrop = Integer.parseInt(parsedMsg[1]);
+
+				table.players[table.playerDealing].pickUpTrump(cardToDrop, table.topOfDiscard);
 				
 				trumpPickedUp = true;
 				break;
@@ -210,13 +209,12 @@ public class EuchreGame {
 				table.rotateTurn();
 				
 				// receive and parse reponse
-				retMsg = server.threads[table.playerTurn + 1].receivePacket();
+				retMsg = server.receivePacket(table.playerTurn + 1);
 				parsedMsg = retMsg.split(",");
 
 				// this is the "Screw the dealer" functionality
 				if (i == 3) {
 					
-
 					int trumpSuit = Integer.parseInt(parsedMsg[1]);
 					char trumpSuitChar = makeSuit(trumpSuit);
 
@@ -232,7 +230,7 @@ public class EuchreGame {
 				}
 				
 				if(!parsedMsg[0].equals("3")){
-					System.out.println("this is a problem");
+					System.out.println("this is a problem");  //debug?
 				} else {
 					if(parsedMsg[1].equals("5")){
 						trumpCalled = false;
@@ -293,48 +291,43 @@ public class EuchreGame {
 	}
 
 	public void runTrick() {
-		// use player turn, use dealer, use read ints, use play card
+
+		String msg;
+		String recvMsg;
+		String[] parsedMsg;
+		Packet packet = new Packet();
+		int cardPlayed = -1;
+		int card;
 
 		// testing play all the cards
 		for (int i = 0; i < 4; i += 1) {
-			System.out
-					.println("Player " + (table.playerTurn + 1) + ", play a card from this hand: (1-5 are the cards)");
-			table.players[table.playerTurn].showHand();
-			int card = in.nextInt() - 1;
 
-			/*
-			//dont check suit of first player
-			if(i==0){
-				// player must play a valid card exception catch
-				while(card < 0 || card > 4 || table.players[table.playerTurn].hand[card] == null) {
-					System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
-					card = in.nextInt() - 1;
-				}
-			}
+			// Tell each client whose turn it is
+			msg = packet.PokeItPacket(table.playerTurn);
 			
-			//do check suit for rest of players
-			else {
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
 			
-				// player has played an invalid card
-				while ((card < 0 || card > 4 || table.players[table.playerTurn].hand[card] == null)
-						|| (table.players[table.playerTurn].handContains(table.tableCards[0].suit)
-								&& table.players[table.playerTurn].hand[card].suit != table.tableCards[0].suit)) {
-	
-					// player must play a valid card exception catch
-					if (card < 0 || card > 4 || table.players[table.playerTurn].hand[card] == null) {
-						System.out.println("Invalid card, try again... (There arent that many cards in your hand)");
-					}
-	
-					// player must play on suit excpetion catch
-					if (table.players[table.playerTurn].handContains(table.tableCards[0].suit)
-							&& table.players[table.playerTurn].hand[card].suit != table.tableCards[0].suit) {
-						System.out.println("You can't play off suit, you have a card of suit that was led...");
-					}
-					card = in.nextInt() - 1;
-				}
-			}
-		*/
+			// receive a played card from the client whose turn it is
+			recvMsg = server.receivePacket(table.playerTurn + 1);
+			
+			// parse packet
+			parsedMsg = recvMsg.split(",");
+			card = Integer.parseInt(parsedMsg[1]);
+			
+			// Play card
 			table.tableCards[table.playerTurn] = table.players[table.playerTurn].playCard(card);
+			
+			// Tell each client what card was played
+			cardPlayed = cardToInt(table.players[table.playerTurn].hand[card]);
+			msg = packet.refreshPacket(cardPlayed, table.playerTurn + 1);
+			
 			table.rotateTurn();
 		}
 
@@ -344,8 +337,6 @@ public class EuchreGame {
 		int maxCardPos = table.evalCards();
 		playerOfCard = maxCardPos;
 
-		System.out.println("Player " + (playerOfCard + 1) + " wins the trick!");
-
 		table.players[playerOfCard].tricks += 1;
 
 		if (playerOfCard == 0 || playerOfCard == 2) {
@@ -354,87 +345,91 @@ public class EuchreGame {
 		if (playerOfCard == 1 || playerOfCard == 3) {
 			table.team2.tricks += 1;
 		}
-
+		
+		if(playerOfCard == 0 || playerOfCard == 2)
+			msg = packet.trickUpdate(1, table.team1.tricks, table.team2.tricks);
+		else
+			msg = packet.trickUpdate(2, table.team1.tricks, table.team2.tricks);
 	}
 	
 	public void runHand(){
 		
-		// should be done
-		dealDeck();
+		Packet myPack = new Packet();
+		String msg;
+		// networking should be done
+		dealDeck();	
 		
-		//TODO networking
+		// networking should be done
 		trumpRound();
 
 		for (int i = 0; i < 5; i += 1) {
 			runTrick();
 		}
-
+		
 		// team 1 Euchd team 2
 		if (table.team1.getTricks() > 2 && table.team2.calledTrump == true) {
 			table.team1.teamScored(2);
-			System.out.println("Team 1 Euch'd Team 2, scored 2 points");
-			System.out.println("Player 1 earned " + table.players[0].tricks + " tricks, and Player 3 earned "
-					+ table.players[2].tricks + " tricks.");
+
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 
 		// team2 Euchd team 1
 		else if (table.team2.getTricks() > 2 && table.team1.calledTrump == true) {
 			table.team2.teamScored(2);
-			System.out.println("Team 2 Euch'd Team 1, scored 2 points");
-			System.out.println("Player 2 earned " + table.players[1].tricks + " tricks, and Player 4 earned "
-					+ table.players[3].tricks + " tricks.");
+			
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 
 		else if (table.team1.getTricks() > 2 || table.team1.getTricks() == 5) {
 			// give them one point of they scored, but not 5 tricks
 			if (table.team1.getTricks() > 2 && table.team1.getTricks() < 5) {
 				table.team1.teamScored(1);
+				
 			}
 			// give them 2 points if they get 5 tricks
 			if (table.team1.getTricks() == 5) {
 				table.team1.teamScored(2);
+				
 			}
-			System.out.println("Team 1 scored!");
-			System.out.println("Player 1 earned " + table.players[0].tricks + " tricks, and Player 3 earned "
-					+ table.players[2].tricks + " tricks.");
+
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 		// team 2 scored
 		else {
 			// give them one point of they scored, but not 5 tricks
 			if (table.team2.getTricks() > 2 && table.team2.getTricks() < 5) {
 				table.team2.teamScored(1);
+				
 			}
 			// give them 2 points if they get 5 tricks
 			if (table.team1.getTricks() == 5) {
 				table.team2.teamScored(2);
+				
 			}
-			System.out.println("Team 2 scored!");
-			System.out.println("Player 2 earned " + table.players[1].tricks + " tricks, and Player 4 earned "
-					+ table.players[3].tricks + " tricks.");
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
-			System.out.println("The Score of the game is: Team 1 has " + table.team1.score + " point(s) and Team 2 has "
-					+ table.team2.score + " point(s).");
-			System.out.println();
+
 		}
 
 		table.team1.calledTrump = false;
 		table.team2.calledTrump = false;
+		
+		msg = myPack.newHandPacket(table.team1.score, table.team2.score);
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		server.sendPacket(msg, table.playerTurn + 1);
+		table.rotateTurn();
+		
 		table.rotateDealer();
 
 	}

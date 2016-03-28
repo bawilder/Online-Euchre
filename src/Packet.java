@@ -150,7 +150,7 @@ public class Packet {
 	 * 		2 = Spades
 	 * 		3 = Diamonds
 	 * 		4 = Hearts
-	 * 		5 = Pass
+	 * 		-1 = Pass
 	 * @return - an assembled packet
 	 */
 	public String chooseTrump(int trump){
@@ -205,19 +205,14 @@ public class Packet {
 	 */
 
 	//TODO: Pass the trump (face up card)
-	public String newHandPacket(int team1Score, int team2Score, int[] newHand, int discard, int dealerFlag) {
+
+	public String newHandPacket(int team1Score, int team2Score) {
 		String packet = "8,";
 		
 		//append team 1's score
 		packet = packet.concat(Integer.toString(team1Score) + ",");
 		//append team 2's score
 		packet = packet.concat(Integer.toString(team2Score) + ",");
-		//append the new hand
-		for(int i = 0; i < newHand.length; i++)
-			packet = packet.concat(Integer.toString(newHand[i]) + ",");
-		
-		//append the card that is currently face up
-		packet = packet.concat(Integer.toString(discard));
 		
 		//return the packet for sending
 		return packet;
@@ -235,20 +230,11 @@ public class Packet {
 	 * @param p4Count - The number of cards in Player 4's hand
 	 * @return - An assembled packet
 	 */
-	public String refreshPacket(int[] table, int p1Count, int p2Count, int p3Count, int p4Count) {
+	public String refreshPacket(int lastCardPlayed, int whoPlayedIt) {
 		String packet = "1,";
-		
-		for (int i = 0; i < 4; i++)
-			if (i<3)
-				packet = packet.concat(Integer.toString(table[i]) + ",");
-			else
-				packet = packet.concat(Integer.toString(table[i]));
 			
-		//Append the cards
-		packet = packet.concat(Integer.toString(p1Count) + ",");
-		packet = packet.concat(Integer.toString(p2Count) + ",");
-		packet = packet.concat(Integer.toString(p3Count) + ",");
-		packet = packet.concat(Integer.toString(p4Count) + ",");
+		packet = packet.concat(Integer.toString(lastCardPlayed) + ",");
+		packet = packet.concat(Integer.toString(whoPlayedIt));
 		
 		//return the packet
 		return packet;
