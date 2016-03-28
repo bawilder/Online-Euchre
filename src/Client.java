@@ -48,6 +48,7 @@ public class Client {
 	private int dealer = -1;
 	private int whoAmI = 1;
 	private int whoseTurn = 0;
+	private int teamNo = 0;
 	
 	private int whoPlayed = 0;
 	private int cardPlayed = 0;
@@ -193,8 +194,11 @@ public class Client {
 					 * 9  - Initialize Game		(host -> client)
 					 */
 					parsedPacket = rcvdInit.split(",");
+					System.out.println("I revcieved Packet type : " + Integer.parseInt(parsedPacket[0]));
 					if(Integer.parseInt(parsedPacket[0]) == 9) {
 						dealer = Integer.parseInt(parsedPacket[1]);
+						whoAmI = Integer.parseInt(parsedPacket[2]);
+						teamNo = Integer.parseInt(parsedPacket[3]);
 						card1Num = Integer.parseInt(parsedPacket[4]);
 						card2Num = Integer.parseInt(parsedPacket[5]);
 						card3Num = Integer.parseInt(parsedPacket[6]);
@@ -214,14 +218,14 @@ public class Client {
 
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
-						yourScore = Integer.parseInt(parsedPacket[1]);
-						oppoScore = Integer.parseInt(parsedPacket[2]);
-						card1Num = Integer.parseInt(parsedPacket[3]);
-						card2Num = Integer.parseInt(parsedPacket[4]);
-						card3Num = Integer.parseInt(parsedPacket[5]);
-						card4Num = Integer.parseInt(parsedPacket[6]);
-						card5Num = Integer.parseInt(parsedPacket[7]);
-						trumpCardNum = Integer.parseInt(parsedPacket[8]);
+						//TODO: check which team you are and display score correctly
+						if (teamNo == 1) {
+							yourScore = Integer.parseInt(parsedPacket[1]);
+							oppoScore = Integer.parseInt(parsedPacket[2]);
+						} else {
+							yourScore = Integer.parseInt(parsedPacket[2]);
+							oppoScore = Integer.parseInt(parsedPacket[1]);
+						}
 					}
 
 					else if (Integer.parseInt(parsedPacket[0]) == 7){
@@ -249,6 +253,7 @@ public class Client {
 							frame.notify();
 						}
 						whoseTurn = Integer.parseInt(parsedPacket[1]);
+						System.out.println("Players turn:" + whoseTurn);
 						checkPlayerTurn();
 						if(whoseTurn == whoAmI) {
 							if(trump == 0 && passed) { //trump has not been chosen yet
@@ -354,12 +359,15 @@ public class Client {
 		btnPass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Trying to Pass");
 				if (myTurn && turnNum == 1) { 
 					if(passed == true && whoAmI == dealer) {
 						System.out.println("you must pick Trump");
 					} else {
+						System.out.println("Trying to tell server to pass");
 						passed = true;
-						msg = myPacket.chooseTrump(-1);
+						msg = myPacket.chooseTrump(20);
+						System.out.println("Sent: " + msg);
 						sendPacket(msg);
 						myTurn = false;
 					}
@@ -375,8 +383,10 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO: pick-up logic
+				System.out.println("Trying to Pick-Up");
 				if(myTurn && turnNum == 1) {
-					msg = myPacket.chooseTrump(trumpCardNum);
+					System.out.println("Trying to tell server to pick it up");
+					msg = myPacket.chooseTrump(1);
 					sendPacket(msg);
 					myTurn = false;
 				}

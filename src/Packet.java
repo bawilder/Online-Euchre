@@ -157,7 +157,9 @@ public class Packet {
  
 		String packet = "3,";
 
-		packet.concat(Integer.toString(trump));
+		System.out.println("got this as trump: " + trump);
+		packet = packet.concat(Integer.toString(trump));
+		System.out.println("Packet: " + packet);
 		return packet;
 	}
 	

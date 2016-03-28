@@ -124,18 +124,21 @@ public class EuchreGame {
 			table.rotateTurn();
 			
 			// Receive a trump choice from the client
+			System.out.println("waiting to receive a packet from player " + (table.playerTurn + 1));
 			retMsg = server.receivePacket(table.playerTurn + 1);
 			parsedMsg = retMsg.split(",");
-			
-			if(!parsedMsg[0].equals("3")){
-				System.out.println("this is a problem");  //debug
-			} else {
-				if(parsedMsg[1].equals("-1")){// player is passing
-					trumpCalled = false;
-				} else{
-					trumpCalled = true;
-				}
+			System.out.println("Recieved:" + retMsg);
+			while(!parsedMsg[0].equals("3")){
+				retMsg = server.receivePacket(table.playerTurn + 1);
+				parsedMsg = retMsg.split(",");
 			}
+			 
+			if(parsedMsg[1].equals("20")){// player is passing
+				trumpCalled = false;
+			} else{
+				trumpCalled = true;
+			}
+			
 			
 
 			if (trumpCalled == true) {
@@ -211,6 +214,10 @@ public class EuchreGame {
 				// receive and parse reponse
 				retMsg = server.receivePacket(table.playerTurn + 1);
 				parsedMsg = retMsg.split(",");
+				while(!parsedMsg[0].equals("3")){
+					retMsg = server.receivePacket(table.playerTurn + 1);
+					parsedMsg = retMsg.split(",");
+				}
 
 				// this is the "Screw the dealer" functionality
 				if (i == 3) {
@@ -232,7 +239,7 @@ public class EuchreGame {
 				if(!parsedMsg[0].equals("3")){
 					System.out.println("this is a problem");  //debug?
 				} else {
-					if(parsedMsg[1].equals("5")){
+					if(parsedMsg[1].equals("20")){
 						trumpCalled = false;
 					} else{
 						trumpCalled = true;
@@ -320,6 +327,10 @@ public class EuchreGame {
 			// parse packet
 			parsedMsg = recvMsg.split(",");
 			card = Integer.parseInt(parsedMsg[1]);
+			while(!parsedMsg[0].equals("2")){
+				recvMsg = server.receivePacket(table.playerTurn + 1);
+				parsedMsg = recvMsg.split(",");
+			}
 			
 			// Play card
 			table.tableCards[table.playerTurn] = table.players[table.playerTurn].playCard(card);
@@ -434,13 +445,8 @@ public class EuchreGame {
 
 	}
 	
-	public void runGame(){
-		
-		// wait for four players to connect
-		while(server.playerNo <= 4){
-			
-		}		
-		
+	public void runGame(){	
+		System.out.println("game is running");
 		while(table.team1.getScore()<10 && table.team2.getScore()<10){
 			runHand();
 		}
@@ -554,8 +560,10 @@ public class EuchreGame {
 	}
 	
 	public static void main(String[] args) {
+		
 		EuchreGame game = new EuchreGame();
 		game.runGame();
+		
 	}
 
 }// EOC
