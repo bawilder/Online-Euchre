@@ -17,12 +17,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.*;
-
-import com.sun.xml.internal.ws.api.message.Packet;
-
 
 public class Client {
 
@@ -48,13 +43,15 @@ public class Client {
 	private String player4Name = "Player4";
 
 	private boolean myTurn = false;
-
+	
+	private int turnNum = 0;
 	private int dealer = -1;
 	private int whoAmI = 0;
 	private int whoseTurn = 0;
 	private int myTeam = 0;
 
-	private boolean beginningstuff;
+	private boolean firstRound = false;
+	private boolean passed = false;
 
 	private int turnNo = 5;
 	private int oppoTricks = 0;
@@ -129,8 +126,9 @@ public class Client {
 	private JLabel lblPlayer4 = new JLabel(player4Name);
 
 	private final JLabel discardLbl = new JLabel("Discard");
-
-	public Packet myPacket = new Packet();
+	
+	private Packet myPacket = new Packet();
+	String msg;
 
 	/**
 	 * Launch the application.
@@ -176,7 +174,9 @@ public class Client {
 					String [] parsedPacket;
 					String rcvdInit = "";
 					rcvdInit = getPacket();
-				
+					//Packet Layout:
+					// 		9,dealFlag,p2Nam,p3Name,p4Name,card1,card2,card3,card4,card5,trump
+
 					/*
 					 * The integer values are as follows:
 					 * 0  - Illegal Move/Error	(host -> client)
@@ -184,7 +184,7 @@ public class Client {
 					 * 2  - Play Card			(client -> host)
 					 * 3  - Choose Trump		(client -> host)
 					 * 4  - Poke-It Packet      (host -> client)
-					 * 5  - Declare Trick Winner (host-> client) 
+					 * 5  - 
 					 * 6  - 
 					 * 7  - Set Trump Values	(host -> client)
 					 * 8  - Score Update/Deal	(host -> client)
@@ -207,10 +207,11 @@ public class Client {
 
 						initRecv();
 						checkDealer();
+						
+						turnNum = 0;
+						passed = false;
 					}
 
-					//TODO: Fix this (team1 score team2 score)
-					//Need new dealer
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
 						if(myTeam == 1) {
@@ -240,6 +241,11 @@ public class Client {
 
 					else if (Integer.parseInt(parsedPacket[0]) == 7){
 						trump = Integer.parseInt(parsedPacket[1]);
+						firstRound = true;
+						if(whoAmI == dealer) {
+							discardLbl.setVisible(true);
+						}
+						
 						if (trump == 1) {
 							trumpLbl.setText("Clubs");
 						} else if (trump == 2) {
@@ -250,18 +256,24 @@ public class Client {
 							trumpLbl.setText("Hearts");
 						}
 					}
-
+					
 					else if(Integer.parseInt(parsedPacket[0]) == 4){
 						//get poked (play card)
+						turnNum = turnNum + 1;
 						synchronized(frame){
 							frame.notify();
 						}
 						whoseTurn = Integer.parseInt(parsedPacket[1]);
 						checkPlayerTurn();
 						if(whoseTurn == whoAmI) {
+							if(trump == 0 && passed) { //trump has not been chosen yet
+								lblPickTrump.setVisible(true);
+								tSelect.setVisible(true);
+							}
 							myTurn = true;
 						} 
 					}
+
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
 						// refresh board
@@ -271,10 +283,8 @@ public class Client {
 						System.out.println("Either no packet received, or error parsing packet");
 					}
 
-
 					rcvdInit = "";
 					Arrays.fill(parsedPacket, null);
-
 
 					// This will redraw the gui so all
 					// labels and buttons show up properly
@@ -322,12 +332,18 @@ public class Client {
 		btnPass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (myTurn) {
-					//TODO: send that i am passing
+				if (myTurn && turnNum == 1) { 
+					if(passed == true && whoAmI == dealer) {
+						System.out.println("you must pick Trump");
+					} else {
+						passed = true;
+						msg = myPacket.chooseTrump(-1);
+						sendPacket(msg);
+						myTurn = false;
+					}
 				}
 			}
 		});
-
 
 		JButton btnPickUp = new JButton("Pick Up");
 		btnPickUp.setBounds(1025, 818, 100, 32);
@@ -337,6 +353,11 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO: pick-up logic
+				if(myTurn && turnNum == 1) {
+					msg = myPacket.chooseTrump(trumpCardNum);
+					sendPacket(msg);
+					myTurn = false;
+				}
 			}
 		});
 
@@ -470,18 +491,65 @@ public class Client {
 
 		JButton tSelectSpades = new JButton("");
 		tSelectSpades.setIcon(new ImageIcon (getClass().getResource("/spade.png")));
+		tSelectSpades.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tSelect.isVisible()) {
+					msg = myPacket.chooseTrump(2);
+					sendPacket(msg);
+					tSelect.setVisible(false);
+					lblPickTrump.setVisible(false);
+					myTurn = false;
+				}
+			}
+		});
 		tSelect.add(tSelectSpades);
 
 		JButton tSelectClubs = new JButton("");
 		tSelectClubs.setIcon(new ImageIcon (getClass().getResource("/club.png")));
+		tSelectClubs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tSelect.isVisible()) {
+					msg = myPacket.chooseTrump(1);
+					sendPacket(msg);
+					tSelect.setVisible(false);
+					lblPickTrump.setVisible(false);
+					myTurn = false;
+				}
+			}
+		});
 		tSelect.add(tSelectClubs);
 
 		JButton tSelectDiamonds = new JButton("");
 		tSelectDiamonds.setIcon(new ImageIcon (getClass().getResource("/diamond (2).png")));
+		tSelectDiamonds.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tSelect.isVisible()) {
+					msg = myPacket.chooseTrump(3);
+					sendPacket(msg);
+					tSelect.setVisible(false);
+					lblPickTrump.setVisible(false);
+					myTurn = false;
+				}
+			}
+		});
 		tSelect.add(tSelectDiamonds);
-
 		JButton tSelectHearts = new JButton("");
 		tSelectHearts.setIcon(new ImageIcon (getClass().getResource("/heart.png")));
+		tSelectHearts.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tSelect.isVisible()) {
+					msg = myPacket.chooseTrump(4);
+					sendPacket(msg);
+					tSelect.setVisible(false);
+					lblPickTrump.setVisible(false);
+					myTurn = false;
+				}
+			}
+		});
 		tSelect.add(tSelectHearts);
 		trumpLbl.setForeground(Color.WHITE);
 		trumpLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -537,8 +605,9 @@ public class Client {
 		drawCards();
 		frame.validate();
 	}
+	
 	private void drawCards () {
-
+		trumpCard.setVisible(true);
 		for (int i = 0; i < 4; i++) { //draw cards for each player
 			switch (i) {
 			case 0 : 
@@ -549,14 +618,26 @@ public class Client {
 						card1butt.setBackground(Color.darkGray);
 						card1butt.setBorderPainted(false);
 						card1butt.setIcon(card1);
+						card1butt.setVisible(true);
 						player1.add(card1butt);
 						card1butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								System.out.println("Playerclicked button1");
-								if (isValidMove(card1Num) && myTurn) {
+								//if i am pickingup get ride of this card and replace with
+								if(firstRound && (whoAmI == dealer)) {
+									card1Num = trumpCardNum;
+									trumpCard.setVisible(false);
+									discardLbl.setVisible(false);
+									firstRound = false;
+									card1butt.setIcon(cardToDrawVert(card1Num));
+									msg = myPacket.playCard(0);
+									sendPacket(msg);
+								} else if (isValidMove(card1Num) && myTurn) {
+									myTurn = false;
 									ply1CardPlayed.setIcon(card1);
 									playCard(card1Num);
+									msg = myPacket.playCard(0);
+									sendPacket(msg);
 									card1butt.setVisible(false);
 								}
 							}
@@ -565,15 +646,26 @@ public class Client {
 						final JButton card2butt = new JButton ();
 						card2butt.setBackground(Color.darkGray);
 						card2butt.setBorderPainted(false);
+						card2butt.setVisible(true);
 						card2butt.setIcon(card2);
 						player1.add(card2butt);
 						card2butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								System.out.println("Player clicked button2");
-								if (isValidMove(card2Num) && myTurn) {
+								if(firstRound && (whoAmI == dealer)) {
+									card2Num = trumpCardNum;
+									trumpCard.setVisible(false);
+									firstRound = false;
+									discardLbl.setVisible(false);
+									card2butt.setIcon(cardToDrawVert(card2Num));
+									msg = myPacket.playCard(1);
+									sendPacket(msg);
+								} else if (isValidMove(card2Num) && myTurn) {
+									myTurn = false;
 									playCard(card2Num);
 									ply1CardPlayed.setIcon(card2);
+									msg = myPacket.playCard(1);
+									sendPacket(msg);
 									card2butt.setVisible(false);
 								}
 							}
@@ -582,15 +674,26 @@ public class Client {
 						final JButton card3butt = new JButton ();
 						card3butt.setBackground(Color.darkGray);
 						card3butt.setBorderPainted(false);
+						card3butt.setVisible(true);
 						card3butt.setIcon(card3);
 						player1.add(card3butt);
 						card3butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								System.out.println("Player clicked button3");
-								if (isValidMove(card3Num) && myTurn) {
+								if(firstRound && (whoAmI == dealer)) {
+									card3Num = trumpCardNum;
+									trumpCard.setVisible(false);
+									discardLbl.setVisible(false);
+									firstRound = false;
+									card3butt.setIcon(cardToDrawVert(card3Num));
+									msg = myPacket.playCard(2);
+									sendPacket(msg);
+								} else if (isValidMove(card3Num) && myTurn) {
+									myTurn = false;
 									ply1CardPlayed.setIcon(card3);
 									playCard(card3Num);
+									msg = myPacket.playCard(2);
+									sendPacket(msg);
 									card3butt.setVisible(false);
 								}
 							}
@@ -599,15 +702,26 @@ public class Client {
 						final JButton card4butt = new JButton ();
 						card4butt.setBackground(Color.darkGray);
 						card4butt.setBorderPainted(false);
+						card4butt.setVisible(true);
 						card4butt.setIcon(card4);
 						player1.add(card4butt);
 						card4butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								System.out.println("Player clicked button4");
-								if (isValidMove(card4Num) && myTurn) {
+								if(firstRound && (whoAmI == dealer)) {
+									card4Num = trumpCardNum;
+									trumpCard.setVisible(false);
+									discardLbl.setVisible(false);
+									firstRound = false;
+									card4butt.setIcon(cardToDrawVert(card4Num));
+									msg = myPacket.playCard(3);
+									sendPacket(msg);
+								} else if (isValidMove(card4Num) && myTurn) {
+									myTurn = false;
 									ply1CardPlayed.setIcon(card4);
 									playCard(card4Num);
+									msg = myPacket.playCard(3);
+									sendPacket(msg);
 									card4butt.setVisible(false);
 								}
 							}
@@ -616,15 +730,26 @@ public class Client {
 						final JButton card5butt = new JButton ();
 						card5butt.setBackground(Color.darkGray);
 						card5butt.setBorderPainted(false);
+						card5butt.setVisible(true);
 						card5butt.setIcon(card5);
 						player1.add(card5butt);
 						card5butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								System.out.println("Player clicked button5");
-								if (isValidMove(card5Num) && myTurn) {
+								if(firstRound && (whoAmI == dealer)) {
+									card5Num = trumpCardNum;
+									trumpCard.setVisible(false);
+									discardLbl.setVisible(false);
+									firstRound = false;
+									card5butt.setIcon(cardToDrawVert(card5Num));
+									msg = myPacket.playCard(4);
+									sendPacket(msg);
+								} else if (isValidMove(card5Num) && myTurn) {
+									myTurn = false;
 									ply1CardPlayed.setIcon(card5);
 									playCard(card5Num);
+									msg = myPacket.playCard(4);
+									sendPacket(msg);
 									card5butt.setVisible(false);
 								}
 							}
@@ -712,6 +837,65 @@ public class Client {
 		case 22 : temp = new ImageIcon(getClass().getResource("/king_of_diamonds.png"));
 		break;
 		case 23 : temp = new ImageIcon(getClass().getResource("/ace_of_diamonds.png"));
+		break;
+		default : System.out.println("Fatal Error");
+		}
+
+		return temp;
+	}
+	
+	private ImageIcon cardToDrawHorz (int carVal) {
+		ImageIcon temp = null;
+
+		switch (carVal) {
+
+		case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades (2).png"));;
+		break;
+		case 1 : temp = new ImageIcon(getClass().getResource("/10_of_spades (2).png"));
+		break;
+		case 2 : temp = new ImageIcon(getClass().getResource("/jack_of_spades (2).png"));
+		break;
+		case 3 : temp = new ImageIcon(getClass().getResource("/queen_of_spades (2).png"));
+		break;
+		case 4 : temp = new ImageIcon(getClass().getResource("/king_of_spades (2).png"));
+		break;
+		case 5 : temp = new ImageIcon(getClass().getResource("/ace_of_spades (2).png"));
+		break;
+		case 6 : temp = new ImageIcon(getClass().getResource("/9_of_hearts (2).png"));
+		break;
+		case 7 : temp = new ImageIcon(getClass().getResource("/10_of_hearts (2).png"));
+		break;
+		case 8 : temp = new ImageIcon(getClass().getResource("/jack_of_hearts (2).png"));
+		break;
+		case 9 : temp = new ImageIcon(getClass().getResource("/queen_of_hearts (2).png"));
+		break;
+		case 10 : temp = new ImageIcon(getClass().getResource("/king_of_hearts (2).png"));
+		break;
+		case 11 : temp = new ImageIcon(getClass().getResource("/ace_of_hearts (2).png"));
+		break;
+		case 12 : temp = new ImageIcon(getClass().getResource("/9_of_clubs (2).png"));
+		break;
+		case 13 : temp = new ImageIcon(getClass().getResource("/10_of_clubs (2).png"));
+		break;
+		case 14 : temp = new ImageIcon(getClass().getResource("/jack_of_clubs (2).png"));
+		break;
+		case 15 : temp = new ImageIcon(getClass().getResource("/queen_of_clubs (2).png"));
+		break;
+		case 16 : temp = new ImageIcon(getClass().getResource("/king_of_clubs (2).png"));
+		break;
+		case 17 : temp = new ImageIcon(getClass().getResource("/ace_of_clubs (2).png"));
+		break;
+		case 18 : temp = new ImageIcon(getClass().getResource("/9_of_diamonds (2).png"));
+		break;
+		case 19 : temp = new ImageIcon(getClass().getResource("/10_of_diamonds (2).png"));
+		break;
+		case 20 : temp = new ImageIcon(getClass().getResource("/jack_of_diamonds (2).png"));
+		break;
+		case 21 : temp = new ImageIcon(getClass().getResource("/queen_of_diamonds (2).png"));
+		break;
+		case 22 : temp = new ImageIcon(getClass().getResource("/king_of_diamonds (2).png"));
+		break;
+		case 23 : temp = new ImageIcon(getClass().getResource("/ace_of_diamonds (2).png"));
 		break;
 		default : System.out.println("Fatal Error");
 		}
@@ -974,7 +1158,6 @@ public class Client {
 						System.exit(0);
 					}
 
-					//TODO: Close socket
 					ConnectUI.dispose();
 					initialize();
 				} else {
@@ -987,6 +1170,7 @@ public class Client {
 		bttnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+				//TODO create server logic
 				System.out.println("Need to create server");
 			}
 		});
@@ -1005,24 +1189,18 @@ public class Client {
 
 	public String getPacket(){
 		String myPacket = "";
-		int count = 0;
-		while(true){
-			try{
-				if(count % 10 == 0)
-					System.out.println("Waiting to receive a packet");
-				else
-					count ++;
-				
-				if(readBuff.ready() == true)
-					myPacket = readBuff.readLine();
-			}
-			catch (Exception err){
-				System.out.println(err);
-			}
-			if(myPacket.length() > 0)
-				break;
-	}
-
+		System.out.println("Waiting to receive a packet");
+		//while(true){
+		try{
+			//if(readBuff.ready() == true)
+			myPacket = readBuff.readLine();
+		}
+		catch (Exception err){
+			System.out.println(err);
+		}
+		//if(myPacket.length() > 0)
+		//break;
+		//}
 
 		return myPacket;
 	}
