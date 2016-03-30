@@ -1,7 +1,8 @@
-//Not sending me the correct dealer.
-//Something breaks when i try to play a card. 
 //keeping track of tricks doesn't have a packet right now
 //Sending the wrong trump when dealer is told to pick it up
+//Something uip with card numbering, client numbering systems does not match game logic system
+//client need to get card lead suit
+//Client needs to get rid of board cards after trick is done.
 
 /**
  * Comments for Zach to add:
@@ -189,6 +190,8 @@ public class Client {
 					 * 8  - Score Update/Deal	(host -> client)
 					 * 9  - Initialize Game		(host -> client)
 					 */
+//					if(rcvdInit == null || rcvdInit == "")
+//						continue;
 					parsedPacket = rcvdInit.split(",");
 					System.out.println("I revcieved Packet type : " + Integer.parseInt(parsedPacket[0]));
 					if(Integer.parseInt(parsedPacket[0]) == 9) {
@@ -219,7 +222,6 @@ public class Client {
 						if (teamNo == 1) {
 							yourScore = Integer.parseInt(parsedPacket[1]);
 							oppoScore = Integer.parseInt(parsedPacket[2]);
-							
 							
 						} else {
 							yourScore = Integer.parseInt(parsedPacket[2]);
@@ -272,8 +274,8 @@ public class Client {
 
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
-						whoPlayed = Integer.parseInt(parsedPacket[1]);
-						cardPlayed = Integer.parseInt(parsedPacket[2]);
+						whoPlayed = Integer.parseInt(parsedPacket[2]);
+						cardPlayed = Integer.parseInt(parsedPacket[1]);
 						if (whoAmI == 1) {
 							if (whoPlayed == 2) { //player 2 played a card
 								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
@@ -670,9 +672,9 @@ public class Client {
 								} else if (isValidMove(card1Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card1);
-									playCard(card1Num);
 									msg = myPacket.playCard(0);
 									sendPacket(msg);
+									System.out.println("pos0 msg:" + msg);
 									card1butt.setVisible(false);
 								}
 							}
@@ -702,10 +704,11 @@ public class Client {
 									frame.repaint();
 								} else if (isValidMove(card2Num) && myTurn && trump != 0) {
 									myTurn = false;
-									playCard(card2Num);
 									ply1CardPlayed.setIcon(card2);
 									msg = myPacket.playCard(1);
 									sendPacket(msg);
+									System.out.println("pos1 msg:" + msg);
+									
 									card2butt.setVisible(false);
 								}
 							}
@@ -736,9 +739,10 @@ public class Client {
 								} else if (isValidMove(card3Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card3);
-									playCard(card3Num);
 									msg = myPacket.playCard(2);
 									sendPacket(msg);
+									System.out.println("pos2 msg:" + msg);
+									
 									card3butt.setVisible(false);
 								}
 							}
@@ -764,15 +768,16 @@ public class Client {
 									card4butt.setIcon(cardToDrawVert(card4Num));
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
+									
 									System.out.println("Discarded");
 									frame.repaint();
 								} else if (isValidMove(card4Num) && myTurn && trump != 0) {
 
 									myTurn = false;
 									ply1CardPlayed.setIcon(card4);
-									playCard(card4Num);
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
+									System.out.println("pos3 msg:" + msg);
 									card4butt.setVisible(false);
 
 								}
@@ -804,8 +809,8 @@ public class Client {
 								} else if (isValidMove(card5Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card5);
-									playCard(card5Num);
 									msg = myPacket.playCard(4);
+									System.out.println("pos4 msg:" + msg);
 									sendPacket(msg);
 									card5butt.setVisible(false);
 								}
