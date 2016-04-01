@@ -213,6 +213,12 @@ public class Client {
 						checkDealer();
 						checkPlayers();
 						
+						ply1CardPlayed.setVisible(false);
+						ply2CardPlayed.setVisible(false);
+						ply3CardPlayed.setVisible(false);
+						ply4CardPlayed.setVisible(false);
+						cardLead = 0 ;
+						
 						passed = false;
 					}
 
@@ -279,38 +285,54 @@ public class Client {
 						if (whoAmI == 1) {
 							if (whoPlayed == 2) { //player 2 played a card
 								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply2CardPlayed.setVisible(true);
 							} else if (whoPlayed == 3) { //player3 played a card
 								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+								ply3CardPlayed.setVisible(true);
 							} else if (whoPlayed == 4) { // player 4 played a card
 								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply4CardPlayed.setVisible(true);
 							}	
 						}
 						else if (whoAmI == 2) {
 							if (whoPlayed == 1) { //player 1 played a card
 								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply4CardPlayed.setVisible(true);
 							} else if (whoPlayed == 3) { //player3 played a card
 								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply2CardPlayed.setVisible(true);
 							} else if (whoPlayed == 4) { // player 4 played a card
 								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+								ply3CardPlayed.setVisible(true);
 							}
 						}
 						else if (whoAmI == 3) {
 							if (whoPlayed == 1) { //player 1 played a card
 								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+								ply3CardPlayed.setVisible(true);
 							} else if (whoPlayed == 2) { //player2 played a card
 								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply4CardPlayed.setVisible(true);
 							} else if (whoPlayed == 4) { // player 4 played a card
 								ply2CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+								ply2CardPlayed.setVisible(true);
 							}
 						}
 						else if (whoAmI == 4) {
 							if (whoPlayed == 1) { //player 1 played a card
 								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply2CardPlayed.setVisible(true);
 							} else if (whoPlayed == 2) { //player2 played a card
 								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+								ply3CardPlayed.setVisible(true);
 							} else if (whoPlayed == 3) { // player 3 played a card
 								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+								ply4CardPlayed.setVisible(true);
 							}
+						}
+						if (cardLead == 0) {
+							cardLead = getCardLead();
+							System.out.println("The suit that was lead is: " + cardLead);
 						}
 					}
 
@@ -672,6 +694,7 @@ public class Client {
 								} else if (isValidMove(card1Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card1);
+									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(0);
 									sendPacket(msg);
 									System.out.println("pos0 msg:" + msg);
@@ -705,6 +728,7 @@ public class Client {
 								} else if (isValidMove(card2Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card2);
+									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(1);
 									sendPacket(msg);
 									System.out.println("pos1 msg:" + msg);
@@ -739,6 +763,7 @@ public class Client {
 								} else if (isValidMove(card3Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card3);
+									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(2);
 									sendPacket(msg);
 									System.out.println("pos2 msg:" + msg);
@@ -775,6 +800,7 @@ public class Client {
 
 									myTurn = false;
 									ply1CardPlayed.setIcon(card4);
+									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
 									System.out.println("pos3 msg:" + msg);
@@ -809,6 +835,7 @@ public class Client {
 								} else if (isValidMove(card5Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card5);
+									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(4);
 									System.out.println("pos4 msg:" + msg);
 									sendPacket(msg);
@@ -1410,6 +1437,28 @@ public class Client {
 			lblPlayer3.setText("Player2");
 			lblPlayer4.setText("Player3");
 		}
+	}
+	
+	private int getCardLead () {
+		//no card are visable, it means no cards have been lead yet
+		if(!ply1CardPlayed.isVisible() && !ply2CardPlayed.isVisible() && !ply3CardPlayed.isVisible() && !ply4CardPlayed.isVisible()) {
+			return 0;
+		} else {
+			return findSuitLead();
+		}
+	}
+	
+	private int findSuitLead () {
+		if ((cardPlayed <= 17) && (cardPlayed >= 12) || (trump == 1 && cardPlayed == 2)) {
+			return 1;
+		} else if ((cardPlayed <= 5) && (cardPlayed >= 0) || (trump == 2 && card2Num == 14)) {
+			return 2;
+		} else if ((cardPlayed <= 23) && (cardPlayed >= 18) || (trump == 3 && card2Num == 8)) {
+			return 3;
+		} else if ((cardPlayed <= 11) && (cardPlayed >= 6) || (trump == 4 && card2Num == 20)) {
+			return 4;
+		}
+		return 0;
 	}
 }
 
