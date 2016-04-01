@@ -118,22 +118,10 @@ public class EuchreGame {
 			System.out.println("waiting to receive a packet from player " + (table.playerTurn + 1));
 			retMsg = server.receivePacket(table.playerTurn + 1);
 			parsedMsg = retMsg.split(",");
-<<<<<<< HEAD
-			
-			if(!parsedMsg[0].equals("3")){
-				System.out.println("this is a problem");  //debug
-			} else {
-				if(parsedMsg[1].equals("5")){
-					trumpCalled = false;
-				} else{
-					trumpCalled = true;
-				}
-=======
 			System.out.println("Recieved:" + retMsg);
 			while(!parsedMsg[0].equals("3")){
 				retMsg = server.receivePacket(table.playerTurn + 1);
 				parsedMsg = retMsg.split(",");
->>>>>>> Zek
 			}
 			 
 			if(parsedMsg[1].equals("20")){// player is passing
@@ -378,13 +366,9 @@ public class EuchreGame {
 	
 	public void runHand(){
 		
-<<<<<<< HEAD
-		// should be done
-=======
 		Packet myPack = new Packet();
 		String msg;
 		// networking should be done
->>>>>>> Zek
 		dealDeck();	
 		
 		// networking should be done
@@ -397,15 +381,6 @@ public class EuchreGame {
 		// team 1 Euchd team 2
 		if (table.team1.getTricks() > 2 && table.team2.calledTrump == true) {
 			table.team1.teamScored(2);
-<<<<<<< HEAD
-			
-			//SEND THE SCORE PACKET
-			Packet myPack= new Packet();
-			myPack.newHandPacket(table.team1.score, table.team2.score);
-			
-			//send packet after deal to pass hand in
-=======
->>>>>>> Zek
 
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
@@ -416,13 +391,6 @@ public class EuchreGame {
 		else if (table.team2.getTricks() > 2 && table.team1.calledTrump == true) {
 			table.team2.teamScored(2);
 			
-<<<<<<< HEAD
-			//SEND THE SCORE PACKET
-			Packet myPack= new Packet();
-			myPack.newHandPacket(table.team1.score, table.team2.score);
-			
-=======
->>>>>>> Zek
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
 
@@ -433,25 +401,11 @@ public class EuchreGame {
 			if (table.team1.getTricks() > 2 && table.team1.getTricks() < 5) {
 				table.team1.teamScored(1);
 				
-<<<<<<< HEAD
-				//SEND THE SCORE PACKET
-				Packet myPack= new Packet();
-				myPack.newHandPacket(table.team1.score, table.team2.score);
-				
-=======
->>>>>>> Zek
 			}
 			// give them 2 points if they get 5 tricks
 			if (table.team1.getTricks() == 5) {
 				table.team1.teamScored(2);
 				
-<<<<<<< HEAD
-				//SEND THE SCORE PACKET
-				Packet myPack= new Packet();
-				myPack.newHandPacket(table.team1.score, table.team2.score);
-				
-=======
->>>>>>> Zek
 			}
 
 			table.players[0].clearTricks();
@@ -464,25 +418,11 @@ public class EuchreGame {
 			if (table.team2.getTricks() > 2 && table.team2.getTricks() < 5) {
 				table.team2.teamScored(1);
 				
-<<<<<<< HEAD
-				//SEND THE SCORE PACKET
-				Packet myPack= new Packet();
-				myPack.newHandPacket(table.team1.score, table.team2.score);
-				
-=======
->>>>>>> Zek
 			}
 			// give them 2 points if they get 5 tricks
 			if (table.team1.getTricks() == 5) {
 				table.team2.teamScored(2);
 				
-<<<<<<< HEAD
-				//SEND THE SCORE PACKET
-				Packet myPack= new Packet();
-				myPack.newHandPacket(table.team1.score, table.team2.score);
-				
-=======
->>>>>>> Zek
 			}
 			table.players[0].clearTricks();
 			table.players[2].clearTricks();
