@@ -53,7 +53,7 @@ public class Client {
 	private boolean passed = false;
 
 	private int turnNo = 5;
-	
+
 	private int oppoTricks = 0;
 	private int oppoScore = 0;
 	private int yourTricks = 0;
@@ -190,8 +190,8 @@ public class Client {
 					 * 8  - Score Update/Deal	(host -> client)
 					 * 9  - Initialize Game		(host -> client)
 					 */
-//					if(rcvdInit == null || rcvdInit == "")
-//						continue;
+					//					if(rcvdInit == null || rcvdInit == "")
+					//						continue;
 					parsedPacket = rcvdInit.split(",");
 					System.out.println("I revcieved Packet type : " + Integer.parseInt(parsedPacket[0]));
 					if(Integer.parseInt(parsedPacket[0]) == 9) {
@@ -212,13 +212,13 @@ public class Client {
 						initRecv();
 						checkDealer();
 						checkPlayers();
-						
+
 						ply1CardPlayed.setVisible(false);
 						ply2CardPlayed.setVisible(false);
 						ply3CardPlayed.setVisible(false);
 						ply4CardPlayed.setVisible(false);
 						cardLead = 0 ;
-						
+
 						passed = false;
 					}
 
@@ -228,11 +228,13 @@ public class Client {
 						if (teamNo == 1) {
 							yourScore = Integer.parseInt(parsedPacket[1]);
 							oppoScore = Integer.parseInt(parsedPacket[2]);
-							
+
 						} else {
 							yourScore = Integer.parseInt(parsedPacket[2]);
 							oppoScore = Integer.parseInt(parsedPacket[1]);
 						}
+						yourTeamScore.setText(Integer.toString(yourScore));
+						oppoScorelbl.setText(Integer.toString(oppoScore));
 					}
 
 					//Whenever trump gets called the dealer had to discard with this code.
@@ -253,7 +255,8 @@ public class Client {
 						} else if (trump == 4){
 							trumpLbl.setText("Hearts");
 						}
-						
+
+
 						if (trump > 0) {
 							trumpCard.setVisible(false);
 							tSelect.setVisible(false);
@@ -261,6 +264,18 @@ public class Client {
 						}
 					}
 
+					else if(Integer.parseInt(parsedPacket[0]) == 5){
+						if(teamNo == 1){
+							yourTricks = Integer.parseInt(parsedPacket[2]);
+							oppoTricks = Integer.parseInt(parsedPacket[3]);
+						} else {
+							yourTricks = Integer.parseInt(parsedPacket[3]);
+							oppoTricks = Integer.parseInt(parsedPacket[2]);
+						}
+						yourTeamTricks.setText(Integer.toString(yourTricks)); 
+						oppoTrickslbl.setText(Integer.toString(oppoTricks));
+
+					}
 					else if(Integer.parseInt(parsedPacket[0]) == 4){
 						//get poked (play card)
 						synchronized(frame){
@@ -733,7 +748,7 @@ public class Client {
 									msg = myPacket.playCard(1);
 									sendPacket(msg);
 									System.out.println("pos1 msg:" + msg);
-									
+
 									card2butt.setVisible(false);
 								}
 							}
@@ -768,7 +783,7 @@ public class Client {
 									msg = myPacket.playCard(2);
 									sendPacket(msg);
 									System.out.println("pos2 msg:" + msg);
-									
+
 									card3butt.setVisible(false);
 								}
 							}
@@ -794,7 +809,7 @@ public class Client {
 									card4butt.setIcon(cardToDrawVert(card4Num));
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
-									
+
 									System.out.println("Discarded");
 									frame.repaint();
 								} else if (isValidMove(card4Num) && myTurn && trump != 0) {
@@ -1416,10 +1431,10 @@ public class Client {
 			}
 		}
 	}
-	
+
 	private void checkPlayers () {
 		if (whoAmI == 1) {
-			
+
 		} else if (whoAmI == 2) {
 			lblPlayer1.setText("Player2");
 			lblPlayer2.setText("Player3");
@@ -1439,7 +1454,7 @@ public class Client {
 			lblPlayer4.setText("Player3");
 		}
 	}
-	
+
 	private int getCardLead () {
 		//no card are visable, it means no cards have been lead yet
 		if(!ply1CardPlayed.isVisible() && !ply2CardPlayed.isVisible() && !ply3CardPlayed.isVisible() && !ply4CardPlayed.isVisible()) {
@@ -1448,7 +1463,7 @@ public class Client {
 			return findSuitLead();
 		}
 	}
-	
+
 	private int findSuitLead () {
 		if ((cardPlayed <= 17) && (cardPlayed >= 12) || (trump == 1 && cardPlayed == 2)) {
 			return 1;
