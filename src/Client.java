@@ -215,19 +215,6 @@ public class Client {
 						
 						passed = false;
 					}
-					
-					else if(Integer.parseInt(parsedPacket[0]) == 5){
-						if(myTeam == Integer.parseInt(parsedPacket[1])) {
-							yourTricks = Integer.parseInt(parsedPacket[2]);
-							oppoTricks = Integer.parseInt(parsedPacket[3]);
-						}
-						else {
-							oppoTricks = Integer.parseInt(parsedPacket[2]);
-							yourTricks = Integer.parseInt(parsedPacket[3]);	
-						}
-						yourTeamTricks.setText(Integer.toString(yourTricks));
-						oppoTrickslbl.setText(Integer.toString(oppoTricks));
-					}
 
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
