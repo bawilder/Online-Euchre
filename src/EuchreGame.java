@@ -71,6 +71,13 @@ public class EuchreGame {
 		player4init = packet.initPacket(table.playerDealing + 1, 4, 2, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player4init, 4);
 		
+		System.out.println("player 1 hand: " + table.players[0].hand);
+		System.out.println("player 2 hand: " + table.players[1].hand);
+		System.out.println("player 3 hand: " + table.players[2].hand);
+		System.out.println("player 4 hand: " + table.players[3].hand);
+		
+		System.out.println("Card turned up = " + table.deck.discard[0]);
+		
 	}
 
 	public char makeSuit(int suit) {
@@ -350,6 +357,7 @@ public class EuchreGame {
 		playerOfCard = maxCardPos;
 
 		table.players[playerOfCard].tricks += 1;
+		table.playerTurn = playerOfCard;
 
 		if (playerOfCard == 0 || playerOfCard == 2) {
 			table.team1.tricks += 1;
