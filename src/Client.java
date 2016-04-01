@@ -253,6 +253,7 @@ public class Client {
 						} else if (trump == 4){
 							trumpLbl.setText("Hearts");
 						}
+						
 						if (trump > 0) {
 							trumpCard.setVisible(false);
 							tSelect.setVisible(false);
