@@ -147,13 +147,13 @@ public class EuchreGame {
 				System.out.println("Trump called is" + table.topOfDiscard.suit);
 				
 				// get the int value of the trump suit
-				if(table.topOfDiscard.suit == 'C')
+				if(table.topOfDiscard.suit == 'S')
 					trump = 1;
-				else if(table.topOfDiscard.suit == 'S')
-					trump = 2;
-				else if(table.topOfDiscard.suit == 'D')
-					trump = 3;
 				else if(table.topOfDiscard.suit == 'H')
+					trump = 2;
+				else if(table.topOfDiscard.suit == 'C')
+					trump = 3;
+				else if(table.topOfDiscard.suit == 'D')
 					trump = 4;
 				
 				
