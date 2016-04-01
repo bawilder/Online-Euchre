@@ -362,6 +362,12 @@ public class EuchreGame {
 			msg = packet.trickUpdate(1, table.team1.tricks, table.team2.tricks);
 		else
 			msg = packet.trickUpdate(2, table.team1.tricks, table.team2.tricks);
+		
+		
+		for(int i = 0; i < 4; i++){
+			server.sendPacket(msg, table.playerTurn + 1);
+			table.rotateTurn();
+		}
 	}
 	
 	public void runHand(){
