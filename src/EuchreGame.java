@@ -47,6 +47,7 @@ public class EuchreGame {
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[0].hand[i]);
 		}
+		System.out.println("player 1 hand: " + tempArray);
 		player1init = packet.initPacket(table.playerDealing + 1, 1, 1, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player1init, 1);
 		
@@ -54,6 +55,7 @@ public class EuchreGame {
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[1].hand[i]);
 		}
+		System.out.println("player 2 hand: " + tempArray);
 		player2init = packet.initPacket(table.playerDealing + 1, 2, 2, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player2init, 2);
 		
@@ -61,6 +63,7 @@ public class EuchreGame {
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[2].hand[i]);
 		}
+		System.out.println("player 3 hand: " + tempArray);
 		player3init = packet.initPacket(table.playerDealing + 1, 3, 1, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player3init, 3);
 		
@@ -68,15 +71,11 @@ public class EuchreGame {
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[3].hand[i]);
 		}
+		System.out.println("player 4 hand: " + tempArray);
 		player4init = packet.initPacket(table.playerDealing + 1, 4, 2, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player4init, 4);
 		
-		System.out.println("player 1 hand: " + table.players[0].hand);
-		System.out.println("player 2 hand: " + table.players[1].hand);
-		System.out.println("player 3 hand: " + table.players[2].hand);
-		System.out.println("player 4 hand: " + table.players[3].hand);
-		
-		System.out.println("Card turned up = " + table.deck.discard[0]);
+		System.out.println("Card turned up = " + cardToInt(table.deck.discard[0]));
 		
 	}
 
