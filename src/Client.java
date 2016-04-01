@@ -277,7 +277,20 @@ public class Client {
 							myTurn = true;
 						} 
 					}
-
+					else if(Integer.parseInt(parsedPacket[0]) == 5){
+						if(teamNo == 1){
+							yourTricks = Integer.parseInt(parsedPacket[2]);
+							oppoTricks = Integer.parseInt(parsedPacket[3]);
+						}
+						else{
+							yourTricks = Integer.parseInt(parsedPacket[3]);
+							oppoTricks = Integer.parseInt(parsedPacket[2]);
+						}
+						
+						yourTeamTricks.setText(Integer.toString(yourTricks)); 
+						oppoTrickslbl.setText(Integer.toString(oppoTricks));
+							
+					}
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
 						whoPlayed = Integer.parseInt(parsedPacket[2]);
