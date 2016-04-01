@@ -47,7 +47,7 @@ public class EuchreGame {
 		for(int i = 0; i < 5; i++){
 			tempArray[i] = this.cardToInt(table.players[0].hand[i]);
 		}
-		System.out.println("player 1 hand: " + tempArray.toString());
+		System.out.println("player 1 hand: " + tempArray[0] + "," + tempArray[1] + "," + tempArray[2] + "," + tempArray[3] + "," + tempArray[4]);
 		player1init = packet.initPacket(table.playerDealing + 1, 1, 1, tempArray, this.cardToInt(table.topOfDiscard));
 		server.sendPacket(player1init, 1);
 		
@@ -475,98 +475,98 @@ public class EuchreGame {
 	}
 	
 	public int cardToInt(Card tempCard){
-		if (tempCard.suit == 'C' && tempCard.face == 'N'){
+		if (tempCard.suit == 'S' && tempCard.face == 'N'){
 		    return 0;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'T'){
+		if (tempCard.suit == 'S' && tempCard.face == 'T'){
 		    return 1;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'J'){
+		if (tempCard.suit == 'S' && tempCard.face == 'J'){
 		    return 2;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'S' && tempCard.face == 'Q'){
 		    return 3;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'K'){
+		if (tempCard.suit == 'S' && tempCard.face == 'K'){
 		    return 4;
 		}
 
-		if (tempCard.suit == 'C' && tempCard.face == 'A'){
+		if (tempCard.suit == 'S' && tempCard.face == 'A'){
 		    return 5;
 		}
-		if (tempCard.suit == 'S' && tempCard.face == 'N'){
+		if (tempCard.suit == 'H' && tempCard.face == 'N'){
 		    return 6;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'T'){
+		if (tempCard.suit == 'H' && tempCard.face == 'T'){
 		    return 7;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'J'){
+		if (tempCard.suit == 'H' && tempCard.face == 'J'){
 		    return 8;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'H' && tempCard.face == 'Q'){
 		    return 9;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'K'){
+		if (tempCard.suit == 'H' && tempCard.face == 'K'){
 		    return 10;
 		}
 
-		if (tempCard.suit == 'S' && tempCard.face == 'A'){
+		if (tempCard.suit == 'H' && tempCard.face == 'A'){
 		    return 11;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'N'){
+		if (tempCard.suit == 'C' && tempCard.face == 'N'){
 		    return 12;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'T'){
+		if (tempCard.suit == 'C' && tempCard.face == 'T'){
 		    return 13;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'J'){
+		if (tempCard.suit == 'C' && tempCard.face == 'J'){
 		    return 14;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'C' && tempCard.face == 'Q'){
 		    return 15;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'K'){
+		if (tempCard.suit == 'C' && tempCard.face == 'K'){
 		    return 16;
 		}
 
-		if (tempCard.suit == 'D' && tempCard.face == 'A'){
+		if (tempCard.suit == 'C' && tempCard.face == 'A'){
 		    return 17;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'N'){
+		if (tempCard.suit == 'D' && tempCard.face == 'N'){
 		    return 18;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'T'){
+		if (tempCard.suit == 'D' && tempCard.face == 'T'){
 		    return 19;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'J'){
+		if (tempCard.suit == 'D' && tempCard.face == 'J'){
 		    return 20;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'Q'){
+		if (tempCard.suit == 'D' && tempCard.face == 'Q'){
 		    return 21;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'K'){
+		if (tempCard.suit == 'D' && tempCard.face == 'K'){
 		    return 22;
 		}
 
-		if (tempCard.suit == 'H' && tempCard.face == 'A'){
+		if (tempCard.suit == 'D' && tempCard.face == 'A'){
 		    return 23;
 		}
 		
