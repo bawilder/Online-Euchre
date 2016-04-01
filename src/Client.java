@@ -217,7 +217,7 @@ public class Client {
 						ply2CardPlayed.setVisible(false);
 						ply3CardPlayed.setVisible(false);
 						ply4CardPlayed.setVisible(false);
-						cardLead = 0 ;
+						cardLead = 0;
 
 						passed = false;
 					}
@@ -235,6 +235,12 @@ public class Client {
 						}
 						yourTeamScore.setText(Integer.toString(yourScore));
 						oppoScorelbl.setText(Integer.toString(oppoScore));
+						
+						ply1CardPlayed.setVisible(false);
+						ply2CardPlayed.setVisible(false);
+						ply3CardPlayed.setVisible(false);
+						ply4CardPlayed.setVisible(false);
+						cardLead = 0;
 					}
 
 					//Whenever trump gets called the dealer had to discard with this code.
@@ -247,15 +253,14 @@ public class Client {
 						}
 
 						if (trump == 1) {
-							trumpLbl.setText("Clubs");
-						} else if (trump == 2) {
 							trumpLbl.setText("Spades");
-						} else if (trump == 3) {
-							trumpLbl.setText("Diamonds");
-						} else if (trump == 4){
+						} else if (trump == 2) {
 							trumpLbl.setText("Hearts");
+						} else if (trump == 3) {
+							trumpLbl.setText("Clubs");
+						} else if (trump == 4){
+							trumpLbl.setText("Diamonds");
 						}
-
 
 						if (trump > 0) {
 							trumpCard.setVisible(false);
@@ -274,6 +279,12 @@ public class Client {
 						}
 						yourTeamTricks.setText(Integer.toString(yourTricks)); 
 						oppoTrickslbl.setText(Integer.toString(oppoTricks));
+						
+						ply1CardPlayed.setVisible(false);
+						ply2CardPlayed.setVisible(false);
+						ply3CardPlayed.setVisible(false);
+						ply4CardPlayed.setVisible(false);
+						cardLead = 0;
 
 					}
 					else if(Integer.parseInt(parsedPacket[0]) == 4){
@@ -330,7 +341,7 @@ public class Client {
 								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
 								ply4CardPlayed.setVisible(true);
 							} else if (whoPlayed == 4) { // player 4 played a card
-								ply2CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
 								ply2CardPlayed.setVisible(true);
 							}
 						}
@@ -712,6 +723,7 @@ public class Client {
 									ply1CardPlayed.setIcon(card1);
 									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(0);
+									card1Num = -1;
 									sendPacket(msg);
 									System.out.println("pos0 msg:" + msg);
 									card1butt.setVisible(false);
@@ -745,6 +757,7 @@ public class Client {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card2);
 									ply1CardPlayed.setVisible(true);
+									card2Num = -1;
 									msg = myPacket.playCard(1);
 									sendPacket(msg);
 									System.out.println("pos1 msg:" + msg);
@@ -780,6 +793,7 @@ public class Client {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card3);
 									ply1CardPlayed.setVisible(true);
+									card3Num = -1;
 									msg = myPacket.playCard(2);
 									sendPacket(msg);
 									System.out.println("pos2 msg:" + msg);
@@ -817,6 +831,7 @@ public class Client {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card4);
 									ply1CardPlayed.setVisible(true);
+									card4Num = -1;
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
 									System.out.println("pos3 msg:" + msg);
@@ -852,6 +867,7 @@ public class Client {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card5);
 									ply1CardPlayed.setVisible(true);
+									card5Num = -1;
 									msg = myPacket.playCard(4);
 									System.out.println("pos4 msg:" + msg);
 									sendPacket(msg);
@@ -1098,28 +1114,35 @@ public class Client {
 	}
 
 
+	/**
+	 * 0 - Invalid
+	 * 1 - Spade
+	 * 2 - Heart
+	 * 3 - Club
+	 * 4 - Diamond
+	 */
 	private boolean isValidMove (int cardPlayed) {
 
 		if(cardLead == 0) { //Player has the lead, they can play anything they want
 			return true;
 		} else if (!canFollowSuit()) { // if they cannot follow suit, any card is valid
 			return true;
-		} else if(cardLead == 1 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 1 && cardPlayed == 2)) {
+		} else if(cardLead == 1 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 1 && cardPlayed == 14)) {
 			if(trump == 2 && cardPlayed == 14) {
 				return false;
 			}
 			return true;
-		} else if (cardLead == 2 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 2 && cardPlayed == 14)) {
+		} else if (cardLead == 2 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 2 && cardPlayed == 20)) {
 			if(trump == 1 && cardPlayed == 2) {
 				return false;
 			}
 			return true;
-		} else if (cardLead == 3 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 3 && cardPlayed == 8)) {
+		} else if (cardLead == 3 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 3 && cardPlayed == 2)) {
 			if(trump == 4 && cardPlayed == 20) {
 				return false;
 			}
 			return true;
-		} else if (cardLead == 4 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 4 && cardPlayed == 20)) {
+		} else if (cardLead == 4 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 4 && cardPlayed == 8)) {
 			if(trump == 3 && cardPlayed == 8) {
 				return false;
 			}
@@ -1131,65 +1154,65 @@ public class Client {
 
 	/**
 	 * 0 - Invalid
-	 * 1 - Club
-	 * 2 - Spade
-	 * 3 - Diamond
-	 * 4 - Heart
+	 * 1 - Spade
+	 * 2 - Heart
+	 * 3 - Club
+	 * 4 - Diamond
 	 */
 	private boolean canFollowSuit () {
-		if(cardLead == 1) {
-			if ((card1Num <= 17) && (card1Num >= 12) || (trump == 1 && card1Num == 2)) {
+		if (cardLead == 1) {
+			if ((card1Num <= 5) && (card1Num >= 0) || (trump == 1 && card1Num == 14)) {
 				return true;
-			} else if (((card2Num <= 17) && (card1Num >= 12) || (trump == 1 && card2Num == 2))) {
+			} else if (((card2Num <= 5) && (card1Num >= 0) || (trump == 1 && card2Num == 14))) {
 				return true;
-			} else if (((card3Num <= 17) && (card1Num >= 12) || (trump == 1 && card3Num == 2))) {
+			} else if (((card3Num <= 5) && (card1Num >= 0) || (trump == 1 && card3Num == 14))) {
 				return true;
-			} else if (((card4Num <= 17) && (card1Num >= 12) || (trump == 1 && card4Num == 2))) {
+			} else if (((card4Num <= 5) && (card1Num >= 0) || (trump == 1 && card4Num == 14))) {
 				return true;
-			} else if (((card5Num <= 17) && (card1Num >= 12) || (trump == 1 && card5Num == 2))) {
+			} else if (((card5Num <= 5) && (card1Num >= 0) || (trump == 1 && card5Num == 14))) {
 				return true;
 			}
 			return false;
 		} else if (cardLead == 2) {
-			if ((card1Num <= 5) && (card1Num >= 0) || (trump == 2 && card1Num == 14)) {
+			if ((card1Num <= 11) && (card1Num >= 6) || (trump == 2 && card1Num == 20)) {
 				return true;
-			} else if (((card2Num <= 5) && (card1Num >= 0) || (trump == 2 && card2Num == 14))) {
+			} else if ((card2Num <= 11) && (card2Num >= 6) || (trump == 2 && card2Num == 20)) {
 				return true;
-			} else if (((card3Num <= 5) && (card1Num >= 0) || (trump == 2 && card3Num == 14))) {
+			} else if ((card3Num <= 11) && (card3Num >= 6) || (trump == 2 && card3Num == 20)) {
 				return true;
-			} else if (((card4Num <= 5) && (card1Num >= 0) || (trump == 2 && card4Num == 14))) {
+			} else if ((card4Num <= 11) && (card4Num >= 6) || (trump == 2 && card4Num == 20)) {
 				return true;
-			} else if (((card5Num <= 5) && (card1Num >= 0) || (trump == 2 && card5Num == 14))) {
-				return true;
-			}
-			return false;
-		} else if (cardLead == 3) {
-			if ((card1Num <= 23) && (card1Num >= 18) || (trump == 3 && card1Num == 8)) {
-				return true;
-			} else if ((card2Num <= 23) && (card2Num >= 18) || (trump == 3 && card2Num == 8)) {
-				return true;
-			} else if ((card3Num <= 23) && (card3Num >= 18) || (trump == 3 && card3Num == 8)) {
-				return true;
-			} else if ((card4Num <= 23) && (card4Num >= 18) || (trump == 3 && card4Num == 8)) {
-				return true;
-			} else if ((card5Num <= 23) && (card5Num >= 18) || (trump == 3 && card5Num == 8)) {
+			} else if ((card5Num <= 11) && (card5Num >= 6) || (trump == 2 && card5Num == 20)) {
 				return true;
 			}
 			return false;
-		} else if (cardLead == 4) {
-			if ((card1Num <= 11) && (card1Num >= 6) || (trump == 4 && card1Num == 20)) {
+		}else if(cardLead == 3) {
+			if ((card1Num <= 17) && (card1Num >= 12) || (trump == 3 && card1Num == 2)) {
 				return true;
-			} else if ((card2Num <= 11) && (card2Num >= 6) || (trump == 4 && card2Num == 20)) {
+			} else if (((card2Num <= 17) && (card1Num >= 12) || (trump == 3 && card2Num == 2))) {
 				return true;
-			} else if ((card3Num <= 11) && (card3Num >= 6) || (trump == 4 && card3Num == 20)) {
+			} else if (((card3Num <= 17) && (card1Num >= 12) || (trump == 3 && card3Num == 2))) {
 				return true;
-			} else if ((card4Num <= 11) && (card4Num >= 6) || (trump == 4 && card4Num == 20)) {
+			} else if (((card4Num <= 17) && (card1Num >= 12) || (trump == 3 && card4Num == 2))) {
 				return true;
-			} else if ((card5Num <= 11) && (card5Num >= 6) || (trump == 4 && card5Num == 20)) {
+			} else if (((card5Num <= 17) && (card1Num >= 12) || (trump == 3 && card5Num == 2))) {
 				return true;
 			}
 			return false;
-		}
+		}  else if (cardLead == 4) {
+			if ((card1Num <= 23) && (card1Num >= 18) || (trump == 4 && card1Num == 8)) {
+				return true;
+			} else if ((card2Num <= 23) && (card2Num >= 18) || (trump == 4 && card2Num == 8)) {
+				return true;
+			} else if ((card3Num <= 23) && (card3Num >= 18) || (trump == 4 && card3Num == 8)) {
+				return true;
+			} else if ((card4Num <= 23) && (card4Num >= 18) || (trump == 4 && card4Num == 8)) {
+				return true;
+			} else if ((card5Num <= 23) && (card5Num >= 18) || (trump == 4 && card5Num == 8)) {
+				return true;
+			}
+			return false;
+		} 
 		return false;
 	}
 
@@ -1464,15 +1487,22 @@ public class Client {
 		}
 	}
 
+	/**
+	 * 0 - Invalid
+	 * 1 - Spade
+	 * 2 - Heart
+	 * 3 - Club
+	 * 4 - Diamond
+	 */
 	private int findSuitLead () {
 		if ((cardPlayed <= 17) && (cardPlayed >= 12) || (trump == 1 && cardPlayed == 2)) {
-			return 1;
-		} else if ((cardPlayed <= 5) && (cardPlayed >= 0) || (trump == 2 && card2Num == 14)) {
-			return 2;
-		} else if ((cardPlayed <= 23) && (cardPlayed >= 18) || (trump == 3 && card2Num == 8)) {
 			return 3;
-		} else if ((cardPlayed <= 11) && (cardPlayed >= 6) || (trump == 4 && card2Num == 20)) {
+		} else if ((cardPlayed <= 5) && (cardPlayed >= 0) || (trump == 2 && card2Num == 14)) {
+			return 1;
+		} else if ((cardPlayed <= 23) && (cardPlayed >= 18) || (trump == 3 && card2Num == 8)) {
 			return 4;
+		} else if ((cardPlayed <= 11) && (cardPlayed >= 6) || (trump == 4 && card2Num == 20)) {
+			return 2;
 		}
 		return 0;
 	}
