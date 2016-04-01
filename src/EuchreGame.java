@@ -85,10 +85,10 @@ public class EuchreGame {
 			trumpSuit = 'S';
 		}
 		if (suit == 2) {
-			trumpSuit = 'C';
+			trumpSuit = 'H';
 		}
 		if (suit == 3) {
-			trumpSuit = 'H';
+			trumpSuit = 'C';
 		}
 		if (suit == 4) {
 			trumpSuit = 'D';
