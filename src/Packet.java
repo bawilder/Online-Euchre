@@ -150,14 +150,16 @@ public class Packet {
 	 * 		2 = Spades
 	 * 		3 = Diamonds
 	 * 		4 = Hearts
-	 * 		5 = Pass
+	 * 		-1 = Pass
 	 * @return - an assembled packet
 	 */
 	public String chooseTrump(int trump){
  
 		String packet = "3,";
 
-		packet.concat(Integer.toString(trump));
+		System.out.println("got this as trump: " + trump);
+		packet = packet.concat(Integer.toString(trump));
+		System.out.println("Packet: " + packet);
 		return packet;
 	}
 	
@@ -205,6 +207,7 @@ public class Packet {
 	 * @return - Packet
 	 */
 
+
 	public String newHandPacket(int team1Score, int team2Score) {
 		String packet = "8,";
 		
@@ -212,6 +215,7 @@ public class Packet {
 		packet = packet.concat(Integer.toString(team1Score) + ",");
 		//append team 2's score
 		packet = packet.concat(Integer.toString(team2Score) + ",");
+		
 		//return the packet for sending
 		return packet;
 	}

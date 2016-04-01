@@ -106,13 +106,13 @@ public class EchoThread extends Thread {
 	 */
 	public String receivePacket(){
 		String rcvPack = "";
-		while(rcvPack.equals(null)){
-			try {
-				rcvPack = in.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		
+		try {
+			rcvPack = in.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
 		return rcvPack;
 	}
 

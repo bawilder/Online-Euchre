@@ -1,6 +1,8 @@
-//Need dealer to be identified in initPacket player1 is dealer, player2 is dealer, player3 is dealer, or player4 is dealer
-//Need poke-it-packet to send every client client whose turn it is
-//need a packet to send each client who they are in init packet. Which player they are.
+//keeping track of tricks doesn't have a packet right now
+//Sending the wrong trump when dealer is told to pick it up
+//Something uip with card numbering, client numbering systems does not match game logic system
+//client need to get card lead suit
+//Client needs to get rid of board cards after trick is done.
 
 /**
  * Comments for Zach to add:
@@ -37,23 +39,21 @@ public class Client {
 	public BufferedReader readBuff;
 	public static PrintWriter writeBuff;
 
-	private String player1Name = "Player1";
-	private String player2Name = "Player2";
-	private String player3Name = "Player3";
-	private String player4Name = "Player4";
-
 	private boolean myTurn = false;
-	
-	private int turnNum = 0;
-	private int dealer = -1;
-	private int whoAmI = 0;
-	private int whoseTurn = 0;
-	private int myTeam = 0;
 
-	private boolean firstRound = false;
+	private int dealer = -1;
+	private int whoAmI = 1;
+	private int whoseTurn = 0;
+	private int teamNo = 0;
+
+	private int whoPlayed = 0;
+	private int cardPlayed = 0;
+
+	private boolean needToDiscard = false;
 	private boolean passed = false;
 
 	private int turnNo = 5;
+	
 	private int oppoTricks = 0;
 	private int oppoScore = 0;
 	private int yourTricks = 0;
@@ -120,13 +120,13 @@ public class Client {
 	private final JPanel player3 = new JPanel();
 	private final JPanel player4 = new JPanel();
 
-	private JLabel lblPlayer1 = new JLabel(player1Name);
-	private JLabel lblPlayer2 = new JLabel(player2Name);
-	private JLabel lblPlayer3 = new JLabel(player3Name);
-	private JLabel lblPlayer4 = new JLabel(player4Name);
+	private JLabel lblPlayer1 = new JLabel("Player1");
+	private JLabel lblPlayer2 = new JLabel("Player2");
+	private JLabel lblPlayer3 = new JLabel("Player3");
+	private JLabel lblPlayer4 = new JLabel("Player4");
 
 	private final JLabel discardLbl = new JLabel("Discard");
-	
+
 	private Packet myPacket = new Packet();
 	String msg;
 
@@ -190,11 +190,14 @@ public class Client {
 					 * 8  - Score Update/Deal	(host -> client)
 					 * 9  - Initialize Game		(host -> client)
 					 */
+//					if(rcvdInit == null || rcvdInit == "")
+//						continue;
 					parsedPacket = rcvdInit.split(",");
+					System.out.println("I revcieved Packet type : " + Integer.parseInt(parsedPacket[0]));
 					if(Integer.parseInt(parsedPacket[0]) == 9) {
 						dealer = Integer.parseInt(parsedPacket[1]);
 						whoAmI = Integer.parseInt(parsedPacket[2]);
-						myTeam = Integer.parseInt(parsedPacket[3]);
+						teamNo = Integer.parseInt(parsedPacket[3]);
 						card1Num = Integer.parseInt(parsedPacket[4]);
 						card2Num = Integer.parseInt(parsedPacket[5]);
 						card3Num = Integer.parseInt(parsedPacket[6]);
@@ -204,11 +207,12 @@ public class Client {
 
 						System.out.println("Card currently in hand: " + card1Num + ", " + card2Num + ", " + card3Num + ", " + card4Num + ", " + card5Num);
 						System.out.println("Card currently displayed up: " + trumpCardNum);
+						System.out.println("The dealer is:" + dealer);
 
 						initRecv();
 						checkDealer();
+						checkPlayers();
 						
-						turnNum = 0;
 						passed = false;
 					}
 					
@@ -227,59 +231,53 @@ public class Client {
 
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						//score update
-						if(myTeam == 1) {
+						//TODO: check which team you are and display score correctly
+						if (teamNo == 1) {
 							yourScore = Integer.parseInt(parsedPacket[1]);
 							oppoScore = Integer.parseInt(parsedPacket[2]);
-							yourTeamScore.setText(Integer.toString(yourScore));
-							oppoScorelbl.setText(Integer.toString(oppoScore));
 							
 						} else {
 							yourScore = Integer.parseInt(parsedPacket[2]);
 							oppoScore = Integer.parseInt(parsedPacket[1]);
-							yourTeamScore.setText(Integer.toString(yourScore));
-							oppoScorelbl.setText(Integer.toString(oppoScore));
 						}
-			
-						card1Num = Integer.parseInt(parsedPacket[4]);
-						card2Num = Integer.parseInt(parsedPacket[5]);
-						card3Num = Integer.parseInt(parsedPacket[6]);
-						card4Num = Integer.parseInt(parsedPacket[7]);
-						card5Num = Integer.parseInt(parsedPacket[8]);
-						dealer = Integer.parseInt(parsedPacket[9]);
-						
-						checkDealer();
-						pickCards();
-						drawCards();
 					}
 
+					//Whenever trump gets called the dealer had to discard with this code.
 					else if (Integer.parseInt(parsedPacket[0]) == 7){
 						trump = Integer.parseInt(parsedPacket[1]);
-						firstRound = true;
-						if(whoAmI == dealer) {
+						if(whoAmI == dealer && !passed) { //If trump has been made, and if I'm the dealer and I haven't passed yet. Then I need to discard. 
+							needToDiscard = true;
+							passed = true;
 							discardLbl.setVisible(true);
 						}
-						
+
 						if (trump == 1) {
 							trumpLbl.setText("Clubs");
 						} else if (trump == 2) {
 							trumpLbl.setText("Spades");
-						} if (trump == 3) {
+						} else if (trump == 3) {
 							trumpLbl.setText("Diamonds");
-						} if (trump == 4){
+						} else if (trump == 4){
 							trumpLbl.setText("Hearts");
 						}
+						if (trump > 0) {
+							trumpCard.setVisible(false);
+							tSelect.setVisible(false);
+							lblPickTrump.setVisible(false);
+						}
 					}
-					
+
 					else if(Integer.parseInt(parsedPacket[0]) == 4){
 						//get poked (play card)
-						turnNum = turnNum + 1;
 						synchronized(frame){
 							frame.notify();
 						}
 						whoseTurn = Integer.parseInt(parsedPacket[1]);
+						System.out.println("Players turn:" + whoseTurn);
 						checkPlayerTurn();
 						if(whoseTurn == whoAmI) {
 							if(trump == 0 && passed) { //trump has not been chosen yet
+								trumpCard.setVisible(false);
 								lblPickTrump.setVisible(true);
 								tSelect.setVisible(true);
 							}
@@ -289,7 +287,44 @@ public class Client {
 
 					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
-						// refresh board
+						whoPlayed = Integer.parseInt(parsedPacket[2]);
+						cardPlayed = Integer.parseInt(parsedPacket[1]);
+						if (whoAmI == 1) {
+							if (whoPlayed == 2) { //player 2 played a card
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 3) { //player3 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							} else if (whoPlayed == 4) { // player 4 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							}	
+						}
+						else if (whoAmI == 2) {
+							if (whoPlayed == 1) { //player 1 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 3) { //player3 played a card
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 4) { // player 4 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							}
+						}
+						else if (whoAmI == 3) {
+							if (whoPlayed == 1) { //player 1 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							} else if (whoPlayed == 2) { //player2 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 4) { // player 4 played a card
+								ply2CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							}
+						}
+						else if (whoAmI == 4) {
+							if (whoPlayed == 1) { //player 1 played a card
+								ply2CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							} else if (whoPlayed == 2) { //player2 played a card
+								ply3CardPlayed.setIcon(cardToDrawVert(cardPlayed));
+							} else if (whoPlayed == 3) { // player 3 played a card
+								ply4CardPlayed.setIcon(cardToDrawHorz(cardPlayed));
+							}
+						}
 					}
 
 					else{
@@ -345,12 +380,15 @@ public class Client {
 		btnPass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (myTurn && turnNum == 1) { 
+				System.out.println("Trying to Pass");
+				if (myTurn && trump == 0) { 
 					if(passed == true && whoAmI == dealer) {
 						System.out.println("you must pick Trump");
 					} else {
+						System.out.println("Trying to tell server to pass");
 						passed = true;
-						msg = myPacket.chooseTrump(-1);
+						msg = myPacket.chooseTrump(20);
+						System.out.println("Sent: " + msg);
 						sendPacket(msg);
 						myTurn = false;
 					}
@@ -366,8 +404,10 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO: pick-up logic
-				if(myTurn && turnNum == 1) {
-					msg = myPacket.chooseTrump(trumpCardNum);
+				System.out.println("Trying to Pick-Up");
+				if(myTurn && trump == 0) {
+					System.out.println("Trying to tell server to pick it up");
+					msg = myPacket.chooseTrump(1);
 					sendPacket(msg);
 					myTurn = false;
 				}
@@ -510,8 +550,6 @@ public class Client {
 				if(tSelect.isVisible()) {
 					msg = myPacket.chooseTrump(2);
 					sendPacket(msg);
-					tSelect.setVisible(false);
-					lblPickTrump.setVisible(false);
 					myTurn = false;
 				}
 			}
@@ -526,8 +564,6 @@ public class Client {
 				if(tSelect.isVisible()) {
 					msg = myPacket.chooseTrump(1);
 					sendPacket(msg);
-					tSelect.setVisible(false);
-					lblPickTrump.setVisible(false);
 					myTurn = false;
 				}
 			}
@@ -542,8 +578,6 @@ public class Client {
 				if(tSelect.isVisible()) {
 					msg = myPacket.chooseTrump(3);
 					sendPacket(msg);
-					tSelect.setVisible(false);
-					lblPickTrump.setVisible(false);
 					myTurn = false;
 				}
 			}
@@ -557,8 +591,6 @@ public class Client {
 				if(tSelect.isVisible()) {
 					msg = myPacket.chooseTrump(4);
 					sendPacket(msg);
-					tSelect.setVisible(false);
-					lblPickTrump.setVisible(false);
 					myTurn = false;
 				}
 			}
@@ -618,7 +650,7 @@ public class Client {
 		drawCards();
 		frame.validate();
 	}
-	
+
 	private void drawCards () {
 		trumpCard.setVisible(true);
 		for (int i = 0; i < 4; i++) { //draw cards for each player
@@ -637,20 +669,25 @@ public class Client {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								//if i am pickingup get ride of this card and replace with
-								if(firstRound && (whoAmI == dealer)) {
+								synchronized(frame){
+									frame.notify();
+								}
+								if(needToDiscard) {
 									card1Num = trumpCardNum;
 									trumpCard.setVisible(false);
 									discardLbl.setVisible(false);
-									firstRound = false;
+									needToDiscard = false;
 									card1butt.setIcon(cardToDrawVert(card1Num));
 									msg = myPacket.playCard(0);
 									sendPacket(msg);
-								} else if (isValidMove(card1Num) && myTurn) {
+									System.out.println("Discarded");
+									frame.repaint();
+								} else if (isValidMove(card1Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card1);
-									playCard(card1Num);
 									msg = myPacket.playCard(0);
 									sendPacket(msg);
+									System.out.println("pos0 msg:" + msg);
 									card1butt.setVisible(false);
 								}
 							}
@@ -665,20 +702,26 @@ public class Client {
 						card2butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if(firstRound && (whoAmI == dealer)) {
+								synchronized(frame){
+									frame.notify();
+								}
+								if(needToDiscard) {
 									card2Num = trumpCardNum;
 									trumpCard.setVisible(false);
-									firstRound = false;
+									needToDiscard = false;
 									discardLbl.setVisible(false);
 									card2butt.setIcon(cardToDrawVert(card2Num));
 									msg = myPacket.playCard(1);
 									sendPacket(msg);
-								} else if (isValidMove(card2Num) && myTurn) {
+									System.out.println("Discarded");
+									frame.repaint();
+								} else if (isValidMove(card2Num) && myTurn && trump != 0) {
 									myTurn = false;
-									playCard(card2Num);
 									ply1CardPlayed.setIcon(card2);
 									msg = myPacket.playCard(1);
 									sendPacket(msg);
+									System.out.println("pos1 msg:" + msg);
+									
 									card2butt.setVisible(false);
 								}
 							}
@@ -693,20 +736,26 @@ public class Client {
 						card3butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if(firstRound && (whoAmI == dealer)) {
+								synchronized(frame){
+									frame.notify();
+								}
+								if(needToDiscard) {
 									card3Num = trumpCardNum;
 									trumpCard.setVisible(false);
 									discardLbl.setVisible(false);
-									firstRound = false;
+									needToDiscard = false;
 									card3butt.setIcon(cardToDrawVert(card3Num));
 									msg = myPacket.playCard(2);
 									sendPacket(msg);
-								} else if (isValidMove(card3Num) && myTurn) {
+									System.out.println("Discarded");
+									frame.repaint();
+								} else if (isValidMove(card3Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card3);
-									playCard(card3Num);
 									msg = myPacket.playCard(2);
 									sendPacket(msg);
+									System.out.println("pos2 msg:" + msg);
+									
 									card3butt.setVisible(false);
 								}
 							}
@@ -721,21 +770,29 @@ public class Client {
 						card4butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if(firstRound && (whoAmI == dealer)) {
+								synchronized(frame){
+									frame.notify();
+								}
+								if(needToDiscard) {
 									card4Num = trumpCardNum;
 									trumpCard.setVisible(false);
 									discardLbl.setVisible(false);
-									firstRound = false;
+									needToDiscard = false;
 									card4butt.setIcon(cardToDrawVert(card4Num));
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
-								} else if (isValidMove(card4Num) && myTurn) {
+									
+									System.out.println("Discarded");
+									frame.repaint();
+								} else if (isValidMove(card4Num) && myTurn && trump != 0) {
+
 									myTurn = false;
 									ply1CardPlayed.setIcon(card4);
-									playCard(card4Num);
 									msg = myPacket.playCard(3);
 									sendPacket(msg);
+									System.out.println("pos3 msg:" + msg);
 									card4butt.setVisible(false);
+
 								}
 							}
 						});
@@ -749,19 +806,24 @@ public class Client {
 						card5butt.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if(firstRound && (whoAmI == dealer)) {
+								synchronized(frame){
+									frame.notify();
+								}
+								if(needToDiscard) {
 									card5Num = trumpCardNum;
 									trumpCard.setVisible(false);
 									discardLbl.setVisible(false);
-									firstRound = false;
+									needToDiscard = false;
 									card5butt.setIcon(cardToDrawVert(card5Num));
 									msg = myPacket.playCard(4);
 									sendPacket(msg);
-								} else if (isValidMove(card5Num) && myTurn) {
+									System.out.println("Discarded");
+									frame.repaint();
+								} else if (isValidMove(card5Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(card5);
-									playCard(card5Num);
 									msg = myPacket.playCard(4);
+									System.out.println("pos4 msg:" + msg);
 									sendPacket(msg);
 									card5butt.setVisible(false);
 								}
@@ -856,7 +918,7 @@ public class Client {
 
 		return temp;
 	}
-	
+
 	private ImageIcon cardToDrawHorz (int carVal) {
 		ImageIcon temp = null;
 
@@ -1337,6 +1399,29 @@ public class Client {
 			} else if (whoseTurn == 4) {
 				player1Turn.setVisible(true);
 			}
+		}
+	}
+	
+	private void checkPlayers () {
+		if (whoAmI == 1) {
+			
+		} else if (whoAmI == 2) {
+			lblPlayer1.setText("Player2");
+			lblPlayer2.setText("Player3");
+			lblPlayer3.setText("Player4");
+			lblPlayer4.setText("Player1");
+
+		} else if (whoAmI == 3) {
+			lblPlayer1.setText("Player3");
+			lblPlayer2.setText("Player4");
+			lblPlayer3.setText("Player1");
+			lblPlayer4.setText("Player2");
+
+		} else if (whoAmI == 4) {
+			lblPlayer1.setText("Player4");
+			lblPlayer2.setText("Player1");
+			lblPlayer3.setText("Player2");
+			lblPlayer4.setText("Player3");
 		}
 	}
 }
