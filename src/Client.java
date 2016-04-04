@@ -4,6 +4,8 @@
 //client need to get card lead suit
 //Client needs to get rid of board cards after trick is done.
 
+//turn calculation after dealer told to pick up is wrong
+
 /**
  * Comments for Zach to add:
  * Trump display, shows players what is trump
@@ -359,7 +361,10 @@ public class Client {
 						}
 						if (cardLead == 0) {
 							cardLead = getCardLead();
+							System.out.println();
+							System.out.println("The card we are looking at is: " + cardPlayed);
 							System.out.println("The suit that was lead is: " + cardLead);
+							System.out.println();
 						}
 					}
 
@@ -584,7 +589,7 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tSelect.isVisible()) {
-					msg = myPacket.chooseTrump(2);
+					msg = myPacket.chooseTrump(1);
 					sendPacket(msg);
 					myTurn = false;
 				}
@@ -598,7 +603,7 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tSelect.isVisible()) {
-					msg = myPacket.chooseTrump(1);
+					msg = myPacket.chooseTrump(3);
 					sendPacket(msg);
 					myTurn = false;
 				}
@@ -612,7 +617,7 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tSelect.isVisible()) {
-					msg = myPacket.chooseTrump(3);
+					msg = myPacket.chooseTrump(4);
 					sendPacket(msg);
 					myTurn = false;
 				}
@@ -625,7 +630,7 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tSelect.isVisible()) {
-					msg = myPacket.chooseTrump(4);
+					msg = myPacket.chooseTrump(2);
 					sendPacket(msg);
 					myTurn = false;
 				}
@@ -720,7 +725,7 @@ public class Client {
 									frame.repaint();
 								} else if (isValidMove(card1Num) && myTurn && trump != 0) {
 									myTurn = false;
-									ply1CardPlayed.setIcon(card1);
+									ply1CardPlayed.setIcon(cardToDrawVert(card1Num));
 									ply1CardPlayed.setVisible(true);
 									msg = myPacket.playCard(0);
 									card1Num = -1;
@@ -755,7 +760,7 @@ public class Client {
 									frame.repaint();
 								} else if (isValidMove(card2Num) && myTurn && trump != 0) {
 									myTurn = false;
-									ply1CardPlayed.setIcon(card2);
+									ply1CardPlayed.setIcon(cardToDrawVert(card2Num));
 									ply1CardPlayed.setVisible(true);
 									card2Num = -1;
 									msg = myPacket.playCard(1);
@@ -791,7 +796,7 @@ public class Client {
 									frame.repaint();
 								} else if (isValidMove(card3Num) && myTurn && trump != 0) {
 									myTurn = false;
-									ply1CardPlayed.setIcon(card3);
+									ply1CardPlayed.setIcon(cardToDrawVert(card3Num));
 									ply1CardPlayed.setVisible(true);
 									card3Num = -1;
 									msg = myPacket.playCard(2);
@@ -829,7 +834,7 @@ public class Client {
 								} else if (isValidMove(card4Num) && myTurn && trump != 0) {
 
 									myTurn = false;
-									ply1CardPlayed.setIcon(card4);
+									ply1CardPlayed.setIcon(cardToDrawVert(card4Num));
 									ply1CardPlayed.setVisible(true);
 									card4Num = -1;
 									msg = myPacket.playCard(3);
@@ -865,7 +870,7 @@ public class Client {
 									frame.repaint();
 								} else if (isValidMove(card5Num) && myTurn && trump != 0) {
 									myTurn = false;
-									ply1CardPlayed.setIcon(card5);
+									ply1CardPlayed.setIcon(cardToDrawVert(card5Num));
 									ply1CardPlayed.setVisible(true);
 									card5Num = -1;
 									msg = myPacket.playCard(4);
@@ -1127,23 +1132,23 @@ public class Client {
 			return true;
 		} else if (!canFollowSuit()) { // if they cannot follow suit, any card is valid
 			return true;
-		} else if(cardLead == 1 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 1 && cardPlayed == 14)) {
-			if(trump == 2 && cardPlayed == 14) {
+		} else if(cardLead == 1 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 1 && cardPlayed == 14)) {
+			if(trump == 3 && cardPlayed == 2) {
 				return false;
 			}
 			return true;
-		} else if (cardLead == 2 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 2 && cardPlayed == 20)) {
-			if(trump == 1 && cardPlayed == 2) {
+		} else if (cardLead == 2 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 2 && cardPlayed == 20)) {
+			if(trump == 4 && cardPlayed == 8) {
 				return false;
 			}
 			return true;
-		} else if (cardLead == 3 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 3 && cardPlayed == 2)) {
-			if(trump == 4 && cardPlayed == 20) {
+		} else if (cardLead == 3 && ((cardPlayed <= 17) && (cardPlayed >= 12)) || (trump == 3 && cardPlayed == 2)) {
+			if(trump == 1 && cardPlayed == 14) {
 				return false;
 			}
 			return true;
-		} else if (cardLead == 4 && ((cardPlayed <= 11) && (cardPlayed >= 6)) || (trump == 4 && cardPlayed == 8)) {
-			if(trump == 3 && cardPlayed == 8) {
+		} else if (cardLead == 4 && ((cardPlayed <= 23) && (cardPlayed >= 18)) || (trump == 4 && cardPlayed == 8)) {
+			if(trump == 2 && cardPlayed == 20) {
 				return false;
 			}
 			return true;
@@ -1160,55 +1165,76 @@ public class Client {
 	 * 4 - Diamond
 	 */
 	private boolean canFollowSuit () {
+		
 		if (cardLead == 1) {
-			if ((card1Num <= 5) && (card1Num >= 0) || (trump == 1 && card1Num == 14)) {
+			if ((card1Num <= 5 && card1Num >= 0) || (trump == 1 && card1Num == 14)) {
+				System.out.println("Spade: Must play Card 1");
 				return true;
-			} else if (((card2Num <= 5) && (card1Num >= 0) || (trump == 1 && card2Num == 14))) {
+			} else if (((card2Num <= 5 && card2Num >= 0) || (trump == 1 && card2Num == 14))) {
+				System.out.println("Spade: Must play Card 2");
 				return true;
-			} else if (((card3Num <= 5) && (card1Num >= 0) || (trump == 1 && card3Num == 14))) {
+			} else if (((card3Num <= 5 && card3Num >= 0) || (trump == 1 && card3Num == 14))) {
+				System.out.println("Spade: Must play Card 3");
 				return true;
-			} else if (((card4Num <= 5) && (card1Num >= 0) || (trump == 1 && card4Num == 14))) {
+			} else if (((card4Num <= 5 && card4Num >= 0) || (trump == 1 && card4Num == 14))) {
+				System.out.println("Spade: Must play Card 4");
 				return true;
-			} else if (((card5Num <= 5) && (card1Num >= 0) || (trump == 1 && card5Num == 14))) {
+			} else if (((card5Num <= 5 && card5Num >= 0) || (trump == 1 && card5Num == 14))) {
+				System.out.println("Spade: Must play Card 5");
 				return true;
 			}
 			return false;
 		} else if (cardLead == 2) {
-			if ((card1Num <= 11) && (card1Num >= 6) || (trump == 2 && card1Num == 20)) {
+			if ((card1Num <= 11 && card1Num >= 6) || (trump == 2 && card1Num == 20)) {
+				System.out.println("Heart: Must play Card 1");
 				return true;
-			} else if ((card2Num <= 11) && (card2Num >= 6) || (trump == 2 && card2Num == 20)) {
+			} else if ((card2Num <= 11 && card2Num >= 6) || (trump == 2 && card2Num == 20)) {
+				System.out.println("Heart: Must play Card 2");
 				return true;
-			} else if ((card3Num <= 11) && (card3Num >= 6) || (trump == 2 && card3Num == 20)) {
+			} else if ((card3Num <= 11 && card3Num >= 6) || (trump == 2 && card3Num == 20)) {
+				System.out.println("Heart: Must play Card 3");
 				return true;
-			} else if ((card4Num <= 11) && (card4Num >= 6) || (trump == 2 && card4Num == 20)) {
+			} else if ((card4Num <= 11 && card4Num >= 6) || (trump == 2 && card4Num == 20)) {
+				System.out.println("Heart: Must play Card 4");
 				return true;
-			} else if ((card5Num <= 11) && (card5Num >= 6) || (trump == 2 && card5Num == 20)) {
+			} else if ((card5Num <= 11 && card5Num >= 6) || (trump == 2 && card5Num == 20)) {
+				System.out.println("Heart: Must play Card 5");
 				return true;
 			}
 			return false;
 		}else if(cardLead == 3) {
-			if ((card1Num <= 17) && (card1Num >= 12) || (trump == 3 && card1Num == 2)) {
+			if ((card1Num <= 17 && card1Num >= 12) || (trump == 3 && card1Num == 2)) {
+				System.out.println("Club: Must play Card 1");
 				return true;
-			} else if (((card2Num <= 17) && (card1Num >= 12) || (trump == 3 && card2Num == 2))) {
+			} else if (((card2Num <= 17 && card2Num >= 12) || (trump == 3 && card2Num == 2))) {
+				System.out.println("Club: Must play Card 2");
 				return true;
-			} else if (((card3Num <= 17) && (card1Num >= 12) || (trump == 3 && card3Num == 2))) {
+			} else if (((card3Num <= 17 && card3Num >= 12) || (trump == 3 && card3Num == 2))) {
+				System.out.println("Club: Must play Card 3");
 				return true;
-			} else if (((card4Num <= 17) && (card1Num >= 12) || (trump == 3 && card4Num == 2))) {
+			} else if (((card4Num <= 17 && card4Num >= 12) || (trump == 3 && card4Num == 2))) {
+				System.out.println("Club: Must play Card 4");
 				return true;
-			} else if (((card5Num <= 17) && (card1Num >= 12) || (trump == 3 && card5Num == 2))) {
+			} else if (((card5Num <= 17 && card5Num >= 12) || (trump == 3 && card5Num == 2))) {
+				System.out.println("Club: Must play Card 5");
 				return true;
 			}
 			return false;
 		}  else if (cardLead == 4) {
-			if ((card1Num <= 23) && (card1Num >= 18) || (trump == 4 && card1Num == 8)) {
+			if ((card1Num <= 23 && card1Num >= 18) || (trump == 4 && card1Num == 8)) {
+				System.out.println("Diamonds: Must play Card 1");
 				return true;
-			} else if ((card2Num <= 23) && (card2Num >= 18) || (trump == 4 && card2Num == 8)) {
+			} else if ((card2Num <= 23 && card2Num >= 18) || (trump == 4 && card2Num == 8)) {
+				System.out.println("Diamonds: Must play Card 2");
 				return true;
-			} else if ((card3Num <= 23) && (card3Num >= 18) || (trump == 4 && card3Num == 8)) {
+			} else if ((card3Num <= 23 && card3Num >= 18) || (trump == 4 && card3Num == 8)) {
+				System.out.println("Diamonds: Must play Card 3");
 				return true;
-			} else if ((card4Num <= 23) && (card4Num >= 18) || (trump == 4 && card4Num == 8)) {
+			} else if ((card4Num <= 23 && card4Num >= 18) || (trump == 4 && card4Num == 8)) {
+				System.out.println("Diamonds: Must play Card 4");
 				return true;
-			} else if ((card5Num <= 23) && (card5Num >= 18) || (trump == 4 && card5Num == 8)) {
+			} else if ((card5Num <= 23 && card5Num >= 18) || (trump == 4 && card5Num == 8)) {
+				System.out.println("Diamonds: Must play Card 5");
 				return true;
 			}
 			return false;
@@ -1494,14 +1520,15 @@ public class Client {
 	 * 3 - Club
 	 * 4 - Diamond
 	 */
+	//TODO: leading left returns wrong suit lead
 	private int findSuitLead () {
-		if ((cardPlayed <= 17) && (cardPlayed >= 12) || (trump == 1 && cardPlayed == 2)) {
+		if ((cardPlayed <= 17 && cardPlayed >= 12) || (trump == 3 && cardPlayed == 2)) {
 			return 3;
-		} else if ((cardPlayed <= 5) && (cardPlayed >= 0) || (trump == 2 && card2Num == 14)) {
+		} else if ((cardPlayed <= 5 && cardPlayed >= 0) || (trump == 1 && cardPlayed  == 14)) {
 			return 1;
-		} else if ((cardPlayed <= 23) && (cardPlayed >= 18) || (trump == 3 && card2Num == 8)) {
+		} else if ((cardPlayed <= 23 && cardPlayed >= 18) || (trump == 4 && cardPlayed  == 8)) {
 			return 4;
-		} else if ((cardPlayed <= 11) && (cardPlayed >= 6) || (trump == 4 && card2Num == 20)) {
+		} else if ((cardPlayed <= 11 && cardPlayed >= 6) || (trump == 2 && cardPlayed  == 20)) {
 			return 2;
 		}
 		return 0;

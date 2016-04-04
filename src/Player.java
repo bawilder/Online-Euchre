@@ -38,12 +38,12 @@ public class Player {
 		Card returnCard= hand[cardToPlay];
 		hand[cardToPlay]= null;
 		
-		for(int i = 0; i<4; i+=1){
-			if(hand[i]==null){
-				hand[i]= hand[i+1];
-				hand[i+1] = null;
-			}
-		}
+//		for(int i = 0; i<4; i+=1){
+//			if(hand[i]==null){
+//				hand[i]= hand[i+1];
+//				hand[i+1] = null;
+//			}
+//		}
 		
 		return returnCard;
 	}

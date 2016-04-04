@@ -187,6 +187,8 @@ public class EuchreGame {
 				table.players[table.playerDealing].pickUpTrump(cardToDrop, table.topOfDiscard);
 				
 				trumpPickedUp = true;
+				table.playerTurn = table.playerDealing;
+				table.rotateTurn();
 				break;
 			}
 			table.rotateTurn();
