@@ -204,7 +204,7 @@ public class Client {
 						System.out.println("The dealer is:" + dealer);
 
 
-						if(oppoScore > 1 || yourScore > 1) {
+						if(oppoScore > 0 || yourScore > 0) {
 							player1.removeAll();
 							player2.removeAll();
 							player3.removeAll();
@@ -566,7 +566,6 @@ public class Client {
 
 		trumpCard.setBounds(244, 112, 165, 202);
 		trumpCard.setBackground(Color.DARK_GRAY);
-		trumpCard.setIcon(cardToDrawVert(trumpCardNum));
 		table.add(trumpCard);
 
 		player1Turn.setBackground(Color.YELLOW);
@@ -704,6 +703,7 @@ public class Client {
 	}
 
 	private void drawCards () {
+		trumpCard.setIcon(cardToDrawVert(trumpCardNum));
 		trumpCard.setVisible(true);
 		for (int i = 0; i < 4; i++) { //draw cards for each player
 			switch (i) {
@@ -714,7 +714,7 @@ public class Client {
 						final JButton card1butt = new JButton ();
 						card1butt.setBackground(Color.darkGray);
 						card1butt.setBorderPainted(false);
-						card1butt.setIcon(card1);
+						card1butt.setIcon(cardToDrawVert(card1Num));
 						card1butt.setVisible(true);
 						player1.add(card1butt);
 						card1butt.addActionListener(new ActionListener() {
@@ -751,7 +751,7 @@ public class Client {
 						card2butt.setBackground(Color.darkGray);
 						card2butt.setBorderPainted(false);
 						card2butt.setVisible(true);
-						card2butt.setIcon(card2);
+						card2butt.setIcon(cardToDrawVert(card2Num));
 						player1.add(card2butt);
 						card2butt.addActionListener(new ActionListener() {
 							@Override
@@ -787,7 +787,7 @@ public class Client {
 						card3butt.setBackground(Color.darkGray);
 						card3butt.setBorderPainted(false);
 						card3butt.setVisible(true);
-						card3butt.setIcon(card3);
+						card3butt.setIcon(cardToDrawVert(card3Num));
 						player1.add(card3butt);
 						card3butt.addActionListener(new ActionListener() {
 							@Override
@@ -823,7 +823,7 @@ public class Client {
 						card4butt.setBackground(Color.darkGray);
 						card4butt.setBorderPainted(false);
 						card4butt.setVisible(true);
-						card4butt.setIcon(card4);
+						card4butt.setIcon(cardToDrawVert(card4Num));
 						player1.add(card4butt);
 						card4butt.addActionListener(new ActionListener() {
 							@Override
@@ -861,7 +861,7 @@ public class Client {
 						card5butt.setBackground(Color.darkGray);
 						card5butt.setBorderPainted(false);
 						card5butt.setVisible(true);
-						card5butt.setIcon(card5);
+						card5butt.setIcon(cardToDrawVert(card5Num));
 						player1.add(card5butt);
 						card5butt.addActionListener(new ActionListener() {
 							@Override
@@ -1142,6 +1142,7 @@ public class Client {
 		if(cardLead == 0) { //Player has the lead, they can play anything they want
 			return true;
 		} else if (!canFollowSuit()) { // if they cannot follow suit, any card is valid
+			System.out.println("Cannot Follow suit, any card is valid");
 			return true;
 		} else if(cardLead == 1 && ((cardPlayed <= 5) && (cardPlayed >= 0)) || (trump == 1 && cardPlayed == 14)) {
 			if(trump == 3 && cardPlayed == 2) {

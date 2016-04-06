@@ -229,7 +229,7 @@ public class EuchreGame {
 					if (table.playerDealing % 2 == 0) {
 						table.team1.calledTrump = true;
 					} else {
-						table.team2.calledTrump = false;
+						table.team2.calledTrump = true;
 					}
 
 					table.setTrump(trumpSuitChar);
