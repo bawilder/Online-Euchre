@@ -1,11 +1,3 @@
-//keeping track of tricks doesn't have a packet right now
-//Sending the wrong trump when dealer is told to pick it up
-//Something uip with card numbering, client numbering systems does not match game logic system
-//client need to get card lead suit
-//Client needs to get rid of board cards after trick is done.
-
-//turn calculation after dealer told to pick up is wrong
-
 /**
  * Comments for Zach to add:
  * Trump display, shows players what is trump
@@ -211,9 +203,32 @@ public class Client {
 						System.out.println("Card currently displayed up: " + trumpCardNum);
 						System.out.println("The dealer is:" + dealer);
 
-						initRecv();
-						checkDealer();
-						checkPlayers();
+
+						if(oppoScore > 1 || yourScore > 1) {
+							player1.removeAll();
+							player2.removeAll();
+							player3.removeAll();
+							player4.removeAll();
+							
+							yourTricks = 0;
+							oppoTricks = 0;
+							
+							yourTeamTricks.setText(Integer.toString(yourTricks)); 
+							oppoTrickslbl.setText(Integer.toString(oppoTricks));
+							
+							trump = 0;
+							cardLead = 0;
+							
+							trumpLbl.setText("");
+							
+							drawCards();
+							checkDealer();
+							
+						} else {
+							initRecv();
+							checkDealer();
+							checkPlayers();
+						}
 
 						ply1CardPlayed.setVisible(false);
 						ply2CardPlayed.setVisible(false);
@@ -225,8 +240,6 @@ public class Client {
 					}
 
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
-						//score update
-						//TODO: check which team you are and display score correctly
 						if (teamNo == 1) {
 							yourScore = Integer.parseInt(parsedPacket[1]);
 							oppoScore = Integer.parseInt(parsedPacket[2]);
@@ -237,7 +250,7 @@ public class Client {
 						}
 						yourTeamScore.setText(Integer.toString(yourScore));
 						oppoScorelbl.setText(Integer.toString(oppoScore));
-						
+
 						ply1CardPlayed.setVisible(false);
 						ply2CardPlayed.setVisible(false);
 						ply3CardPlayed.setVisible(false);
@@ -281,7 +294,7 @@ public class Client {
 						}
 						yourTeamTricks.setText(Integer.toString(yourTricks)); 
 						oppoTrickslbl.setText(Integer.toString(oppoTricks));
-						
+
 						ply1CardPlayed.setVisible(false);
 						ply2CardPlayed.setVisible(false);
 						ply3CardPlayed.setVisible(false);
@@ -307,7 +320,6 @@ public class Client {
 						} 
 					}
 
-					//TODO: this.finish()
 					else if(Integer.parseInt(parsedPacket[0]) == 1){
 						whoPlayed = Integer.parseInt(parsedPacket[2]);
 						cardPlayed = Integer.parseInt(parsedPacket[1]);
@@ -444,7 +456,6 @@ public class Client {
 		btnPickUp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO: pick-up logic
 				System.out.println("Trying to Pick-Up");
 				if(myTurn && trump == 0) {
 					System.out.println("Trying to tell server to pick it up");
@@ -1165,75 +1176,75 @@ public class Client {
 	 * 4 - Diamond
 	 */
 	private boolean canFollowSuit () {
-		
+
 		if (cardLead == 1) {
-			if ((card1Num <= 5 && card1Num >= 0) || (trump == 1 && card1Num == 14)) {
+			if ((card1Num <= 5 && card1Num >= 0) && !(trump == 3 && card1Num == 2)) {
 				System.out.println("Spade: Must play Card 1");
 				return true;
-			} else if (((card2Num <= 5 && card2Num >= 0) || (trump == 1 && card2Num == 14))) {
+			} else if ((card2Num <= 5 && card2Num >= 0) && !(trump == 3 && card2Num == 2)) {
 				System.out.println("Spade: Must play Card 2");
 				return true;
-			} else if (((card3Num <= 5 && card3Num >= 0) || (trump == 1 && card3Num == 14))) {
+			} else if ((card3Num <= 5 && card3Num >= 0) && !(trump == 3 && card3Num == 2)) {
 				System.out.println("Spade: Must play Card 3");
 				return true;
-			} else if (((card4Num <= 5 && card4Num >= 0) || (trump == 1 && card4Num == 14))) {
+			} else if ((card4Num <= 5 && card4Num >= 0) && !(trump == 3 && card4Num == 2)) {
 				System.out.println("Spade: Must play Card 4");
 				return true;
-			} else if (((card5Num <= 5 && card5Num >= 0) || (trump == 1 && card5Num == 14))) {
+			} else if ((card5Num <= 5 && card5Num >= 0) && !(trump == 3 && card5Num == 2)) {
 				System.out.println("Spade: Must play Card 5");
 				return true;
 			}
 			return false;
 		} else if (cardLead == 2) {
-			if ((card1Num <= 11 && card1Num >= 6) || (trump == 2 && card1Num == 20)) {
+			if ((card1Num <= 11 && card1Num >= 6) && !(trump == 4 && card1Num == 8)) {
 				System.out.println("Heart: Must play Card 1");
 				return true;
-			} else if ((card2Num <= 11 && card2Num >= 6) || (trump == 2 && card2Num == 20)) {
+			} else if ((card2Num <= 11 && card2Num >= 6) && !(trump == 4 && card2Num == 8)) {
 				System.out.println("Heart: Must play Card 2");
 				return true;
-			} else if ((card3Num <= 11 && card3Num >= 6) || (trump == 2 && card3Num == 20)) {
+			} else if ((card3Num <= 11 && card3Num >= 6) && !(trump == 4 && card3Num == 8)) {
 				System.out.println("Heart: Must play Card 3");
 				return true;
-			} else if ((card4Num <= 11 && card4Num >= 6) || (trump == 2 && card4Num == 20)) {
+			} else if ((card4Num <= 11 && card4Num >= 6) && !(trump == 4 && card4Num == 8)) {
 				System.out.println("Heart: Must play Card 4");
 				return true;
-			} else if ((card5Num <= 11 && card5Num >= 6) || (trump == 2 && card5Num == 20)) {
+			} else if ((card5Num <= 11 && card5Num >= 6) && !(trump == 4 && card5Num == 8)) {
 				System.out.println("Heart: Must play Card 5");
 				return true;
 			}
 			return false;
 		}else if(cardLead == 3) {
-			if ((card1Num <= 17 && card1Num >= 12) || (trump == 3 && card1Num == 2)) {
+			if ((card1Num <= 17 && card1Num >= 12) && !(trump == 1 && card1Num == 14)) {
 				System.out.println("Club: Must play Card 1");
 				return true;
-			} else if (((card2Num <= 17 && card2Num >= 12) || (trump == 3 && card2Num == 2))) {
+			} else if ((card2Num <= 17 && card2Num >= 12) && !(trump == 1 && card2Num == 14)) {
 				System.out.println("Club: Must play Card 2");
 				return true;
-			} else if (((card3Num <= 17 && card3Num >= 12) || (trump == 3 && card3Num == 2))) {
+			} else if ((card3Num <= 17 && card3Num >= 12) && !(trump == 1 && card3Num == 14)) {
 				System.out.println("Club: Must play Card 3");
 				return true;
-			} else if (((card4Num <= 17 && card4Num >= 12) || (trump == 3 && card4Num == 2))) {
+			} else if ((card4Num <= 17 && card4Num >= 12) && !(trump == 1 && card4Num == 14)) {
 				System.out.println("Club: Must play Card 4");
 				return true;
-			} else if (((card5Num <= 17 && card5Num >= 12) || (trump == 3 && card5Num == 2))) {
+			} else if ((card5Num <= 17 && card5Num >= 12) && !(trump == 1 && card5Num == 14)) {
 				System.out.println("Club: Must play Card 5");
 				return true;
 			}
 			return false;
 		}  else if (cardLead == 4) {
-			if ((card1Num <= 23 && card1Num >= 18) || (trump == 4 && card1Num == 8)) {
+			if ((card1Num <= 23 && card1Num >= 18) && !(trump == 2 && card1Num == 20)) {
 				System.out.println("Diamonds: Must play Card 1");
 				return true;
-			} else if ((card2Num <= 23 && card2Num >= 18) || (trump == 4 && card2Num == 8)) {
+			} else if ((card2Num <= 23 && card2Num >= 18) && !(trump == 2 && card2Num == 20)) {
 				System.out.println("Diamonds: Must play Card 2");
 				return true;
-			} else if ((card3Num <= 23 && card3Num >= 18) || (trump == 4 && card3Num == 8)) {
+			} else if ((card3Num <= 23 && card3Num >= 18) && !(trump == 2 && card3Num == 20)) {
 				System.out.println("Diamonds: Must play Card 3");
 				return true;
-			} else if ((card4Num <= 23 && card4Num >= 18) || (trump == 4 && card4Num == 8)) {
+			} else if ((card4Num <= 23 && card4Num >= 18) && !(trump == 2 && card4Num == 20)) {
 				System.out.println("Diamonds: Must play Card 4");
 				return true;
-			} else if ((card5Num <= 23 && card5Num >= 18) || (trump == 4 && card5Num == 8)) {
+			} else if ((card5Num <= 23 && card5Num >= 18) && !(trump == 2 && card5Num == 20)) {
 				System.out.println("Diamonds: Must play Card 5");
 				return true;
 			}
@@ -1522,13 +1533,25 @@ public class Client {
 	 */
 	//TODO: leading left returns wrong suit lead
 	private int findSuitLead () {
-		if ((cardPlayed <= 17 && cardPlayed >= 12) || (trump == 3 && cardPlayed == 2)) {
+		if ((cardPlayed <= 17 && cardPlayed >= 12)) {
+			if (trump == 1 && cardPlayed  == 14) {
+				return 1;
+			}
 			return 3;
-		} else if ((cardPlayed <= 5 && cardPlayed >= 0) || (trump == 1 && cardPlayed  == 14)) {
+		} else if ((cardPlayed <= 5 && cardPlayed >= 0)) {
+			if(trump == 3 && cardPlayed == 2){
+				return 3;
+			}
 			return 1;
-		} else if ((cardPlayed <= 23 && cardPlayed >= 18) || (trump == 4 && cardPlayed  == 8)) {
+		} else if ((cardPlayed <= 23 && cardPlayed >= 18)) {
+			if(trump == 2 && cardPlayed  == 20){
+				return 2;
+			}
 			return 4;
-		} else if ((cardPlayed <= 11 && cardPlayed >= 6) || (trump == 2 && cardPlayed  == 20)) {
+		} else if ((cardPlayed <= 11 && cardPlayed >= 6)) {
+			if(trump == 4 && cardPlayed  == 8){
+				return 4;
+			}
 			return 2;
 		}
 		return 0;

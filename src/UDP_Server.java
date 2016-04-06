@@ -73,7 +73,6 @@ public class UDP_Server {
 //	}
 
 	public static void main(String args[]) {
-		System.out.println("I'm right here motha fuckas");
 		int playerNo = 1;
 		ServerSocket serverSocket = null;
 		Socket socket = null;
