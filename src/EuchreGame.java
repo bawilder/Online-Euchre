@@ -226,15 +226,12 @@ public class EuchreGame {
 					int trumpSuit = Integer.parseInt(parsedMsg[1]);
 					char trumpSuitChar = makeSuit(trumpSuit);
 
-					if (table.playerDealing % 2 == 0) {
-						table.team1.calledTrump = true;
-					} else {
-						table.team2.calledTrump = true;
+					// dealer tried to pass. SCREW THE DEALER
+					if(trumpSuit == 20){
+						i--;
+						continue;
 					}
-
-					table.setTrump(trumpSuitChar);
-
-					break;
+					
 				}
 				
 				if(!parsedMsg[0].equals("3")){
@@ -269,16 +266,6 @@ public class EuchreGame {
 			}
 
 			table.playerTurn = table.playerDealing;
-			table.rotateTurn();
-			
-			msg = packet.PokeItPacket(table.playerTurn);
-			server.sendPacket(msg, table.playerTurn + 1);
-			table.rotateTurn();
-			server.sendPacket(msg, table.playerTurn + 1);
-			table.rotateTurn();
-			server.sendPacket(msg, table.playerTurn + 1);
-			table.rotateTurn();
-			server.sendPacket(msg, table.playerTurn + 1);
 			table.rotateTurn();
 
 		}

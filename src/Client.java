@@ -205,6 +205,14 @@ public class Client {
 
 
 						if(oppoScore > 0 || yourScore > 0) {
+							if(yourScore >= 10) {
+								System.out.println("You are victorious!");
+								System.exit(0);
+							} else if (oppoScore >= 10) {
+								System.out.println("You have been defeated!");
+								System.exit(0);
+							}
+							
 							player1.removeAll();
 							player2.removeAll();
 							player3.removeAll();
@@ -261,6 +269,7 @@ public class Client {
 					//Whenever trump gets called the dealer had to discard with this code.
 					else if (Integer.parseInt(parsedPacket[0]) == 7){
 						trump = Integer.parseInt(parsedPacket[1]);
+						System.out.println("I got this as trump: " + trump);
 						if(whoAmI == dealer && !passed) { //If trump has been made, and if I'm the dealer and I haven't passed yet. Then I need to discard. 
 							needToDiscard = true;
 							passed = true;
@@ -986,9 +995,9 @@ public class Client {
 
 		switch (carVal) {
 
-		case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades (2).png"));;
+		case 0 : temp = new ImageIcon(getClass().getResource("/9_of_spades.png"));;
 		break;
-		case 1 : temp = new ImageIcon(getClass().getResource("/10_of_spades (2).png"));
+		case 1 : temp = new ImageIcon(getClass().getResource("/10_of_spades.png"));
 		break;
 		case 2 : temp = new ImageIcon(getClass().getResource("/jack_of_spades (2).png"));
 		break;
@@ -1012,7 +1021,7 @@ public class Client {
 		break;
 		case 12 : temp = new ImageIcon(getClass().getResource("/9_of_clubs (2).png"));
 		break;
-		case 13 : temp = new ImageIcon(getClass().getResource("/10_of_clubs (2).png"));
+		case 13 : temp = new ImageIcon(getClass().getResource("/10_of_clubs.png"));
 		break;
 		case 14 : temp = new ImageIcon(getClass().getResource("/jack_of_clubs (2).png"));
 		break;
@@ -1022,7 +1031,7 @@ public class Client {
 		break;
 		case 17 : temp = new ImageIcon(getClass().getResource("/ace_of_clubs (2).png"));
 		break;
-		case 18 : temp = new ImageIcon(getClass().getResource("/9_of_diamonds (2).png"));
+		case 18 : temp = new ImageIcon(getClass().getResource("/9_of_diamonds.png"));
 		break;
 		case 19 : temp = new ImageIcon(getClass().getResource("/10_of_diamonds (2).png"));
 		break;
