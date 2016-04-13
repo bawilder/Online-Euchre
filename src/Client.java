@@ -1,10 +1,3 @@
-/**
- * Comments for Zach to add:
- * Trump display, shows players what is trump
- * When player pick ups card
- * 
- */
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +8,16 @@ import java.net.Socket;
 import java.util.Arrays;
 import javax.swing.*;
 
-public class Client {
+/**
+ * This calss runs the user interface for our euchre game. When ran it luanchs a connect screen where
+ * the user must enter the ip address and port number of where the server is hosted. The user must also enter a name although this
+ * doesn't do anything in the final build.
+ * 
+ * @author ztdunham
+ *
+ */
 
+public class Client {
 	private String name;
 	public String serverNum = "localhost";
 	private Label lblServerAddr = new Label ("Server Address:");
@@ -160,8 +161,13 @@ public class Client {
 		ConnectUI();
 	}
 
+	/**
+	 * Main method that interfaces the GUI with the server.
+	 * 
+	 */
 	private void initialize() {
 
+		//Creates a new thread that listens for packets from the server
 		Runnable r = new Runnable() {
 			public void run() {
 				while(true){
@@ -188,6 +194,8 @@ public class Client {
 					//						continue;
 					parsedPacket = rcvdInit.split(",");
 					System.out.println("I revcieved Packet type : " + Integer.parseInt(parsedPacket[0]));
+					
+					//We have recived an initial packet
 					if(Integer.parseInt(parsedPacket[0]) == 9) {
 						dealer = Integer.parseInt(parsedPacket[1]);
 						whoAmI = Integer.parseInt(parsedPacket[2]);
@@ -204,6 +212,7 @@ public class Client {
 						System.out.println("The dealer is:" + dealer);
 
 
+						//More than one hand has been played
 						if(oppoScore > 0 || yourScore > 0) {
 							if(yourScore >= 10) {
 								System.out.println("You are victorious!");
@@ -213,22 +222,26 @@ public class Client {
 								System.exit(0);
 							}
 							
+							// clear the card from player panels
 							player1.removeAll();
 							player2.removeAll();
 							player3.removeAll();
 							player4.removeAll();
-							
+
+							//reset the trick counters
 							yourTricks = 0;
 							oppoTricks = 0;
 							
 							yourTeamTricks.setText(Integer.toString(yourTricks)); 
 							oppoTrickslbl.setText(Integer.toString(oppoTricks));
 							
+							//reset the trump and card lead parameters
 							trump = 0;
 							cardLead = 0;
 							
 							trumpLbl.setText("");
 							
+							//redraw the cards and tell the client the new dealer
 							drawCards();
 							checkDealer();
 							
@@ -238,6 +251,7 @@ public class Client {
 							checkPlayers();
 						}
 
+						//get rid of the cards played last hand
 						ply1CardPlayed.setVisible(false);
 						ply2CardPlayed.setVisible(false);
 						ply3CardPlayed.setVisible(false);
@@ -247,6 +261,7 @@ public class Client {
 						passed = false;
 					}
 
+					//packet recieved  was 
 					else if (Integer.parseInt(parsedPacket[0]) == 8){
 						if (teamNo == 1) {
 							yourScore = Integer.parseInt(parsedPacket[1]);
@@ -1345,8 +1360,9 @@ public class Client {
 		bttnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//TODO create server logic
-				System.out.println("Need to create server");
+				UDP_Server t = new UDP_Server();
+				ConnectUI.dispose();
+				t.main(null);
 			}
 		});
 
