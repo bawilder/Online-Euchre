@@ -17,61 +17,6 @@ public class UDP_Server {
 
 	static int playerNo = 1;
 
-//	public UDP_Server(){
-//		System.out.println("I'm right here motha fuckas");
-//		int playerNo = 1;
-//		ServerSocket serverSocket = null;
-//		Socket socket = null;
-//		boolean endGame = false;
-//
-//		try {
-//			serverSocket = new ServerSocket(0, 0, InetAddress.getByName(null));
-//			System.out.println("Using port number: " + serverSocket.getLocalPort());
-//			System.out.println("IP Address: " + serverSocket.getInetAddress());
-//		} catch (IOException e) {
-//			System.out.println(e);
-//
-//		}
-//		while (playerNo < 5) {
-//			try {
-//				System.out.println("Accepting connections!");
-//				socket = serverSocket.accept();
-//				// Set the game to timeout after 167 minutes
-//				socket.setSoTimeout(10000000);
-//				System.out.println("Connection established");
-//			} catch (IOException e) {
-//				System.out.println(e);
-//				break;
-//			}
-//			// new thread for a client
-//			if(playerNo == 1)
-//				player1 = new EchoThread(socket, playerNo);
-//			else if (playerNo == 2)
-//				player2 = new EchoThread(socket, playerNo);
-//			else if (playerNo == 3)
-//				player3 = new EchoThread(socket, playerNo);
-//			else if (playerNo == 4)
-//				player4 = new EchoThread(socket, playerNo);
-//
-//			playerNo += 1;
-//
-//		}
-//
-//		while (true) {
-//			if(endGame == true)
-//				break;
-//
-//		}
-//		try{
-//			serverSocket.close();
-//		}
-//		catch (Exception e) {
-//			System.out.println(e);
-//			System.exit(0);
-//		}
-//
-//	}
-
 	public static void main(String args[]) {
 		int playerNo = 1;
 		ServerSocket serverSocket = null;
@@ -118,33 +63,6 @@ public class UDP_Server {
 			if(game.gameOver){
 				break;
 			}
-			//run this shit
-			// this is where game logic and server logic intercept/inteface
-
-			//			Packet packit = new Packet();
-			//			int [] hand = {1,2,3,4,5};
-			//			int discard = 6;
-			//			String msg = packit.initPacket(3, 2, 1, hand, discard);
-			//			String msg2 = packit.PokeItPacket(0);
-			//			try{
-			//				player1.sendPacket(msg);
-			//				for(int i = 0; i < 1000000; i++)
-			//					i += 1;
-			//				player1.sendPacket(msg2);
-			//			}
-			//			catch (Exception e){
-			//				System.out.println(e);
-			//				System.exit(0);
-			//			}
-			//			while(true){
-			//				int count = 0;
-			//				count += 1;
-			//				if (count == 2)
-			//					break;
-			//			}
-			//			
-			//if(endGame == true)
-				//break;
 
 		}
 		try{
