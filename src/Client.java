@@ -9,11 +9,11 @@ import java.util.Arrays;
 import javax.swing.*;
 
 /**
- * This calss runs the user interface for our euchre game. When ran it luanchs a connect screen where
+ * This claass runs the user interface for our Euchre game. When ran it launches a connect screen where
  * the user must enter the ip address and port number of where the server is hosted. The user must also enter a name although this
  * doesn't do anything in the final build.
  * 
- * @author ztdunham
+ * @author Team 3
  *
  */
 
@@ -458,10 +458,10 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Trying to Pass");
-				if (myTurn && trump == 0) { 
-					if(passed == true && whoAmI == dealer) {
+				if (myTurn && trump == 0) { //your turn and trump hasn't been set
+					if(passed == true && whoAmI == dealer) {	//you're the dealer and you already passed
 						System.out.println("you must pick Trump");
-					} else {
+					} else {	//send the server the pass
 						System.out.println("Trying to tell server to pass");
 						passed = true;
 						msg = myPacket.chooseTrump(20);
@@ -481,7 +481,7 @@ public class Client {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Trying to Pick-Up");
-				if(myTurn && trump == 0) {
+				if(myTurn && trump == 0) {	//its your turn and trump hasnt been set
 					System.out.println("Trying to tell server to pick it up");
 					msg = myPacket.chooseTrump(1);
 					sendPacket(msg);
@@ -619,6 +619,8 @@ public class Client {
 
 		JButton tSelectSpades = new JButton("");
 		tSelectSpades.setIcon(new ImageIcon (getClass().getResource("/spade.png")));
+		
+		//player select spades
 		tSelectSpades.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -726,6 +728,10 @@ public class Client {
 		frame.validate();
 	}
 
+	/**
+	 * Draws the opponents card backs, and the players hand. Adds buttons for the players hand
+	 * 
+	 */
 	private void drawCards () {
 		trumpCard.setIcon(cardToDrawVert(trumpCardNum));
 		trumpCard.setVisible(true);
@@ -748,7 +754,7 @@ public class Client {
 								synchronized(frame){
 									frame.notify();
 								}
-								if(needToDiscard) {
+								if(needToDiscard) { // need to discard this card, replace it with the turned up card
 									card1Num = trumpCardNum;
 									trumpCard.setVisible(false);
 									discardLbl.setVisible(false);
@@ -758,6 +764,8 @@ public class Client {
 									sendPacket(msg);
 									System.out.println("Discarded");
 									frame.repaint();
+									
+								//you can play if its a valid move, its your turn, and trump has been set
 								} else if (isValidMove(card1Num) && myTurn && trump != 0) {
 									myTurn = false;
 									ply1CardPlayed.setIcon(cardToDrawVert(card1Num));
@@ -946,6 +954,13 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Draws cards vertically based on the number it is given.
+	 * 
+	 * @param carVal, a number corresponding to a card to draw
+	 * 
+	 * @return an ImageIcon of the card
+	 */
 	private ImageIcon cardToDrawVert (int carVal) {
 		ImageIcon temp = null;
 
@@ -1005,6 +1020,13 @@ public class Client {
 		return temp;
 	}
 
+	/**
+	 * Draws cards horizontally based on the number it is given.
+	 * 
+	 * @param carVal, a number corresponding to a card to draw
+	 * 
+	 * @return a horizontal ImageIcon of the card
+	 */
 	private ImageIcon cardToDrawHorz (int carVal) {
 		ImageIcon temp = null;
 
@@ -1155,11 +1177,16 @@ public class Client {
 
 
 	/**
+	 * Takes in a card number and checks if it is a valid move based on what is on the board and what is in the
+	 * players hand.
+	 * 
 	 * 0 - Invalid
 	 * 1 - Spade
 	 * 2 - Heart
 	 * 3 - Club
 	 * 4 - Diamond
+	 * 
+	 * @return a boolean that signals if the card can be played or not
 	 */
 	private boolean isValidMove (int cardPlayed) {
 
@@ -1194,33 +1221,31 @@ public class Client {
 
 
 	/**
-	 * 0 - Invalid
-	 * 1 - Spade
-	 * 2 - Heart
-	 * 3 - Club
-	 * 4 - Diamond
+	 * A helper function to the isValidMove. It looks at the palyers hand and sees if they can follow suit
+	 * 
+	 * @return a boolean saying if the player can follow suit or not
 	 */
 	private boolean canFollowSuit () {
 
-		if (cardLead == 1) {
-			if ((card1Num <= 5 && card1Num >= 0) && !(trump == 3 && card1Num == 2)) {
+		if (cardLead == 1) { // card lead is a spde
+			if ((card1Num <= 5 && card1Num >= 0) && !(trump == 3 && card1Num == 2)) { // card 1 is a spade
 				System.out.println("Spade: Must play Card 1");
 				return true;
-			} else if ((card2Num <= 5 && card2Num >= 0) && !(trump == 3 && card2Num == 2)) {
+			} else if ((card2Num <= 5 && card2Num >= 0) && !(trump == 3 && card2Num == 2)) { // card 2 is a spade
 				System.out.println("Spade: Must play Card 2");
 				return true;
-			} else if ((card3Num <= 5 && card3Num >= 0) && !(trump == 3 && card3Num == 2)) {
+			} else if ((card3Num <= 5 && card3Num >= 0) && !(trump == 3 && card3Num == 2)) { // card 3 is a spade
 				System.out.println("Spade: Must play Card 3");
 				return true;
-			} else if ((card4Num <= 5 && card4Num >= 0) && !(trump == 3 && card4Num == 2)) {
+			} else if ((card4Num <= 5 && card4Num >= 0) && !(trump == 3 && card4Num == 2)) { // card 4 is a spade
 				System.out.println("Spade: Must play Card 4");
 				return true;
-			} else if ((card5Num <= 5 && card5Num >= 0) && !(trump == 3 && card5Num == 2)) {
+			} else if ((card5Num <= 5 && card5Num >= 0) && !(trump == 3 && card5Num == 2)) { // card 5 is a spade
 				System.out.println("Spade: Must play Card 5");
 				return true;
 			}
 			return false;
-		} else if (cardLead == 2) {
+		} else if (cardLead == 2) { // hearts was lead
 			if ((card1Num <= 11 && card1Num >= 6) && !(trump == 4 && card1Num == 8)) {
 				System.out.println("Heart: Must play Card 1");
 				return true;
@@ -1238,7 +1263,7 @@ public class Client {
 				return true;
 			}
 			return false;
-		}else if(cardLead == 3) {
+		}else if(cardLead == 3) { // clubs was lead
 			if ((card1Num <= 17 && card1Num >= 12) && !(trump == 1 && card1Num == 14)) {
 				System.out.println("Club: Must play Card 1");
 				return true;
@@ -1256,7 +1281,7 @@ public class Client {
 				return true;
 			}
 			return false;
-		}  else if (cardLead == 4) {
+		}  else if (cardLead == 4) { //hearts was lead
 			if ((card1Num <= 23 && card1Num >= 18) && !(trump == 2 && card1Num == 20)) {
 				System.out.println("Diamonds: Must play Card 1");
 				return true;
@@ -1294,6 +1319,11 @@ public class Client {
 
 
 
+	/**
+	 * This function make the connection UI that the user would use to connect to a server
+	 * The user must enter the servers IP address, the port number, and a name.
+	 * 
+	 */
 	public void ConnectUI(){
 		final JFrame ConnectUI = new JFrame();
 		Font f = new Font (lblPortNum.getName(), Font.PLAIN, 15);
@@ -1418,12 +1448,17 @@ public class Client {
 		}
 	}
 
+	/**
+	 * A function that checks who is the dealer and displays the dealer flag for the correct person
+	 * 
+	 */
 	private void checkDealer() {
 		ply1Deal.setVisible(false);
 		ply2Deal.setVisible(false);
 		ply3Deal.setVisible(false);
 		ply4Deal.setVisible(false);
-		if (whoAmI == 1) {
+		
+		if (whoAmI == 1) {	//draw the GUI normal
 			if (dealer == 1) {
 				ply1Deal.setVisible(true);
 			} else if (dealer == 2) {
@@ -1433,7 +1468,7 @@ public class Client {
 			} else if (dealer == 4) {
 				ply4Deal.setVisible(true);
 			}	
-		} else if (whoAmI == 2) {
+		} else if (whoAmI == 2) { //Draw the GUI as if you are player2
 			if (dealer == 1) {
 				ply4Deal.setVisible(true);
 			} else if (dealer == 2) {
@@ -1444,7 +1479,7 @@ public class Client {
 				ply3Deal.setVisible(true);
 			}
 
-		} else if (whoAmI == 3) {
+		} else if (whoAmI == 3) { //draw the GUI as if you are player 3
 			if (dealer == 1) {
 				ply3Deal.setVisible(true);
 			} else if (dealer == 2) {
@@ -1455,7 +1490,7 @@ public class Client {
 				ply2Deal.setVisible(true);
 			}
 
-		} else if (whoAmI == 4) {
+		} else if (whoAmI == 4) { //drwa the GUI as player 4
 			if (dealer == 1) {
 				ply2Deal.setVisible(true);
 			} else if (dealer == 2) {
@@ -1468,12 +1503,17 @@ public class Client {
 		}
 	}
 
+	/**
+	 * A function that checks whose turn it is and display the correct palyers turn based on which
+	 * player GUI that is being displayed
+	 * 
+	 */
 	private void checkPlayerTurn () {
 		player1Turn.setVisible(false);
 		player2Turn.setVisible(false);
 		player3Turn.setVisible(false);
 		player4Turn.setVisible(false);
-		if (whoAmI == 1) {
+		if (whoAmI == 1) { //draw the players turn as if you are player 1
 			if (whoseTurn == 1) {
 				player1Turn.setVisible(true);
 			} else if (whoseTurn == 2) {
@@ -1483,7 +1523,7 @@ public class Client {
 			} else if (whoseTurn == 4) {
 				player4Turn.setVisible(true);
 			}	
-		} else if (whoAmI == 2) {
+		} else if (whoAmI == 2) {	//draw the plays turn as if you are player 2
 			if (whoseTurn == 1) {
 				player4Turn.setVisible(true);
 			} else if (whoseTurn == 2) {
@@ -1494,7 +1534,7 @@ public class Client {
 				player3Turn.setVisible(true);
 			}
 
-		} else if (whoAmI == 3) {
+		} else if (whoAmI == 3) {	//draw the players turn as if you are player 3
 			if (whoseTurn == 1) {
 				player3Turn.setVisible(true);
 			} else if (whoseTurn == 2) {
@@ -1505,7 +1545,7 @@ public class Client {
 				player2Turn.setVisible(true);
 			}
 
-		} else if (whoAmI == 4) {
+		} else if (whoAmI == 4) { 	//draw the players turn as if you are player 4
 			if (whoseTurn == 1) {
 				player2Turn.setVisible(true);
 			} else if (whoseTurn == 2) {
@@ -1518,6 +1558,10 @@ public class Client {
 		}
 	}
 
+	/**
+	 * A function that displays the player names in the correct position
+	 * 
+	 */
 	private void checkPlayers () {
 		if (whoAmI == 1) {
 
@@ -1541,6 +1585,12 @@ public class Client {
 		}
 	}
 
+	
+	/**
+	 * A function that returns the suit of the card that was lead 
+	 * 
+	 * @return
+	 */
 	private int getCardLead () {
 		//no card are visable, it means no cards have been lead yet
 		if(!ply1CardPlayed.isVisible() && !ply2CardPlayed.isVisible() && !ply3CardPlayed.isVisible() && !ply4CardPlayed.isVisible()) {
@@ -1551,13 +1601,14 @@ public class Client {
 	}
 
 	/**
+	 * A helper function that returns the suit of the card that was lead 
+	 * 
 	 * 0 - Invalid
 	 * 1 - Spade
 	 * 2 - Heart
 	 * 3 - Club
 	 * 4 - Diamond
 	 */
-	//TODO: leading left returns wrong suit lead
 	private int findSuitLead () {
 		if ((cardPlayed <= 17 && cardPlayed >= 12)) {
 			if (trump == 1 && cardPlayed  == 14) {
